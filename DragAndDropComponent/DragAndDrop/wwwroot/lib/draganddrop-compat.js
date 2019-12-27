@@ -22,7 +22,7 @@ var observeDOM = (function () {
 })();
 
 observeDOM(document, function (m) {
-  var dnds = document.getElementsByClassName("draganddrop-item");
+  var dnds = document.querySelectorAll("*[draggable=true]");
   for (var i = 0; i < dnds.length; i++) {
     dnds[i].ondragstart = function (e) {
       e.dataTransfer.setData("text/plain", "Dragging");
