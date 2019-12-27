@@ -1,0 +1,51 @@
+﻿@page "/dnd"
+
+<h3>DragAndDropSample</h3>
+<p>
+  Drag within a group to reorder.  
+  Drag between groups to move from one group to another in the desired location. 
+  Drag onto group headers to add to the end of that group.
+</p>
+
+<div class="draganddrop-container">
+  <div class="dropzone-wrapper" ondragover="event.preventDefault();">
+    <h3>Group 1 Title</h3>
+    <ul class="draganddrop-group">
+      <li class="draganddrop-item" draggable="true">Group 1 - Item 1</li>
+      <li class="draganddrop-item" draggable="true">Group 1 - Item 2</li>
+      <li class="draganddrop-item" draggable="true">Group 1 - Item 3</li>
+      <li class="draganddrop-item" draggable="true">Group 1 - Item 4</li>
+      <li class="draganddrop-item" draggable="true">Group 1 - Item 5</li>
+      <li class="draganddrop-item" draggable="true">Group 1 - Item 6</li>
+      <li class="draganddrop-item" draggable="true">Group 1 - Item 7</li>
+    </ul>
+  </div>
+  <div class="dropzone-wrapper">
+    <h3>Group 2 Title</h3>
+    <ul class="draganddrop-group">
+      <li class="draganddrop-item" draggable="true">Group 2 - Item 1</li>
+      <li class="draganddrop-item" draggable="true">Group 2 - Item 2</li>
+      <li class="draganddrop-item" draggable="true">Group 2 - Item 3</li>
+      <li class="draganddrop-item" draggable="true">Group 2 - Item 4</li>
+      <li class="draganddrop-item" draggable="true">Group 2 - Item 5</li>
+      <li class="draganddrop-item" draggable="true">Group 2 - Item 6</li>
+      <li class="draganddrop-item" draggable="true">Group 2 - Item 7</li>
+    </ul>
+  </div>
+  <div class="dropzone-wrapper">
+    <h3>Group 3 Title</h3>
+    <ul class="draganddrop-group">
+      <li class="draganddrop-item" draggable="true">Group 3 - Item 1</li>
+      <li class="draganddrop-item" draggable="true">Group 3 - Item 2</li>
+      <li class="draganddrop-item" draggable="true">Group 3 - Item 3</li>
+      <li class="draganddrop-item" draggable="true">Group 3 - Item 4</li>
+      <li class="draganddrop-item" draggable="true">Group 3 - Item 5</li>
+      <li class="draganddrop-item" draggable="true">Group 3 - Item 6</li>
+      <li class="draganddrop-item" draggable="true">Group 3 - Item 7</li>
+    </ul>
+  </div>
+</div>
+
+@code {
+
+}
