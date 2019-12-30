@@ -1,0 +1,49 @@
+﻿<div class="page-description">
+  <h3>Drag And Drop Introduction</h3>
+
+  <input type="checkbox" id="more-less-check" @bind="@less" />
+  <div class="intro-section">
+    <div class="fading-tail"></div>
+    <div class="clearfix"></div>
+    <div class="collapser-text-wrapper"><label for="more-less-check" class="collapser-text text-muted"><em>@(less ? "more" : "less")</em></label></div>
+    <p>
+      This drag and drop sample shows the desired behavior of a reusable drag and drop component. The functionality
+      to be implemented should allow users to:
+    </p>
+    <ul>
+      <li>Drag items within a group to reorder.</li>
+      <li>Drag items between groups to move from one group to another in the desired location.</li>
+      <li>Drag items onto group headers to add to the end of that group.</li>
+    </ul>
+    <p>
+      My goal is to turn this sample into a reusable component that has a good base (default) styling and functionality,
+      as well as one that allows for full customization.  I want to give the developer the freedom to:
+    </p>
+    <ul>
+      <li>style the container for the 0 or more groups of draggable items</li>
+      <li>style the groups or draggable items</li>
+      <li>whether or not to show the group headers</li>
+      <li>style the draggable items</li>
+      <li>style the drop before, on, and after</li>
+      <li>decide where the user is allowed to drag from/drop to</li>
+      <li>allow any object collection to display as the items</li>
+      <li>and hopefully more</li>
+    </ul>
+    <p class="text-light bg-dark p-2" style="border-radius:.4em">
+      <strong>NOTE:</strong> Currently, I am using JavaScript to listen for changes to the DOMTree since some browsers
+      requires the <code>ondragstart</code> event to perform <code>event.dataTransfer.setData(...)</code>.  I chose to
+      use a js file instead of using JS Interop since I have not dove into using JS Interop yet.  I am also hoping to
+      find a way to make the js file only download for browsers that require it.
+    </p>
+    <p>
+      Below, I am starting with bare minimum styling (only class names are used, but no styling applied).  I want to
+      get the functionality working first. The goal is to create a version that moves the item as it is dragged up or
+      down.
+    </p>
+  </div>
+</div>
+
+@code {
+  // UI Only - show/hide longer text in the introduction section
+  bool less = true;
+}

@@ -1,0 +1,50 @@
+﻿@page "/dnd-div"
+@inherits DragAndDropSampleBase
+
+<DragAndDropSampleIntroduction />
+
+<h3>Drag And Drop Sample - Using DIVs</h3>
+
+<div class="draganddrop-container">
+  @if (draggableItems is null || draggableItems.Count() == 0) {
+    <p>TODO: Display empty list</p>
+  } else {
+    foreach (var curDNDGroup in draggableItems.Select(x => x.GroupName).Distinct().OrderBy(groupName => groupName)) {
+      <div class="draganddrop-group"
+           ondragover="event.preventDefault();"
+           @ondrop="@((e) => HandleMove(e, curDNDGroup, draggableItems.Count(d => d.GroupName == curDNDGroup)))"
+           @ondrop:preventDefault="true">
+        <div class="draganddrop-groupname">@curDNDGroup</div>
+        <div class="draganddrop-item-list">
+          @foreach (var curDNDItem in draggableItems.Where(x => x.GroupName == curDNDGroup).OrderBy(x => x.Order)) {
+            <div class="draganddrop-item"
+                 draggable="true"
+                 data-value="@curDNDItem"
+                 @ondragstart="@((e) => HandleDragStart(e, curDNDItem))"
+                 @ondragend="HandleDragEnd"
+                 ondrop="event.preventDefault();">
+              <div class="draganddrop-itemcontent"
+                   @ondrop="@((e) => HandleMove(e, curDNDGroup, curDNDItem.Order))"
+                   @ondrop:stopPropagation="true"
+                   @ondragover="(e) => HandleMove(e, curDNDGroup, curDNDItem.Order)"
+                   @ondragover:stopPropagation="true"
+                   style="height:1em; overflow-y:visible;">
+                @curDNDItem.Item
+              </div>
+              <div class="draganddrop-dropafter"
+                   @ondrop="@((e) => HandleMove(e, curDNDGroup, curDNDItem.Order + 1))"
+                   @ondrop:stopPropagation="true"
+                   @ondragover="(e) => HandleMove(e, curDNDGroup, curDNDItem.Order + 1)"
+                   @ondragover:stopPropagation="true"
+                   style="height:.4em;"></div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+</div>
+
+@code {
+
+}
