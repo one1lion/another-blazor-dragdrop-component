@@ -16,4 +16,8 @@
     <None Include="compilerconfig.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DragAndDrop.Components\DragAndDrop.Components.csproj" />
+  </ItemGroup>
+
 </Project>
