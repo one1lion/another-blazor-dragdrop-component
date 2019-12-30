@@ -1,0 +1,27 @@
+﻿@typeparam TItem
+@inherits DragAndDropItemBase<TItem>
+
+<li class="draganddrop-item"
+    draggable="true"
+    data-value="@Model"
+    @ondragstart="@((e) => HandleDragStart(e, Model))"
+    @ondragend="HandleDragEnd">
+  <div class="draganddrop-itemcontent"
+       @ondrop="@((e) => HandleMove(e, Model.GroupName, Model.Order))"
+       @ondrop:stopPropagation="true"
+       @ondragover="(e) => HandleMove(e, Model.GroupName, Model.Order)"
+       @ondragover:stopPropagation="true"
+       style="height:1em; overflow-y:visible;">
+    @ItemTemplate(Model.Item)
+  </div>
+  <div class="draganddrop-dropafter"
+       @ondrop="@((e) => HandleMove(e, Model.GroupName, Model.Order + 1))"
+       @ondrop:stopPropagation="true"
+       @ondragover="(e) => HandleMove(e, Model.GroupName, Model.Order + 1)"
+       @ondragover:stopPropagation="true"
+       style="height:.4em;"></div>
+</li>
+
+@code {
+ 
+}
