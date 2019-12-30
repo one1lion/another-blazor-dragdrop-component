@@ -52,11 +52,29 @@
     <p>TODO: Display empty list</p>
   } else {
     foreach (var curDNDGroup in draggableItems.Select(x => x.GroupName).Distinct().OrderBy(groupName => groupName)) {
-      <div class="draganddrop-group" ondragover="event.preventDefault();" @ondrop="@((e) => HandleDrop(e, curDNDGroup, draggableItems.Count(d => d.GroupName == curDNDGroup)))">
+      <div class="draganddrop-group"
+           ondragover="event.preventDefault();"
+           @ondrop="@((e) => HandleDrop(e, curDNDGroup, draggableItems.Count(d => d.GroupName == curDNDGroup)))">
         <h3>@curDNDGroup</h3>
-        <ul class="draganddrop-item-list">
-          @foreach (var curDNDItem in draggableItems.Where(x => x.GroupName == curDNDGroup)) {
-            <li class="draganddrop-item" draggable="true">@curDNDItem.Item</li>
+        <ul class="draganddrop-item-list" style="list-style: none;">
+          @foreach (var curDNDItem in draggableItems.Where(x => x.GroupName == curDNDGroup).OrderBy(x => x.Order)) {
+            <li class="draganddrop-item"
+                draggable="true"
+                @ondragstart="@((e) => HandleDragStart(e, curDNDItem))"
+                @ondragend="HandleDragEnd">
+              <div class="draganddrop-itemcontent"
+                   @ondrop="@((e) => HandleDrop(e, curDNDGroup, curDNDItem.Order))"
+                   @ondrop:stopPropagation="true"
+                   @ondragover="(e) => HandleDrop(e, curDNDGroup, curDNDItem.Order)"
+                   @ondragover:stopPropagation="true">
+                @curDNDItem.Item
+              </div>
+              <div class="draganddrop-dropafter"
+                   @ondrop="@((e) => HandleDrop(e, curDNDGroup, curDNDItem.Order + 1))"
+                   @ondrop:stopPropagation="true"
+                   @ondragover="(e) => HandleDrop(e, curDNDGroup, curDNDItem.Order + 1)"
+                   @ondragover:stopPropagation="true" style="height:.2em"></div>
+            </li>
           }
         </ul>
       </div>
@@ -99,8 +117,12 @@
     dragging = false;
   }
 
-  void HandleDrop(DragEventArgs e, string newGroupName, int newOrder) {
-
+  async Task HandleDrop(DragEventArgs e, string newGroupName, int newOrder) {
+    var dragItem = draggableItems.SingleOrDefault(d => d.Id == curItem.Id);
+    if (dragItem is { }) {
+      MoveItem(dragItem.GroupName, newGroupName, dragItem.Order, newOrder);
+    }
+    await InvokeAsync(() => StateHasChanged());
   }
 
   /// <summary>
@@ -176,12 +198,9 @@
   /// </summary>
   /// <param name="inGroupName"></param>
   private void RenumberList(string inGroupName) {
-    var groups = draggableItems.GroupBy(d => d.GroupName);
-    foreach (var group in groups) {
-      var curList = group.OrderBy(g => g.Order);
-      for (var i = 0; i < curList.Count(); i++) {
-        curList.ElementAt(i).Order = i;
-      }
+    var items = draggableItems.Where(d => d.GroupName == inGroupName).OrderBy(d => d.Order);
+    for (var i = 0; i < items.Count(); i++) {
+      items.ElementAt(i).Order = i;
     }
   }
 }
