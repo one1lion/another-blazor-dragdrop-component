@@ -1,15 +1,10 @@
 ﻿using System;
 
-namespace DragAndDrop.Data {
+namespace DragAndDrop.Components {
   /// <summary> 
   /// The wrapper for a draggable item
   /// </summary>
   /// <typeparam name="T">The type of item this is wrapping</typeparam>
-  /// <remarks>
-  /// This is the original version of DraggableItem used in the Sample.
-  /// The version for the Component can be found in the DragAndDrop.Components
-  /// library project.
-  /// </remarks>
   public class DraggableItem<T> {
     public DraggableItem() {
       Id = Guid.NewGuid().ToString();

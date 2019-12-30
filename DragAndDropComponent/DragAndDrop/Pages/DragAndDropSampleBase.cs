@@ -17,7 +17,7 @@ namespace DragAndDrop.Pages {
     /// <remarks>We are currently using strings as the item type, but this can be any object</remarks>
     protected List<DraggableItem<string>> draggableItems = new List<DraggableItem<string>>();
 
-    /// <summary>The most recent <see cref="DragAndDrop.Data.DraggableItem{T}"/> being dragged</summary>
+    /// <summary>The most recent <see cref="DragAndDrop.Components.DraggableItem{T}"/> being dragged</summary>
     protected DraggableItem<string> curItem = null;
     /// <summary>Whether or not dragging is occurring</summary>
     protected bool dragging;
@@ -26,7 +26,7 @@ namespace DragAndDrop.Pages {
     /// On drag start, handles setting the currently dragged item and sets the "dragging" flag to true
     /// </summary>
     /// <param name="e">The arguments related to the drag event</param>
-    /// <param name="draggedItem">The <see cref="DragAndDrop.Data.DraggableItem{T}"/> that is being picked up</param>
+    /// <param name="draggedItem">The <see cref="DragAndDrop.Components.DraggableItem{T}"/> that is being picked up</param>
     protected void HandleDragStart(DragEventArgs e, DraggableItem<string> draggedItem) {
       curItem = draggedItem;
       dragging = true;
@@ -47,11 +47,11 @@ namespace DragAndDrop.Pages {
     /// </summary>
     /// <param name="e">The arguments related to the drag event</param>
     /// <param name="newGroupName">
-    /// The group the currently dragged <see cref="DragAndDrop.Data.DraggableItem{T}"/> is
+    /// The group the currently dragged <see cref="DragAndDrop.Components.DraggableItem{T}"/> is
     /// being dropped into
     /// </param>
     /// <param name="newOrder">
-    /// The location number to move the <see cref="DragAndDrop.Data.DraggableItem{T}"/> to
+    /// The location number to move the <see cref="DragAndDrop.Components.DraggableItem{T}"/> to
     /// within the <paramref name="newGroupName"/>
     /// </param>
     /// <returns></returns>
@@ -67,20 +67,20 @@ namespace DragAndDrop.Pages {
     }
 
     /// <summary>
-    /// Handles moving a <see cref="DragAndDrop.Data.DraggableItem{T}"/>
+    /// Handles moving a <see cref="DragAndDrop.Components.DraggableItem{T}"/>
     /// </summary>
     /// <param name="fromGroupName">
-    /// The group name the <see cref="DragAndDrop.Data.DraggableItem{T}"/> is moving from
+    /// The group name the <see cref="DragAndDrop.Components.DraggableItem{T}"/> is moving from
     /// </param>
     /// <param name="toGroupName">
-    /// The group name the <see cref="DragAndDrop.Data.DraggableItem{T}"/> is moving to
+    /// The group name the <see cref="DragAndDrop.Components.DraggableItem{T}"/> is moving to
     /// </param>
     /// <param name="fromOrder">
-    /// The location number to move the <see cref="DragAndDrop.Data.DraggableItem{T}"/> from
+    /// The location number to move the <see cref="DragAndDrop.Components.DraggableItem{T}"/> from
     /// within the <paramref name="fromGroupName"/>
     /// </param>
     /// <param name="toOrder">
-    /// The location number to move the <see cref="DragAndDrop.Data.DraggableItem{T}"/> to
+    /// The location number to move the <see cref="DragAndDrop.Components.DraggableItem{T}"/> to
     /// within the <paramref name="toGroupName"/>
     /// </param>
     protected void MoveItem(string fromGroupName, string toGroupName, int fromOrder, int toOrder) {
