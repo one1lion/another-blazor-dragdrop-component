@@ -1,0 +1,36 @@
+﻿@typeparam TItem
+
+<div class="draganddrop-group"
+     ondragover="event.preventDefault();"
+     @ondrop="@((e) => HandleMove(e, draggableItems.Count(d => d.GroupName == Name)))"
+     @ondrop:preventDefault="true">
+  <div class="draganddrop-groupname">@Name</div>
+  @((MarkupString)$"<{(Style == DragAndDropStyle.List ? "ul" : "div")} class=\"draganddrop-item-list\">")
+  @foreach (var curDNDItem in draggableItems.Where(x => x.GroupName == Name).OrderBy(x => x.Order)) {
+    @if (Style == DragAndDropStyle.List) {
+      <DragAndDropListItem Model="curDNDItem">
+        <ItemTemplate>
+          @ItemTemplate(curDNDItem.Item)
+        </ItemTemplate>
+      </DragAndDropListItem>
+    } else {
+      <DragAndDropDivItem Model="curDNDItem">
+        <ItemTemplate>
+          @ItemTemplate(curDNDItem.Item)
+        </ItemTemplate>
+      </DragAndDropDivItem>
+    }
+  }
+  @((MarkupString)$"</{(Style == DragAndDropStyle.List ? "ul" : "div")}>")
+</div>
+
+@code {
+  [Parameter] public string Name { get; set; }
+  [Parameter] public DragAndDropStyle Style { get; set; } = DragAndDropStyle.Div;
+  [Parameter] public List<DraggableItem<TItem>> draggableItems { get; set; }
+  [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+
+  protected void HandleMove(DragEventArgs e, int newOrder) {
+
+  }
+}
