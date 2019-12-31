@@ -1,0 +1,14 @@
+﻿@page "/dnd-comps"
+@using DragAndDrop.Components
+@using DragAndDrop.Data
+
+<DragAndDropContainer Items="items" GroupNameProperty="@nameof(Foo.GroupName)">
+</DragAndDropContainer>
+
+@code {
+  List<Foo> items;
+
+  protected override void OnInitialized() {
+    items = SampleDataService.GenerateSampleFooItems();
+  }
+}

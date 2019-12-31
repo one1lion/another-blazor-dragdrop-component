@@ -1,34 +1,78 @@
 ﻿@typeparam TItem
+@using System.Reflection
 
 <div class="draganddrop-group"
      ondragover="event.preventDefault();"
-     @ondrop="@((e) => HandleMove(e, draggableItems.Count(d => d.GroupName == Name)))"
+     @ondrop="@((e) => HandleMove(e, DraggableItems.Count(d => d.GroupName == Name)))"
      @ondrop:preventDefault="true">
   <div class="draganddrop-groupname">@Name</div>
   @((MarkupString)$"<{(Style == DragAndDropStyle.List ? "ul" : "div")} class=\"draganddrop-item-list\">")
-  @foreach (var curDNDItem in draggableItems.Where(x => x.GroupName == Name).OrderBy(x => x.Order)) {
-    @if (Style == DragAndDropStyle.List) {
-      <DragAndDropListItem Model="curDNDItem">
-        <ItemTemplate>
-          @ItemTemplate(curDNDItem.Item)
-        </ItemTemplate>
-      </DragAndDropListItem>
-    } else {
-      <DragAndDropDivItem Model="curDNDItem">
-        <ItemTemplate>
-          @ItemTemplate(curDNDItem.Item)
-        </ItemTemplate>
-      </DragAndDropDivItem>
-    }
-  }
+  <CascadingValue Name="DragAndDropContainer" Value="Container">
+    <CascadingValue Name="DragAndDropGroup" Value="this">
+      @foreach (var curDNDItem in DraggableItems.Where(x => x.GroupName == Name).OrderBy(x => x.Order)) {
+        @if (Style == DragAndDropStyle.List) {
+          <DragAndDropListItem Model="curDNDItem">
+            <ItemTemplate>
+              @ItemTemplate(curDNDItem.Item)
+            </ItemTemplate>
+          </DragAndDropListItem>
+        } else {
+          <DragAndDropDivItem Model="curDNDItem">
+            <ItemTemplate>
+              @ItemTemplate(curDNDItem.Item)
+            </ItemTemplate>
+          </DragAndDropDivItem>
+        }
+      }
+    </CascadingValue>
+  </CascadingValue>
   @((MarkupString)$"</{(Style == DragAndDropStyle.List ? "ul" : "div")}>")
 </div>
 
 @code {
+  [CascadingParameter] public DragAndDropContainer<TItem> Container { get; set; }
   [Parameter] public string Name { get; set; }
-  [Parameter] public DragAndDropStyle Style { get; set; } = DragAndDropStyle.Div;
-  [Parameter] public List<DraggableItem<TItem>> draggableItems { get; set; }
+  [Parameter] public DragAndDropStyle Style { get; set; } = DragAndDropStyle.NotSet;
+  [Parameter] public List<TItem> Items { get; set; }
+  [Parameter] public List<DraggableItem<TItem>> DraggableItems { get; set; }
   [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+  [Parameter] public string OrderProperty { get; set; }
+
+  Type t;
+  PropertyInfo orderProp;
+
+  protected override void OnParametersSet() {
+    // Validation:
+    if (Container is { }) {
+      // This component is being wrapped inside of a DragAndDropContainer
+
+      // Inherit the container's set style
+      Style = Style == DragAndDropStyle.NotSet ? Container.DefaultGroupStyle : Style;
+
+      // If neither Items nor Draggable Items is set, try to get the DraggableItems 
+      // for this group from the Container
+      if (Items is null && DraggableItems is null) {
+        DraggableItems = Container.DraggableItems?.Where(d => d.GroupName == Name).ToList();
+      }
+    } else {
+
+    }
+
+    if (Items == null) {
+      DraggableItems = new List<DraggableItem<TItem>>();
+      return;
+    }
+
+    t = typeof(TItem);
+    orderProp = string.IsNullOrWhiteSpace(OrderProperty) ? null : t.GetProperty(OrderProperty);
+
+    var i = 0;
+    DraggableItems = Items.Select(curItem => new DraggableItem<TItem>() {
+      GroupName = Name,
+      Order = orderProp is { } ? (int)orderProp.GetValue(curItem) : i++,
+      Item = curItem
+    }).ToList();
+  }
 
   protected void HandleMove(DragEventArgs e, int newOrder) {
 
