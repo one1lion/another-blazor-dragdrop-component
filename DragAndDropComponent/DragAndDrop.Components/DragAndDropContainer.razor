@@ -4,7 +4,7 @@
 <div class="draganddrop-container">
   <CascadingValue Value="this">
     @if(!string.IsNullOrWhiteSpace(GroupNameProperty) && gnProp is { }) {
-      foreach(var curGroup in DraggableItems.GroupBy(g => g.GroupName).OrderBy(g => g.Key)) {
+      foreach(var curGroup in DraggableItems.GroupBy((Func<DraggableItem<TItem>, string>)(g => (string)g.Name)).OrderBy(g => g.Key)) {
         <DragAndDropGroup Name="@curGroup.Key" Style="DefaultGroupStyle" DraggableItems="DraggableItems" TItem="TItem" />
       }
     } else {
@@ -43,7 +43,7 @@
 
     var i = 0;
     DraggableItems = Items.Select(curItem => new DraggableItem<TItem>() {
-      GroupName = gnProp is { } ? (string)gnProp.GetValue(curItem) : "",
+      Name = gnProp is { } ? (string)gnProp.GetValue(curItem) : "",
       Order = orderProp is { } ? (int)orderProp.GetValue(curItem) : i++,
       Item = curItem
     }).ToList();
