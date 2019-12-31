@@ -8,17 +8,17 @@
      @ondragend="HandleDragEnd"
      ondrop="event.preventDefault();">
   <div class="draganddrop-itemcontent"
-       @ondrop="@((e) => HandleMove(e, Model.GroupName, Model.Order))"
+       @ondrop="@((e) => HandleMove(e, Model.Name, Model.Order))"
        @ondrop:stopPropagation="true"
-       @ondragover="(e) => HandleMove(e, Model.GroupName, Model.Order)"
+       @ondragover="(e) => HandleMove(e, Model.Name, Model.Order)"
        @ondragover:stopPropagation="true"
        style="height:1em; overflow-y:visible;">
     @ItemTemplate(Model.Item)
   </div>
   <div class="draganddrop-dropafter"
-       @ondrop="@((e) => HandleMove(e, Model.GroupName, Model.Order + 1))"
+       @ondrop="@((e) => HandleMove(e, Model.Name, Model.Order + 1))"
        @ondrop:stopPropagation="true"
-       @ondragover="(e) => HandleMove(e, Model.GroupName, Model.Order + 1)"
+       @ondragover="(e) => HandleMove(e, Model.Name, Model.Order + 1)"
        @ondragover:stopPropagation="true"
        style="height:.4em;"></div>
 </div>

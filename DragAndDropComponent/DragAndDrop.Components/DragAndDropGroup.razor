@@ -3,13 +3,13 @@
 
 <div class="draganddrop-group"
      ondragover="event.preventDefault();"
-     @ondrop="@((e) => HandleMove(e, DraggableItems.Count(d => d.GroupName == Name)))"
+     @ondrop="@((e) => HandleMove(e, DraggableItems.Count(d => d.Name == Name)))"
      @ondrop:preventDefault="true">
   <div class="draganddrop-groupname">@Name</div>
   @((MarkupString)$"<{(Style == DragAndDropStyle.List ? "ul" : "div")} class=\"draganddrop-item-list\">")
   <CascadingValue Name="DragAndDropContainer" Value="Container">
     <CascadingValue Name="DragAndDropGroup" Value="this">
-      @foreach (var curDNDItem in DraggableItems.Where(x => x.GroupName == Name).OrderBy(x => x.Order)) {
+      @foreach (var curDNDItem in DraggableItems.Where(x => x.Name == Name).OrderBy(x => x.Order)) {
         @if (Style == DragAndDropStyle.List) {
           <DragAndDropListItem Model="curDNDItem">
             <ItemTemplate>
@@ -52,7 +52,7 @@
       // If neither Items nor Draggable Items is set, try to get the DraggableItems 
       // for this group from the Container
       if (Items is null && DraggableItems is null) {
-        DraggableItems = Container.DraggableItems?.Where(d => d.GroupName == Name).ToList();
+        DraggableItems = Container.DraggableItems?.Where(d => d.Name == Name).ToList();
       }
     } else {
 
@@ -68,7 +68,7 @@
 
     var i = 0;
     DraggableItems = Items.Select(curItem => new DraggableItem<TItem>() {
-      GroupName = Name,
+      Name = Name,
       Order = orderProp is { } ? (int)orderProp.GetValue(curItem) : i++,
       Item = curItem
     }).ToList();
