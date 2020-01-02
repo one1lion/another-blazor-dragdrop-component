@@ -30,7 +30,7 @@
 </div>
 
 @code {
-  [CascadingParameter] public DragAndDropContainer<TItem> Container { get; set; }
+  [CascadingParameter] public DragAndDropContainerComponent<TItem> Container { get; set; }
   [Parameter] public string Name { get; set; }
   [Parameter] public DragAndDropStyle Style { get; set; } = DragAndDropStyle.NotSet;
   [Parameter] public List<TItem> Items { get; set; }

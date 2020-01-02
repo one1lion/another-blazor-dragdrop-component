@@ -3,8 +3,8 @@
 
 <div class="draganddrop-container">
   <CascadingValue Value="this">
-    @if(!string.IsNullOrWhiteSpace(GroupNameProperty) && gnProp is { }) {
-      foreach(var curGroup in DraggableItems.GroupBy((Func<DraggableItem<TItem>, string>)(g => (string)g.Name)).OrderBy(g => g.Key)) {
+    @if (!string.IsNullOrWhiteSpace(GroupNameProperty) && gnProp is { }) {
+      foreach (var curGroup in DraggableItems.GroupBy((Func<DraggableItem<TItem>, string>)(g => (string)g.Name)).OrderBy(g => g.Key)) {
         <DragAndDropGroup Name="@curGroup.Key" Style="DefaultGroupStyle" DraggableItems="DraggableItems" TItem="TItem" />
       }
     } else {
@@ -17,7 +17,7 @@
   /// <summary>The list of child <see cref="TItem"/>s</summary>
   [Parameter] public List<TItem> Items { get; set; }
   /// <summary>
-  /// The property of <see cref="TItem" /> to be used as the 
+  /// The property of <see cref="TItem" /> to be used as the
   /// <see cref="DragAndDrop.Components.DragAndDropGroup{TItem}.Name"/>
   /// </summary>
   [Parameter] public string GroupNameProperty { get; set; }
@@ -37,7 +37,7 @@
       return;
     }
 
-    t  = typeof(TItem);
+    t = typeof(TItem);
     gnProp = string.IsNullOrWhiteSpace(GroupNameProperty) ? null : t.GetProperty(GroupNameProperty);
     orderProp = string.IsNullOrWhiteSpace(OrderProperty) ? null : t.GetProperty(OrderProperty);
 

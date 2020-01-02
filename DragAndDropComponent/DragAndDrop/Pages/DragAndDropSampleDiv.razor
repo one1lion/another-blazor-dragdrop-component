@@ -5,7 +5,7 @@
 
 <h3>Drag And Drop Sample - Using DIVs</h3>
 
-<div class="draganddrop-container">
+<div class="draganddrop-container" ondragover="event.preventDefault();">
   @if (draggableItems is null || draggableItems.Count() == 0) {
     <p>TODO: Display empty list</p>
   } else {
@@ -29,14 +29,14 @@
                    @ondragover="(e) => HandleMove(e, curDNDGroup, curDNDItem.Order)"
                    @ondragover:stopPropagation="true"
                    style="height:1em; overflow-y:visible;">
-                @curDNDItem.Item
+                @curDNDItem.Item (@curDNDItem.Order)
               </div>
               <div class="draganddrop-dropafter"
                    @ondrop="@((e) => HandleMove(e, curDNDGroup, curDNDItem.Order + 1))"
                    @ondrop:stopPropagation="true"
                    @ondragover="(e) => HandleMove(e, curDNDGroup, curDNDItem.Order + 1)"
                    @ondragover:stopPropagation="true"
-                   style="height:.4em;"></div>
+                   style="height:.4em;background-color: magenta;"></div>
             </div>
           }
         </div>

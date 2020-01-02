@@ -1,0 +1,289 @@
+﻿@page "/dnd-test"
+@using DragAndDrop.Components
+@using DragAndDrop.Components.Interfaces
+@using System.Globalization
+
+<h3>Test Data Structure</h3>
+@if (container is null) {
+  <p>There is no drag and drop container structure</p>
+} else {
+  @*<div class="draganddrop-container">
+      <h3>@container.Name</h3>
+      @foreach (DraggableGroup<string> group in container.Children.OrderBy(g => g.Order)) {
+        <div class="draganddrop-group" draggable="@(group.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))">
+          <div class="draganddrop-groupname">@group.Name (@group.Order)</div>
+          <div class="draganddrop-item-list">
+            @foreach (DraggableItem<string> item in group.Children.OrderBy(i => i.Order)) {
+              <div class="draganddrop-item" draggable="@(item.DragEnabled.ToString().ToLower(System.Globalization.CultureInfo.CurrentCulture))">
+                @item.Item (@item.Order)
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>*@
+  <div class="draganddrop-container" ondragover="event.preventDefault();">
+    <h3>@container.Name</h3>
+    @for (var i = 0; i < container.Children.Count(); i++) {
+      var group = container.Children[i] as DraggableGroup<string>;
+      <div class="draganddrop-group"
+           draggable="@(group.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))"
+           ondragover="event.preventDefault();"
+           @ondragstart="@((e) => HandleDragStart(e, group))"
+           @ondragend="HandleDragEnd"
+           @ondrop="@((e) => HandleDrop(e, group, group.Children.Count()))"
+           @ondrop:preventDefault="true">
+        <div class="draganddrop-groupname">@group.Name (@group.Order)</div>
+        <div class="draganddrop-item-list">
+          @for (var j = 0; j < group.Children.Count(); j++) {
+            var item = (DraggableItem<string>)group.Children[j];
+            var curItemIndex = item.Parent.Children.IndexOf(item);
+            <div class="draganddrop-item"
+                 draggable="@(item.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))"
+                 data-value="@item"
+                 @ondragstart="@((e) => HandleDragStart(e, item))"
+                 @ondragstart:stopPropagation="true"
+                 @ondragend="HandleDragEnd"
+                 @ondragend:stopPropagation="true"
+                 ondrop="event.preventDefault();">
+              <div class="draganddrop-itemcontent"
+                   @ondrop="@((e) => HandleDrop(e, group, curItemIndex))"
+                   @ondrop:stopPropagation="true"
+                   style="height:1em; overflow-y:visible;">
+                @item.Item (Order Property: @item.Order - Index in list: @(item.Parent.Children.IndexOf(item)))
+              </div>
+              <div class="draganddrop-dropafter"
+                   @ondrop="@((e) => HandleDrop(e, group, curItemIndex + 1))"
+                   @ondrop:stopPropagation="true"
+                   style="height:.4em;background-color: magenta;"></div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
+
+@code {
+  DragAndDropContainer<string> container;
+  bool dragging;
+  IDraggableElement<string> curDraggedElement;
+
+  protected override void OnInitialized() {
+    container = new DragAndDropContainer<string>() {
+      Name = "Top-most container element",
+      Children = new List<IDragAndDropElement<string>>(),
+      Order = 0
+    };
+
+    // Group 1
+    var group = new DraggableGroup<string>() {
+      Name = "Group 1",
+      AllowedTargetNames = new List<string>() { "Group 1" },
+      Order = 0,
+      Parent = container,
+      Children = new List<IDragAndDropElement<string>>()
+    };
+
+    var item = new DraggableItem<string>() {
+      Item = "Group 1, Item 1",
+      Name = "Group 1, Item 1",
+      Order = 0,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+    item = new DraggableItem<string>() {
+      Item = "Group 1, Item 3",
+      Name = "Group 1, Item 3",
+      Order = 1,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+    item = new DraggableItem<string>() {
+      Item = "Group 1, Item 2",
+      Name = "Group 1, Item 2",
+      Order = 2,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(1, item);
+    item = new DraggableItem<string>() {
+      Item = "Group 1, Item 4",
+      Name = "Group 1, Item 4",
+      Order = 3,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+
+    container.Children.Add(group);
+
+    // Group 2
+    group = new DraggableGroup<string>() {
+      Name = "Group 2",
+      Order = 1,
+      Parent = container,
+      Children = new List<IDragAndDropElement<string>>()
+    };
+
+    item = new DraggableItem<string>() {
+      Item = "Group 2, Item 1",
+      Name = "Group 2, Item 1",
+      Order = 0,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+    item = new DraggableItem<string>() {
+      Item = "Group 2, Item 2",
+      Name = "Group 2, Item 2",
+      Order = 1,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+    item = new DraggableItem<string>() {
+      Item = "Group 2, Item 3",
+      Name = "Group 2, Item 3",
+      Order = 2,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+    item = new DraggableItem<string>() {
+      Item = "Group 2, Item 4",
+      Name = "Group 2, Item 4",
+      Order = 3,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+
+    container.Children.Add(group);
+
+    // Group 3
+    group = new DraggableGroup<string>() {
+      Name = "Group 3",
+      Order = 2,
+      Parent = container,
+      Children = new List<IDragAndDropElement<string>>()
+    };
+
+    item = new DraggableItem<string>() {
+      Item = "Group 3, Item 1",
+      Name = "Group 3, Item 1",
+      Order = 0,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+    item = new DraggableItem<string>() {
+      Item = "Group 3, Item 2",
+      Name = "Group 3, Item 2",
+      Order = 1,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+    item = new DraggableItem<string>() {
+      Item = "Group 3, Item 3",
+      Name = "Group 3, Item 3",
+      Order = 2,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+    item = new DraggableItem<string>() {
+      Item = "Group 3, Item 4",
+      Name = "Group 3, Item 4",
+      Order = 3,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+
+    container.Children.Add(group);
+
+    // Group 4
+    group = new DraggableGroup<string>() {
+      Name = "Group 4",
+      Order = 3,
+      Parent = container,
+      Children = new List<IDragAndDropElement<string>>()
+    };
+
+    item = new DraggableItem<string>() {
+      Item = "Group 4, Item 1",
+      Name = "Group 4, Item 1",
+      Order = 0,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+    item = new DraggableItem<string>() {
+      Item = "Group 4, Item 2",
+      Name = "Group 4, Item 2",
+      Order = 1,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+    item = new DraggableItem<string>() {
+      Item = "Group 4, Item 3",
+      Name = "Group 4, Item 3",
+      Order = 2,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+    item = new DraggableItem<string>() {
+      Item = "Group 4, Item 4",
+      Name = "Group 4, Item 4",
+      Order = 3,
+      Parent = group,
+      AllowedTargetNames = new List<string>() { "Group 1", "Group 2" }
+    };
+    group.Children.Insert(group.Children.Count(), item);
+
+    container.Children.Add(group);
+  }
+
+  void HandleDragStart(DragEventArgs e, IDraggableElement<string> element) {
+    curDraggedElement = element;
+    dragging = true;
+  }
+
+  void HandleDragEnd(DragEventArgs e) {
+    dragging = false;
+    curDraggedElement = null;
+  }
+
+  void HandleDrop(DragEventArgs e, IDragAndDropContainer<string> target, int targetIndex) {
+    if (curDraggedElement is null) { return; }
+
+    var movingWithinGroup = curDraggedElement.Parent.Name == target.Name;
+    var originalIndex = curDraggedElement.Parent.Children.IndexOf(curDraggedElement);
+
+    if ((movingWithinGroup && originalIndex == targetIndex) || !curDraggedElement.CanDrop(target)) { return; }
+
+    if (target.Children == null) { target.Children = new List<IDragAndDropElement<string>>(); }
+    // In all cases, insert the dragged element into the list of children of the target element
+    target.Children.Insert(targetIndex, curDraggedElement);
+
+    if (movingWithinGroup) {
+      // If moving within the same group (re-ordering only), remove
+      // the original element from the group.  When doing so, add 1
+      // to the index to remove from if the original element is
+      // moving from a higher numbered index to a lower numbered index
+      target.Children.RemoveAt(originalIndex + (originalIndex > targetIndex ? 1 : 0));
+    } else {
+      // If moving to a different group, remove the original element
+      // from its current Parent's Children, and reparent to the new
+      // group
+      curDraggedElement.Parent.Children.RemoveAt(originalIndex);
+      curDraggedElement.Parent = target;
+    }
+  }
+}

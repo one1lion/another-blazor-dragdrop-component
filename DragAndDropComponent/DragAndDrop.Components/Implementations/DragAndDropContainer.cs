@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 
 namespace DragAndDrop.Components {
-  public class DragAndDropContainerElement<T> : IDragAndDropElement<T> {
+  public class DragAndDropContainer<T> : IDragAndDropContainer<T> {
     public string Name { get; set; }
-    public IDragAndDropElement<T> Parent { get; set; }
+    public int Order { get; set; }
+    public IDragAndDropContainer<T> Parent { get; set; }
     public IList<IDragAndDropElement<T>> Children { get; set; }
   }
 }
