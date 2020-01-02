@@ -28,14 +28,14 @@
                    @ondragover="(e) => HandleMove(e, curDNDGroup, curDNDItem.Order)"
                    @ondragover:stopPropagation="true"
                    style="height:1em; overflow-y:visible;">
-                @curDNDItem.Item
+                @curDNDItem.Item (@curDNDItem.Order)
               </div>
               <div class="draganddrop-dropafter"
                    @ondrop="@((e) => HandleMove(e, curDNDGroup, curDNDItem.Order + 1))"
                    @ondrop:stopPropagation="true"
                    @ondragover="(e) => HandleMove(e, curDNDGroup, curDNDItem.Order + 1)"
                    @ondragover:stopPropagation="true"
-                   style="height:.4em;"></div>
+                   style="height:.4em;background-color: magenta;"></div>
             </li>
           }
         </ul>

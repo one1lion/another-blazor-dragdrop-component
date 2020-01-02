@@ -183,3 +183,40 @@ app {
       max-height: 640px;
       overflow-y: auto;
       padding: .5em; } }
+
+/* Styles to show different elements in samples: */
+.draganddrop-container {
+  background-color: lightblue;
+  border: 1px solid blue;
+  margin: 2px;
+  padding: 5px;
+}
+
+.draganddrop-group {
+  background-color: antiquewhite;
+  border: 1px solid purple;
+  margin: 2px;
+  padding: 5px;
+}
+
+.draganddrop-groupname {
+  background-color: rgba(0,0,0,.1);
+  border: 1px solid orange;
+  margin: 2px;
+  padding: 5px;
+}
+
+.draganddrop-item-list {
+  background-color: aqua;
+  border: 1px solid aquamarine;
+  margin: 2px;
+  padding: 5px;
+}
+
+.draganddrop-item {
+  color: white;
+  background-color: darkgray;
+  border: 1px solid black;
+  margin: 2px;
+  padding: 5px;
+}

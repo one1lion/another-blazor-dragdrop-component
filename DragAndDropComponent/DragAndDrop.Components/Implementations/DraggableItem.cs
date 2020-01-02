@@ -23,12 +23,7 @@ namespace DragAndDrop.Components {
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDraggableElement{T}.DragEnabled" />
     public bool DragEnabled { get; set; } = true;
 
-    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement{T}.Parent" />
-    public IDragAndDropElement<T> Parent { get; set; }
-    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement{T}.Children" />
-    public IList<IDragAndDropElement<T>> Children { 
-      get { return null; }
-      set { return; } 
-    }
+    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer{T}.Parent" />
+    public IDragAndDropContainer<T> Parent { get; set; }
   }
 }

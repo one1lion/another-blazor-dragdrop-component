@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DragAndDrop.Components {
   public class DragAndDropItemBase<TItem> : ComponentBase {
-    [CascadingParameter] public DragAndDropContainer<TItem> Container { get; set; }
+    [CascadingParameter] public DragAndDropContainerComponent<TItem> Container { get; set; }
     [CascadingParameter] public DragAndDropGroup<TItem> DragAndDropGroup { get; set; }
 
     [Parameter] public DraggableItem<TItem> Model { get; set; }

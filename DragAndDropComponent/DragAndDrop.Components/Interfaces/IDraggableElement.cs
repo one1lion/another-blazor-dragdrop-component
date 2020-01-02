@@ -9,8 +9,6 @@ namespace DragAndDrop.Components.Interfaces {
   /// </summary>
   /// <typeparam name="T">The type of data contained within the element</typeparam>
   public interface IDraggableElement<T> : IDragAndDropElement<T> {
-    /// <summary>The order this element should be displayed</summary>
-    int Order { get; set; }
     /// <summary>
     /// A flag indicating whether or not this element should 
     /// be allowed to be dragged currently
@@ -26,39 +24,41 @@ namespace DragAndDrop.Components.Interfaces {
     /// <summary>
     /// Indicates whether the current element can be dropped into or onto a specified target name
     /// </summary>
-    /// <param name="targetName">
-    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement{T}.Name" /> to test
+    /// <param name="container"> 
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer{T}.Name" /> to test
     /// whether this element can be dropped into/onto
     /// </param>
     /// <returns>Whether or not this element can be dropped into/onto the specified target name</returns>
-    public bool CanDrop(string targetName) => targetName != null && AllowedTargetNames != null && AllowedTargetNames.Contains(targetName);
+    public bool CanDrop(IDragAndDropContainer<T> container) => container is { } && AllowedTargetNames is { } && AllowedTargetNames.Contains(container.Name);
 
     // TODO: Remove this when ready to implement
     //void GroupWith(IDragAndDropElement<T> element);
 
-    public bool MoveInto(IDragAndDropElement<T> element, int? order = default) {
-      if (element is null || !CanDrop(element.Name)) { return false; }
 
-      if(element.Id == Parent?.Id) {
 
-      } else {
+    //public bool MoveInto(IDragAndDropContainer<T> container, int? order = default) {
+    //  if (container is null || !CanDrop(container)) { return false; }
 
-      }
-      Parent = element;
-      // Get all draggable
-      var elemChildren = ((List<IDraggableElement<T>>)element.Children.Where(x => x.GetType().GetTypeInfo().IsAssignableFrom(typeof(IDraggableElement<T>).GetTypeInfo())).Select(x => (IDraggableElement<T>)x).OrderBy(x => x.Order));
-      for(var i = 0; i < elemChildren.Count(); i++) {
-        elemChildren[i].Order = i;
-      }
-      if (!element.Children.Any(x => x.Id == Id)) { element.Children.Add(this); }
-      if (order == default) {
-        Order = element.Children.Count;
-      } else {
+    //  if(container.Id == Parent?.Id) {
 
-      }
+    //  } else {
 
-      return true;
-    }
+    //  }
+    //  Parent = container;
+    //  // Get all draggable
+    //  var elemChildren = ((List<IDraggableElement<T>>)container.Children.Where(x => x.GetType().GetTypeInfo().IsAssignableFrom(typeof(IDraggableElement<T>).GetTypeInfo())).Select(x => (IDraggableElement<T>)x).OrderBy(x => x.Order));
+    //  for(var i = 0; i < elemChildren.Count(); i++) {
+    //    elemChildren[i].Order = i;
+    //  }
+    //  if (!container.Children.Any(x => x.Id == Id)) { container.Children.Add(this); }
+    //  if (order == default) {
+    //    Order = container.Children.Count;
+    //  } else {
+
+    //  }
+
+    //  return true;
+    //}
 
   }
 }
