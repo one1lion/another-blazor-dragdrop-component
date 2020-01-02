@@ -31,6 +31,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// </summary>
     public List<IDragAndDropElement<T>> Sibblings => Parent?.Children?.Where(s => s.Id != Id).ToList();
 
-    void AddChild(IDragAndDropElement<T> element);
+    // TODO: remove this when ready to implement
+    //void AddChild(IDragAndDropElement<T> element);
   }
 }
