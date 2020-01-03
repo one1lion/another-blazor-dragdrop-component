@@ -11,6 +11,9 @@
             added as child elements
             </summary>
         </member>
+        <member name="M:DragAndDrop.Components.DragAndDropContainer.#ctor">
+            <summary>The default constructor</summary>
+        </member>
         <member name="P:DragAndDrop.Components.DragAndDropContainer.Id">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id" />
         </member>
@@ -23,6 +26,44 @@
         <member name="P:DragAndDrop.Components.DragAndDropContainer.Children">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children" />
         </member>
+        <member name="M:DragAndDrop.Components.DragAndDropContainer.Clone">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
+        </member>
+        <member name="M:DragAndDrop.Components.DragAndDropContainer.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)"/>
+        </member>
+        <member name="T:DragAndDrop.Components.DragAndDropItem`1">
+            <summary>
+            An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> that
+            wraps content.  This element is not draggable.
+            </summary>
+            <typeparam name="T">The type of data contained within the element</typeparam>
+        </member>
+        <member name="M:DragAndDrop.Components.DragAndDropItem`1.#ctor">
+            <summary>
+            The default constructor
+            </summary>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropItem`1.Id">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id"/>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropItem`1.Name">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name"/>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropItem`1.Parent">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent"/>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropItem`1.Item">
+            <summary>
+            The item being wrapped by this draggable element
+            </summary>
+        </member>
+        <member name="M:DragAndDrop.Components.DragAndDropItem`1.Clone">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
+        </member>
+        <member name="M:DragAndDrop.Components.DragAndDropItem`1.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)"/>
+        </member>
         <member name="T:DragAndDrop.Components.DraggableGroup">
             <summary>
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
@@ -31,6 +72,9 @@
             moving the entire group (with its children) into the 
             target <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer" />
             </summary>
+        </member>
+        <member name="M:DragAndDrop.Components.DraggableGroup.#ctor">
+            <summary>The default constructor</summary>
         </member>
         <member name="P:DragAndDrop.Components.DraggableGroup.Id">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id" />
@@ -50,12 +94,21 @@
         <member name="P:DragAndDrop.Components.DraggableGroup.Children">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children" />
         </member>
+        <member name="M:DragAndDrop.Components.DraggableGroup.Clone">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
+        </member>
+        <member name="M:DragAndDrop.Components.DraggableGroup.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)"/>
+        </member>
         <member name="T:DragAndDrop.Components.DraggableItem`1">
             <summary>
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
             that can be dragged onto/into <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer" />s
             </summary>
             <typeparam name="T">The type of data contained within the element</typeparam>
+        </member>
+        <member name="M:DragAndDrop.Components.DraggableItem`1.#ctor">
+            <summary>The default constructor</summary>
         </member>
         <member name="P:DragAndDrop.Components.DraggableItem`1.Id">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id" />
@@ -75,7 +128,13 @@
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
         </member>
         <member name="P:DragAndDrop.Components.DraggableItem`1.Parent">
-            <inheritdoc cref="!:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Parent" />
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent" />
+        </member>
+        <member name="M:DragAndDrop.Components.DraggableItem`1.Clone">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
+        </member>
+        <member name="M:DragAndDrop.Components.DraggableItem`1.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)"/>
         </member>
         <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer">
             <summary>
@@ -139,7 +198,7 @@
             </param>
             <returns>Whether prepending the child was successful</returns>
         </member>
-        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.MoveElement(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Nullable{System.Int32})">
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.MoveChild(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Nullable{System.Int32})">
             <summary>
             Move an existing element within this list to a target index
             </summary>
@@ -158,6 +217,36 @@
             <exception cref="T:System.ArgumentOutOfRangeException">
             Throws an Argument Exception if the provided <paramref name="targetIndex"/> value is
             negative or greater than the count of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
+            </exception>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.RemoveChild(DragAndDrop.Components.Interfaces.IDragAndDropElement)">
+            <summary>
+            Remove an existising child of this 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            </summary>
+            <param name="element">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to be removed
+            </param>
+            <returns>
+            The removed child if the requested element exists in the list of children, otherwise null 
+            </returns>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.RemoveChild(System.Int32)">
+            <summary>
+            Remove an existising child of this 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> at the
+            specified index
+            </summary>
+            <param name="index">
+            The index of the child <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to be removed
+            </param>
+            <returns>
+            The removed child if the requested element exists in the list of children, otherwise null 
+            </returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Throws an Argument Exception if the provided <paramref name="index"/> value is
+            negative or greater than or equal to the count of 
             <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
             </exception>
         </member>
@@ -185,9 +274,46 @@
         </member>
         <member name="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Siblings">
             <summary>
-            The other elements nested in the 
-            <see cref="!:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Parent"/> element
+            The other elements nested in this 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent"/>'s element
             </summary>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone">
+            <summary>
+            Creates a deep copy of this element
+            </summary>
+            <returns>A deep copy of this element</returns>
+            <remarks>
+            When determining the logic for cloning, keep in mind that if a property or field is a reference type, 
+            the reference is copied, so it might be best to invoke the "Clone" method for that field as well
+            </remarks>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
+            <summary>
+            Groups this element with the specified <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
+            into a new <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            </summary>
+            <param name="element">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to group with
+            </param>
+            <param name="showFirst">Whether or not this item should appear first in the new group</param>
+            <returns></returns>
+        </member>
+        <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropGroupable">
+            <summary>
+            A specification for a making an IDragAndDropElement groupable 
+            </summary>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropGroupable.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
+            <summary>
+            Groups this element with the specified <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
+            into a new <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            </summary>
+            <param name="element">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to group with
+            </param>
+            <param name="showFirst">Whether or not this item should appear first in the new group</param>
+            <returns></returns>
         </member>
         <member name="T:DragAndDrop.Components.Interfaces.IDraggableElement">
             <summary>
@@ -218,10 +344,68 @@
             Indicates whether the current element can be dropped into or onto a specified target name
             </summary>
             <param name="container"> 
-            The <see cref="!:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Name" /> to test
+            The <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name" /> to test
             whether this element can be dropped into/onto
             </param>
             <returns>Whether or not this element can be dropped into/onto the specified target name</returns>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDraggableElement.AddTo(DragAndDrop.Components.Interfaces.IDragAndDropContainer,System.Nullable{System.Int32})">
+            <summary>
+            Add this element to the target 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            </summary>
+            <param name="targetContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to
+            add this element to
+            </param>
+            <param name="targetIndex">
+            The index (position) within the list of the <paramref name="targetContainer"/> 
+            this item should be added at.  If this is the default value for nullable int,
+            it will be added to the end
+            </param>
+            <returns>Whether or not the add was successful</returns>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDraggableElement.CopyTo(DragAndDrop.Components.Interfaces.IDragAndDropContainer,System.Nullable{System.Int32})">
+            <summary>
+            Copy this element to the target 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            </summary>
+            <param name="targetContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to
+            copy this element to
+            </param>
+            <param name="targetIndex">
+            The index (position) within the list of the <paramref name="targetContainer"/> 
+            the copy of this item should be added at.  If this is the default value for nullable 
+            int, it will be added to the end
+            </param>
+            <returns>Whether or not the add was successful</returns>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDraggableElement.RemoveFrom(DragAndDrop.Components.Interfaces.IDragAndDropContainer)">
+            <summary>
+            Remove this element from the target
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            </summary>
+            <param name="targetContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to
+            remove this element from
+            </param>
+            <returns>Whether or not the remove was successful</returns>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDraggableElement.Move(DragAndDrop.Components.Interfaces.IDragAndDropContainer,System.Nullable{System.Int32})">
+            <summary>
+            Move this element to or within the target 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            </summary>
+            <param name="targetContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to
+            move this element to or within
+            </param>
+            <param name="targetIndex">
+            The index (position) within the list of the <paramref name="targetContainer"/> 
+            this item should be added at.  If this is the default value for nullable int,
+            it will be added to the end
+            </param>
         </member>
         <member name="P:DragAndDrop.Components.DragAndDropContainerComponent`1.Items">
             <summary>The list of child <see cref="!:TItem"/>s</summary>

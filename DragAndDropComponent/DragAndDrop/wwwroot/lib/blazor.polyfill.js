@@ -948,7 +948,6 @@ var wrappedDefineProperty = function defineProperty(target, key, descriptor) {
     && has(descriptor, 'value')
     && !has(descriptor, 'get')
     && !has(descriptor, 'set')
-    // TODO: add validation descriptor w/o calling accessors
     && !descriptor.configurable
     && (!has(descriptor, 'writable') || descriptor.writable)
     && (!has(descriptor, 'enumerable') || descriptor.enumerable)

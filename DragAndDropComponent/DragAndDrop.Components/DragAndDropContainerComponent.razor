@@ -41,7 +41,6 @@
     gnProp = string.IsNullOrWhiteSpace(GroupNameProperty) ? null : t.GetProperty(GroupNameProperty);
     orderProp = string.IsNullOrWhiteSpace(OrderProperty) ? null : t.GetProperty(OrderProperty);
 
-    var i = 0;
     DraggableItems = Items.Select(curItem => new DraggableItem<TItem>() {
       Name = gnProp is { } ? (string)gnProp.GetValue(curItem) : "",
       Item = curItem

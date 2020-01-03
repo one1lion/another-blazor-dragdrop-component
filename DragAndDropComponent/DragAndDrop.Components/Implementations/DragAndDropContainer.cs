@@ -9,6 +9,7 @@ namespace DragAndDrop.Components {
   /// added as child elements
   /// </summary>
   public class DragAndDropContainer : IDragAndDropContainer {
+    /// <summary>The default constructor</summary>
     public DragAndDropContainer() {
       Id = Guid.NewGuid().ToString();
     }
@@ -21,5 +22,21 @@ namespace DragAndDrop.Components {
     public IDragAndDropContainer Parent { get; set; }
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children" />
     public IList<IDragAndDropElement> Children { get; set; }
+
+    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
+    public IDraggableElement Clone() {
+      // TODO: Implement
+      var newDNDContainer = new DragAndDropContainer() {
+        Name = $"{Name} (1)"
+      };
+
+      throw new NotImplementedException();
+    }
+
+    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith(IDragAndDropElement, bool)"/>
+    public IDragAndDropContainer GroupWith(IDragAndDropElement element, bool showFirst = false) {
+      // TODO: Implement
+      throw new NotImplementedException();
+    }
   }
 }
