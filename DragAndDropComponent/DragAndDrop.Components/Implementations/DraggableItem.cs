@@ -9,6 +9,7 @@ namespace DragAndDrop.Components {
   /// </summary>
   /// <typeparam name="T">The type of data contained within the element</typeparam>
   public class DraggableItem<T> : IDraggableElement {
+    /// <summary>The default constructor</summary>
     public DraggableItem() {
       Id = Guid.NewGuid().ToString();
     }
@@ -28,7 +29,19 @@ namespace DragAndDrop.Components {
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
     public bool DragEnabled { get; set; } = true;
 
-    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Parent" />
+    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent" />
     public IDragAndDropContainer Parent { get; set; }
+
+    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
+    public IDraggableElement Clone() {
+      // TODO: Implement
+      throw new NotImplementedException();
+    }
+
+    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith"/>
+    public IDragAndDropContainer GroupWith(IDragAndDropElement element, bool showFirst = false) {
+      // TODO: Implement
+      throw new NotImplementedException();
+    }
   }
 }

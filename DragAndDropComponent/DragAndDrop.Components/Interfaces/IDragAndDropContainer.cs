@@ -104,7 +104,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// negative or greater than the count of 
     /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
     /// </exception>
-    public bool MoveElement(IDragAndDropElement existingChild, int? targetIndex = default) {
+    public bool MoveChild(IDragAndDropElement existingChild, int? targetIndex = default) {
       if (Children is null) { Children = new List<IDragAndDropElement>(); }
 
       if (existingChild is null || !Children.Any(ce => ce.Id == existingChild.Id)) { return false; }
@@ -125,6 +125,58 @@ namespace DragAndDrop.Components.Interfaces {
       Children.RemoveAt(originalIndex + (originalIndex > targetIndex ? 1 : 0));
 
       return true;
+    }
+    #endregion
+
+    #region Remove
+    /// <summary>
+    /// Remove an existising child of this 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+    /// </summary>
+    /// <param name="element">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to be removed
+    /// </param>
+    /// <returns>
+    /// The removed child if the requested element exists in the list of children, otherwise null 
+    /// </returns>
+    public IDragAndDropElement RemoveChild(IDragAndDropElement element) {
+      if (Children is null) { Children = new List<IDragAndDropElement>(); }
+
+      if (element is null || !Children.Contains(element)) { return null; }
+
+      Children.Remove(element);
+      element.Parent = null;
+
+      return element;
+    }
+
+    /// <summary>
+    /// Remove an existising child of this 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> at the
+    /// specified index
+    /// </summary>
+    /// <param name="index">
+    /// The index of the child <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to be removed
+    /// </param>
+    /// <returns>
+    /// The removed child if the requested element exists in the list of children, otherwise null 
+    /// </returns>
+    /// <exception cref="System.ArgumentOutOfRangeException">
+    /// Throws an Argument Exception if the provided <paramref name="index"/> value is
+    /// negative or greater than or equal to the count of 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
+    /// </exception>
+    public IDragAndDropElement RemoveChild(int index) {
+      if (Children is null) { return null; }
+
+      if (index < 0) { throw new ArgumentOutOfRangeException("The specified target index must be greater than or equal to 0."); }
+      if (index > Children.Count()) { throw new ArgumentOutOfRangeException("The specified target index must be less than the count of children."); }
+
+      var element = Children[index];
+      Children.Remove(element);
+      element.Parent = null;
+
+      return element;
     }
     #endregion
   }

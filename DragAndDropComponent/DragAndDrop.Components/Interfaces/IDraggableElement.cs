@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace DragAndDrop.Components.Interfaces {
   /// <summary>
@@ -27,40 +29,92 @@ namespace DragAndDrop.Components.Interfaces {
     /// Indicates whether the current element can be dropped into or onto a specified target name
     /// </summary>
     /// <param name="container"> 
-    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Name" /> to test
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Name" /> to test
     /// whether this element can be dropped into/onto
     /// </param>
     /// <returns>Whether or not this element can be dropped into/onto the specified target name</returns>
     public bool CanDrop(IDragAndDropContainer container) => container is { } && AllowedTargetNames is { } && AllowedTargetNames.Contains(container.Name);
 
-    // TODO: Remove this when ready to implement
-    //void GroupWith(IDragAndDropElement element);
+    /// <summary>
+    /// Add this element to the target 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+    /// </summary>
+    /// <param name="targetContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to
+    /// add this element to
+    /// </param>
+    /// <param name="targetIndex">
+    /// The index (position) within the list of the <paramref name="targetContainer"/> 
+    /// this item should be added at.  If this is the default value for nullable int,
+    /// it will be added to the end
+    /// </param>
+    /// <returns>Whether or not the add was successful</returns>
+    public bool AddTo(IDragAndDropContainer targetContainer, int? targetIndex = default) {
+      if(!CanDrop(targetContainer)) { return false; }
+      return targetContainer.AddChild(this, targetIndex);
+    }
 
+    /// <summary>
+    /// Copy this element to the target 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+    /// </summary>
+    /// <param name="targetContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to
+    /// copy this element to
+    /// </param>
+    /// <param name="targetIndex">
+    /// The index (position) within the list of the <paramref name="targetContainer"/> 
+    /// the copy of this item should be added at.  If this is the default value for nullable 
+    /// int, it will be added to the end
+    /// </param>
+    /// <returns>Whether or not the add was successful</returns>
+    public bool CopyTo(IDragAndDropContainer targetContainer, int? targetIndex = default) {
+      var copiedElement = this.Clone();
+      copiedElement.Parent = targetContainer;
+      if(!copiedElement.AllowedTargetNames.Contains(targetContainer.Name)) { copiedElement.AllowedTargetNames.Add(targetContainer.Name); }
+      return targetContainer.AddChild(copiedElement, targetIndex);
+    }
 
+    /// <summary>
+    /// Remove this element from the target
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+    /// </summary>
+    /// <param name="targetContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to
+    /// remove this element from
+    /// </param>
+    /// <returns>Whether or not the remove was successful</returns>
+    public IDraggableElement RemoveFrom(IDragAndDropContainer targetContainer) {
+      return (IDraggableElement)targetContainer.RemoveChild(this);
+    }
 
-    //public bool MoveInto(IDragAndDropContainer container, int? order = default) {
-    //  if (container is null || !CanDrop(container)) { return false; }
+    /// <summary>
+    /// Move this element to or within the target 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+    /// </summary>
+    /// <param name="targetContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to
+    /// move this element to or within
+    /// </param>
+    /// <param name="targetIndex">
+    /// The index (position) within the list of the <paramref name="targetContainer"/> 
+    /// this item should be added at.  If this is the default value for nullable int,
+    /// it will be added to the end
+    /// </param>
+    public bool Move(IDragAndDropContainer targetContainer, int? targetIndex = default) {
+      var movingWithinGroup = Parent.Name == targetContainer.Name;
+      var originalIndex = Parent.Children.IndexOf(this);
 
-    //  if(container.Id == Parent?.Id) {
+      if (movingWithinGroup && originalIndex == targetIndex) { return true; }
+      if (!CanDrop(targetContainer)) { return false; }
 
-    //  } else {
-
-    //  }
-    //  Parent = container;
-    //  // Get all draggable
-    //  var elemChildren = ((List<IDraggableElement>)container.Children.Where(x => x.GetType().GetTypeInfo().IsAssignableFrom(typeof(IDraggableElement).GetTypeInfo())).Select(x => (IDraggableElement)x).OrderBy(x => x.Order));
-    //  for(var i = 0; i < elemChildren.Count(); i++) {
-    //    elemChildren[i].Order = i;
-    //  }
-    //  if (!container.Children.Any(x => x.Id == Id)) { container.Children.Add(this); }
-    //  if (order == default) {
-    //    Order = container.Children.Count;
-    //  } else {
-
-    //  }
-
-    //  return true;
-    //}
-
+      if (movingWithinGroup) {
+        return targetContainer.MoveChild(this, targetIndex);
+      } else {
+        Parent.RemoveChild(this);
+        targetContainer.AddChild(this, targetIndex);
+        return true;
+      }
+    }
   }
 }
