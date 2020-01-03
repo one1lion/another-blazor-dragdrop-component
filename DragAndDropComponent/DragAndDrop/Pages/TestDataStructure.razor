@@ -10,7 +10,7 @@
   <div class="draganddrop-container" ondragover="event.preventDefault();">
     <h3>@container.Name</h3>
     @for (var i = 0; i < container.Children.Count(); i++) {
-      var group = container.Children[i] as DraggableGroup<string>;
+      var group = container.Children[i] as DraggableGroup;
       <div class="draganddrop-group"
            draggable="@(group.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))"
            ondragover="event.preventDefault();"
@@ -23,7 +23,7 @@
             Note: The current Group's order is based on its index within the parent container:
               group.Parent.Children.IndexOf(group)
           *@
-          @group.Name (@((group).Id))
+          @group.Name
         </div>
         <div class="draganddrop-item-list">
           @for (var j = 0; j < group.Children.Count(); j++) {
@@ -45,7 +45,7 @@
                   Note: The current Item's order is based on its index within the parent container:
                     item.Parent.Children.IndexOf(item)
                 *@
-                @item.Item (@((item as IDragAndDropElement).Id))
+                @item.Item
               </div>
               <div class="draganddrop-dropafter"
                    @ondrop="@((e) => HandleDrop(e, group, curItemIndex + 1))"
@@ -62,7 +62,7 @@
 @code {
   DragAndDropContainer container;
   bool dragging;
-  IDraggableElement<string> curDraggedElement;
+  IDraggableElement curDraggedElement;
 
   protected override void OnInitialized() {
     container = new DragAndDropContainer() {
@@ -73,7 +73,7 @@
     // Create 4 sample groups with 6 items each
     var intList = new List<int>() { 1, 2, 3, 4 };
     for (var i = 0; i < 4; i++) {
-      var group = new DraggableGroup<string>() {
+      var group = new DraggableGroup() {
         Name = $"Group {i + 1}",
         AllowedTargetNames = intList.Where(il => il != i).Select(il => $"Group {il + 1}").ToList(),
         Parent = container,
@@ -92,7 +92,7 @@
     }
   }
 
-  void HandleDragStart(DragEventArgs e, IDraggableElement<string> element) {
+  void HandleDragStart(DragEventArgs e, IDraggableElement element) {
     curDraggedElement = element;
     dragging = true;
   }
