@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DragAndDrop.Components</name>
+    </assembly>
+    <members>
+        <member name="T:DragAndDrop.Components.DragAndDropContainer">
+            <summary>
+            An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            that allows <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>s to be
+            added as child elements
+            </summary>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropContainer.Id">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id" />
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropContainer.Name">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name" />
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropContainer.Parent">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent" />
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropContainer.Children">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children" />
+        </member>
+        <member name="T:DragAndDrop.Components.DraggableGroup">
+            <summary>
+            An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
+            and <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            that can be dragged onto/into other <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer" />s,
+            moving the entire group (with its children) into the 
+            target <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer" />
+            </summary>
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableGroup.Id">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id" />
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableGroup.Name">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name" />
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableGroup.DragEnabled">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableGroup.AllowedTargetNames">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames" />
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableGroup.Parent">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent" />
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableGroup.Children">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children" />
+        </member>
+        <member name="T:DragAndDrop.Components.DraggableItem`1">
+            <summary>
+            An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
+            that can be dragged onto/into <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer" />s
+            </summary>
+            <typeparam name="T">The type of data contained within the element</typeparam>
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableItem`1.Id">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id" />
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableItem`1.Name">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name" />
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableItem`1.Item">
+            <summary>
+            The item being wrapped by this draggable element
+            </summary>
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableItem`1.AllowedTargetNames">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames" />
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableItem`1.DragEnabled">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableItem`1.Parent">
+            <inheritdoc cref="!:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Parent" />
+        </member>
+        <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer">
+            <summary>
+            Extends the basic <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
+            by adding a <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
+            property, enabling this element to contain child 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>s
+            </summary>
+        </member>
+        <member name="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children">
+            <summary>
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement" />s 
+            nested within this element
+            </summary>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.AddChild(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Nullable{System.Int32})">
+            <summary>
+            Add an element that does not already exist as a child of this 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            </summary>
+            <param name="element">
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to be added as a 
+            child
+            </param>
+            <param name="targetIndex">
+            The index position in the list of
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> to
+            add the <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> at.  If
+            this is not specified (default), it will be added at the end
+            </param>
+            <returns>Whether adding the child was successful</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Throws an Argument Exception if the provided <paramref name="targetIndex"/> value is
+            negative or greater than the count of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
+            </exception>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.AppendChild(DragAndDrop.Components.Interfaces.IDragAndDropElement)">
+            <summary>
+            Append an element that does not already exist as a child of this 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            to the end of the list of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
+            </summary>
+            <param name="element">
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to be added as a 
+            child
+            </param>
+            <returns>Whether appending the child was successful</returns>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.PrependChild(DragAndDrop.Components.Interfaces.IDragAndDropElement)">
+            <summary>
+            Prepend an element that does not already exist as a child of this 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            to the beginning of the list of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
+            </summary>
+            <param name="element">
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to be added as a 
+            child
+            </param>
+            <returns>Whether prepending the child was successful</returns>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.MoveElement(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Nullable{System.Int32})">
+            <summary>
+            Move an existing element within this list to a target index
+            </summary>
+            <param name="existingChild">
+            An existing <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+            in this container's list of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+            </param>
+            <param name="targetIndex">
+            The index position in the list of
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> to
+            move the <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to.  If
+            this is not specified (default), it will be moved to the end
+            </param>
+            <returns>Whether moving the child was successful</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Throws an Argument Exception if the provided <paramref name="targetIndex"/> value is
+            negative or greater than the count of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
+            </exception>
+        </member>
+        <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropElement">
+            <summary>
+            The basic element for a Drag And Drop Component of which all elements are derived
+            </summary>
+            <remarks>
+            By default, Drag And Drop elements that implement this are static elements managed by
+            this control.  To make an element draggable, it should implement
+            <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
+            </remarks>
+        </member>
+        <member name="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id">
+            <summary>A unique identifier for the element</summary>
+        </member>
+        <member name="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name">
+            <summary>The name for this element</summary>
+        </member>
+        <member name="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent">
+            <summary>
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer" /> 
+            that this element is nested in
+            </summary>
+        </member>
+        <member name="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Siblings">
+            <summary>
+            The other elements nested in the 
+            <see cref="!:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Parent"/> element
+            </summary>
+        </member>
+        <member name="T:DragAndDrop.Components.Interfaces.IDraggableElement">
+            <summary>
+            An <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> that is
+            specified to be draggable
+            </summary>
+            <remarks>
+            An element that only implements this interface cannot contain children by default.
+            To allow children, also implement the 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> interface.
+            </remarks>
+        </member>
+        <member name="P:DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled">
+            <summary>
+            A flag indicating whether or not this element should 
+            be allowed to be dragged currently
+            </summary>
+        </member>
+        <member name="P:DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames">
+            <summary>
+            A list of target 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name" />s
+            the item can be dropped into/onto
+            </summary>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDraggableElement.CanDrop(DragAndDrop.Components.Interfaces.IDragAndDropContainer)">
+            <summary>
+            Indicates whether the current element can be dropped into or onto a specified target name
+            </summary>
+            <param name="container"> 
+            The <see cref="!:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Name" /> to test
+            whether this element can be dropped into/onto
+            </param>
+            <returns>Whether or not this element can be dropped into/onto the specified target name</returns>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropContainerComponent`1.Items">
+            <summary>The list of child <see cref="!:TItem"/>s</summary>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropContainerComponent`1.GroupNameProperty">
+            <summary>
+            The property of <see cref="!:TItem" /> to be used as the
+            <see cref="P:DragAndDrop.Components.DragAndDropGroup`1.Name"/>
+            </summary>
+        </member>
+    </members>
+</doc>
