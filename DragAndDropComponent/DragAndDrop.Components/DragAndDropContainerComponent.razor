@@ -44,7 +44,6 @@
     var i = 0;
     DraggableItems = Items.Select(curItem => new DraggableItem<TItem>() {
       Name = gnProp is { } ? (string)gnProp.GetValue(curItem) : "",
-      Order = orderProp is { } ? (int)orderProp.GetValue(curItem) : i++,
       Item = curItem
     }).ToList();
   }
