@@ -9,7 +9,7 @@
   @((MarkupString)$"<{(Style == DragAndDropStyle.List ? "ul" : "div")} class=\"draganddrop-item-list\">")
   <CascadingValue Name="DragAndDropContainer" Value="Container">
     <CascadingValue Name="DragAndDropGroup" Value="this">
-      @foreach (var curDNDItem in DraggableItems.Where(x => x.Name == Name).OrderBy(x => x.Order)) {
+      @foreach (var curDNDItem in DraggableItems.Where(x => x.Name == Name)) {
         @if (Style == DragAndDropStyle.List) {
           <DragAndDropListItem Model="curDNDItem">
             <ItemTemplate>
@@ -66,10 +66,8 @@
     t = typeof(TItem);
     orderProp = string.IsNullOrWhiteSpace(OrderProperty) ? null : t.GetProperty(OrderProperty);
 
-    var i = 0;
     DraggableItems = Items.Select(curItem => new DraggableItem<TItem>() {
       Name = Name,
-      Order = orderProp is { } ? (int)orderProp.GetValue(curItem) : i++,
       Item = curItem
     }).ToList();
   }
