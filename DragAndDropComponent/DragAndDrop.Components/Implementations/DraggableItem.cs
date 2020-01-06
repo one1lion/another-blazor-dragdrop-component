@@ -38,10 +38,17 @@ namespace DragAndDrop.Components {
       throw new NotImplementedException();
     }
 
-    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith"/>
-    public IDragAndDropContainer GroupWith(IDragAndDropElement element, bool showFirst = false) {
-      // TODO: Implement
-      throw new NotImplementedException();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="element"></param>
+    /// <param name="makeDraggable"></param>
+    /// <param name="showFirst"></param>
+    /// <returns></returns>
+    public IDragAndDropContainer GroupWith(IDragAndDropElement element, bool makeDraggable, bool showFirst = false) {
+      return makeDraggable ? 
+        (IDragAndDropContainer)((IDragAndDropElement)this).GroupWith<DraggableGroup>(element, showFirst) :
+        (IDragAndDropContainer)((IDragAndDropElement)this).GroupWith<DragAndDropContainer>(element, showFirst);
     }
   }
 }
