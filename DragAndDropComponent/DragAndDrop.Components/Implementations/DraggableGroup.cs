@@ -31,6 +31,7 @@ namespace DragAndDrop.Components {
 
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
     public IDraggableElement Clone() {
+
       // TODO: Implement
       throw new NotImplementedException();
     }
