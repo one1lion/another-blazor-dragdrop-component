@@ -41,10 +41,36 @@ namespace DragAndDrop.Components.Interfaces {
     IDraggableElement Clone();
 
     /// <summary>
+    /// Creates a deep copy of this element
+    /// </summary>
+    /// <typeparam name="TDragAndDropElement">
+    /// The implemented type if <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
+    /// </typeparam>
+    /// <returns>A deep copy of this element.  This includes a copy of any reference elements</returns>
+    public TDragAndDropElement Clone<TDragAndDropElement>() where TDragAndDropElement : IDragAndDropElement {
+      // Create a new instance of TDragAndDropElement that will be the copy of this element
+      var copiedElement = (TDragAndDropElement)Activator.CreateInstance(typeof(TDragAndDropElement));
+      // Copy all properties that are not references
+
+      // For each remaining property that is an implementation of IDragAndDropElement,
+      //   set the value of the property to the Clone() method of the IDragAndDropElement
+      // Note: need to check if the property is an enumerable/iterable of IDragAndDropElements and clone each
+      //       element in the enumerable/iterable
+      // For each remaining property
+      // Try to use the Clone/Copy method for the referenced object
+      // Then try to use MemberwiseClone
+      // Otherwise, use the reference
+
+      return copiedElement;
+    }
+
+    /// <summary>
     /// Groups this element with the specified <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
     /// into a new <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
     /// </summary>
-    /// <typeparam name="TDragAndDropContainer"></typeparam>
+    /// <typeparam name="TDragAndDropContainer">
+    /// The implemented type if <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+    /// </typeparam>
     /// <param name="element">
     /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to group with
     /// </param>
@@ -54,17 +80,27 @@ namespace DragAndDrop.Components.Interfaces {
       // Hold the parent reference of the element being grouped with (if the element has a parent)
       var containerParent = element.Parent;
       // Construct the Name for the new container
-      var newContName = showFirst ? $"{Name}_{element.Name} Group" : $"{element.Name}_{Name} Group";
-      var myIndex = Parent.Children.IndexOf(this);
-      Type myType = this.GetType();
+      var newContName = $"({(showFirst ? $"{Name}_{element.Name} Group" : $"{element.Name}_{Name} Group")})";
+      // Hold the current index of this element
+      var myIndex = Parent is null ? 0 : Parent.Children.IndexOf(this);
+      // Hold the current index of the element being grouped with
+      var targetIndex = (containerParent is null ? 0 : containerParent.Children.IndexOf(element));
+      // Subtract 1 from the target index if this element's parent is the same as the element being grouped with's parent
+      //   and this element's index is lower than the element being grouped with's index
+      targetIndex -= (Parent is { } && Parent == containerParent && myIndex < targetIndex ? 1 : 0);
+
+      // Determine if this element has a property named "AllowedTargetNames"
+      Type myType = GetType();
       PropertyInfo myAllowedTargets = myType.GetProperty("AllowedTargetNames");
-      Type elemType = element.GetType();
-      PropertyInfo elemAllowedTargets = elemType.GetProperty("AllowedTargetNames");
       // If this element has an AllowedTargetNames property, add the new group name to it if it doesn't already contain it
       if (myAllowedTargets is { }) {
         var curTargets = (List<string>)myAllowedTargets.GetValue(this);
         if (!curTargets.Contains(newContName)) { curTargets.Add(newContName); }
       }
+
+      // Determine if the element being grouped with has a property named "AllowedTargetNames"
+      Type elemType = element.GetType();
+      PropertyInfo elemAllowedTargets = elemType.GetProperty("AllowedTargetNames");
       // If the target element has an AllowedTargetNames property, add the new group name to it if it doesn't already contain it
       if (elemAllowedTargets is { }) {
         var curTargets = (List<string>)elemAllowedTargets.GetValue(this);
@@ -72,17 +108,20 @@ namespace DragAndDrop.Components.Interfaces {
       }
 
       // Make a new container for the elements
-      Type newContType = typeof(TDragAndDropContainer);
-      PropertyInfo nameProp = newContType.GetProperty("Name");
       var newContainer = (TDragAndDropContainer)Activator.CreateInstance(typeof(TDragAndDropContainer));
 
+      // Set the name value to name constructed above
       newContainer.Name = newContName;
 
-      Parent?.RemoveChild(this);
+      // Add the elements in order based on the "showFirst" flag
       newContainer.AddChild(element);
       newContainer.AddChild(this, showFirst ? 0 : 1);
-      if (containerParent is { }) { containerParent.AddChild(newContainer, myIndex); }
 
+      // If the element that this element is being grouped with had a parent,
+      //   add the new container to that parent's children at the original element's index
+      if (containerParent is { }) { containerParent.AddChild(newContainer, targetIndex); }
+
+      // Return the newly created IDragAndDropContainer
       return newContainer;
     }
   }

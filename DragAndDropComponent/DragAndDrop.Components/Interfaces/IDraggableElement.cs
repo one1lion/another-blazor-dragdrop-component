@@ -51,7 +51,8 @@ namespace DragAndDrop.Components.Interfaces {
     /// <returns>Whether or not the add was successful</returns>
     public bool AddTo(IDragAndDropContainer targetContainer, int? targetIndex = default) {
       if(!CanDrop(targetContainer)) { return false; }
-      return targetContainer.AddChild(this, targetIndex);
+      targetContainer.AddChild(this, targetIndex);
+      return true;
     }
 
     /// <summary>
@@ -69,10 +70,11 @@ namespace DragAndDrop.Components.Interfaces {
     /// </param>
     /// <returns>Whether or not the add was successful</returns>
     public bool CopyTo(IDragAndDropContainer targetContainer, int? targetIndex = default) {
-      var copiedElement = this.Clone();
+      var copiedElement = Clone();
       copiedElement.Parent = targetContainer;
       if(!copiedElement.AllowedTargetNames.Contains(targetContainer.Name)) { copiedElement.AllowedTargetNames.Add(targetContainer.Name); }
-      return targetContainer.AddChild(copiedElement, targetIndex);
+      targetContainer.AddChild(copiedElement, targetIndex);
+      return true;
     }
 
     /// <summary>

@@ -172,10 +172,17 @@
             this is not specified (default), it will be added at the end
             </param>
             <returns>Whether adding the child was successful</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Throws an Argument Null Exception if the provided <paramref name="element"/> is null
+            </exception>
             <exception cref="T:System.ArgumentOutOfRangeException">
             Throws an Argument Exception if the provided <paramref name="targetIndex"/> value is
             negative or greater than the count of 
             <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
+            </exception>
+            <exception cref="T:System.OperationCanceledException">
+            Throws an Operation Canceled Exception if the <paramref name="element"/> already
+            exists as a child
             </exception>
         </member>
         <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.AppendChild(DragAndDrop.Components.Interfaces.IDragAndDropElement)">
@@ -294,12 +301,23 @@
             the reference is copied, so it might be best to invoke the "Clone" method for that field as well
             </remarks>
         </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1">
+            <summary>
+            Creates a deep copy of this element
+            </summary>
+            <typeparam name="TDragAndDropElement">
+            The implemented type if <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
+            </typeparam>
+            <returns>A deep copy of this element.  This includes a copy of any reference elements</returns>
+        </member>
         <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith``1(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
             <summary>
             Groups this element with the specified <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
             into a new <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
             </summary>
-            <typeparam name="TDragAndDropContainer"></typeparam>
+            <typeparam name="TDragAndDropContainer">
+            The implemented type if <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            </typeparam>
             <param name="element">
             The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to group with
             </param>
