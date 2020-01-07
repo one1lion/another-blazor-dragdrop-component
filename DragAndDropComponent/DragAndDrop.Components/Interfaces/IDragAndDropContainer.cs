@@ -32,24 +32,32 @@ namespace DragAndDrop.Components.Interfaces {
     /// this is not specified (default), it will be added at the end
     /// </param>
     /// <returns>Whether adding the child was successful</returns>
+    /// <exception cref="System.ArgumentNullException">
+    /// Throws an Argument Null Exception if the provided <paramref name="element"/> is null
+    /// </exception>
     /// <exception cref="System.ArgumentOutOfRangeException">
     /// Throws an Argument Exception if the provided <paramref name="targetIndex"/> value is
     /// negative or greater than the count of 
     /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
     /// </exception>
-    public bool AddChild(IDragAndDropElement element, int? targetIndex = default) {
+    /// <exception cref="System.OperationCanceledException">
+    /// Throws an Operation Canceled Exception if the <paramref name="element"/> already
+    /// exists as a child
+    /// </exception>
+    public void AddChild(IDragAndDropElement element, int? targetIndex = default) {
+      if (element is null) { throw new ArgumentNullException("The element to be added is null."); }
+
       if (Children is null) { Children = new List<IDragAndDropElement>(); }
+      if (Children.Any(ce => ce.Id == element.Id)) { throw new OperationCanceledException("The element already exists as a child.  Use the MoveChild method to reposition an existing child element."); }
+      if (!targetIndex.HasValue) { targetIndex = Children.Count(); }
 
-      if (element is null || Children.Any(ce => ce.Id == element.Id)) { return false; }
-      if (targetIndex == default) { targetIndex = Children.Count(); }
+      if (targetIndex.Value < 0) { throw new ArgumentOutOfRangeException("The specified target index must be greater than or equal to 0."); }
+      if (targetIndex.Value > Children.Count()) { throw new ArgumentOutOfRangeException("The specified target index must be less than or equal to the count of children."); }
 
-      if (targetIndex < 0) { throw new ArgumentOutOfRangeException("The specified target index must be greater than or equal to 0."); }
-      if (targetIndex > Children.Count()) { throw new ArgumentOutOfRangeException("The specified target index must be less than or equal to the count of children."); }
+      // TODO: Remove from existing parent
 
       Children.Insert(targetIndex.Value, element);
       element.Parent = this;
-
-      return true;
     }
 
     /// <summary>
@@ -63,8 +71,8 @@ namespace DragAndDrop.Components.Interfaces {
     /// child
     /// </param>
     /// <returns>Whether appending the child was successful</returns>
-    public bool AppendChild(IDragAndDropElement element) {
-      return AddChild(element);
+    public void AppendChild(IDragAndDropElement element) {
+      AddChild(element);
     }
 
     /// <summary>
@@ -78,8 +86,8 @@ namespace DragAndDrop.Components.Interfaces {
     /// child
     /// </param>
     /// <returns>Whether prepending the child was successful</returns>
-    public bool PrependChild(IDragAndDropElement element) {
-      return AddChild(element, 0);
+    public void PrependChild(IDragAndDropElement element) {
+      AddChild(element, 0);
     }
     #endregion
 

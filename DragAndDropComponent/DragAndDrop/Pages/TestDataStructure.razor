@@ -90,6 +90,64 @@
       }
       container.Children.Add(group);
     }
+
+    var item1 = new DraggableItem<string>() {
+      Name = "MyName",
+      AllowedTargetNames = new List<string>() { "Group 1" },
+      DragEnabled = true,
+      Parent = (DraggableGroup)container.Children[0],
+      Item = "Part of new group"
+    };
+
+    ((DraggableGroup)container.Children[0]).Children.Add(item1);
+
+    var item2 = new DraggableItem<string>() {
+      Name = "OtherName",
+      AllowedTargetNames = new List<string>() { "Group 2" },
+      DragEnabled = true,
+      Parent = (DraggableGroup)container.Children[1],
+      Item = "Other part of new group"
+    };
+
+    ((DraggableGroup)container.Children[1]).Children.Add(item2);
+
+    var item3 = new DragAndDropItem<string>() {
+      Name = "ImmovableDnDItem",
+      Parent = container,
+      Item = "You cannot move me"
+    };
+
+    container.Children.Insert(0, item3);
+
+    var newGroup = item1.GroupWith(item2, true, false);
+    // Truths about parents
+    var thisIsTrue = (newGroup.Parent == container.Children[1]);
+    thisIsTrue = (item1.Parent == newGroup);
+    thisIsTrue = (item2.Parent == newGroup);
+
+    // Truths about children
+    thisIsTrue = (newGroup.Children.Count == 2);
+    thisIsTrue = (newGroup.Children.Contains(item1));
+    thisIsTrue = (newGroup.Children.Contains(item2));
+
+    // Truths about names
+    var compositeName = $"{item1.Name}_{item2.Name} Group";
+    thisIsTrue = (newGroup.Name == compositeName);
+    thisIsTrue = (item1.AllowedTargetNames.Contains(compositeName));
+    thisIsTrue = (item2.AllowedTargetNames.Contains(compositeName));
+
+    // Truths about order
+    var otherNewGroup = newGroup.GroupWith<DraggableGroup>(item3, true);
+    thisIsTrue = (otherNewGroup.Parent == container);
+    thisIsTrue = (newGroup.Parent == otherNewGroup);
+    thisIsTrue = (item3.Parent == otherNewGroup);
+
+    compositeName = $"{item3.Name}_{newGroup.Name} Group";
+    // (ImmovableDnDItem_(MyName_OtherName Group))
+
+    thisIsTrue = (otherNewGroup.Children.Count == 2);
+
+
   }
 
   void HandleDragStart(DragEventArgs e, IDraggableElement element) {
