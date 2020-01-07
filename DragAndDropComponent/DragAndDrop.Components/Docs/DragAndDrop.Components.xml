@@ -61,9 +61,6 @@
         <member name="M:DragAndDrop.Components.DragAndDropItem`1.Clone">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
         </member>
-        <member name="M:DragAndDrop.Components.DragAndDropItem`1.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean,System.Boolean)">
-            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith``1(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)"/>
-        </member>
         <member name="T:DragAndDrop.Components.DraggableGroup">
             <summary>
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
@@ -76,29 +73,11 @@
         <member name="M:DragAndDrop.Components.DraggableGroup.#ctor">
             <summary>The default constructor</summary>
         </member>
-        <member name="P:DragAndDrop.Components.DraggableGroup.Id">
-            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id" />
-        </member>
-        <member name="P:DragAndDrop.Components.DraggableGroup.Name">
-            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name" />
-        </member>
         <member name="P:DragAndDrop.Components.DraggableGroup.DragEnabled">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
         </member>
         <member name="P:DragAndDrop.Components.DraggableGroup.AllowedTargetNames">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames" />
-        </member>
-        <member name="P:DragAndDrop.Components.DraggableGroup.Parent">
-            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent" />
-        </member>
-        <member name="P:DragAndDrop.Components.DraggableGroup.Children">
-            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children" />
-        </member>
-        <member name="M:DragAndDrop.Components.DraggableGroup.Clone">
-            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
-        </member>
-        <member name="M:DragAndDrop.Components.DraggableGroup.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
-            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith``1(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)"/>
         </member>
         <member name="T:DragAndDrop.Components.DraggableItem`1">
             <summary>
@@ -110,37 +89,11 @@
         <member name="M:DragAndDrop.Components.DraggableItem`1.#ctor">
             <summary>The default constructor</summary>
         </member>
-        <member name="P:DragAndDrop.Components.DraggableItem`1.Id">
-            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id" />
-        </member>
-        <member name="P:DragAndDrop.Components.DraggableItem`1.Name">
-            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name" />
-        </member>
-        <member name="P:DragAndDrop.Components.DraggableItem`1.Item">
-            <summary>
-            The item being wrapped by this draggable element
-            </summary>
-        </member>
         <member name="P:DragAndDrop.Components.DraggableItem`1.AllowedTargetNames">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames" />
         </member>
         <member name="P:DragAndDrop.Components.DraggableItem`1.DragEnabled">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
-        </member>
-        <member name="P:DragAndDrop.Components.DraggableItem`1.Parent">
-            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent" />
-        </member>
-        <member name="M:DragAndDrop.Components.DraggableItem`1.Clone">
-            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
-        </member>
-        <member name="M:DragAndDrop.Components.DraggableItem`1.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="element"></param>
-            <param name="makeDraggable"></param>
-            <param name="showFirst"></param>
-            <returns></returns>
         </member>
         <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer">
             <summary>
@@ -324,21 +277,48 @@
             <param name="showFirst">Whether or not this item should appear first in the new group</param>
             <returns>The new <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/></returns>
         </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean,System.Boolean)">
+            <summary>
+            A convenience method for returning either a 
+            <see cref="T:DragAndDrop.Components.DragAndDropContainer" /> or a
+            <see cref="T:DragAndDrop.Components.DraggableGroup" />
+            </summary>
+            <param name="element">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
+            to group this element with
+            </param>
+            <param name="makeDraggable">
+            If true, this will return a <see cref="T:DragAndDrop.Components.DraggableGroup" />, otherwise it will return
+            a <see cref="T:DragAndDrop.Components.DragAndDropContainer" />
+            </param>
+            <param name="showFirst">Whether or not this item should appear first in the new group</param>
+            <returns>
+            If <paramref name="makeDraggable"/> is true, a <see cref="T:DragAndDrop.Components.DraggableGroup" />, 
+            otherwise a <see cref="T:DragAndDrop.Components.DragAndDropContainer" />
+            </returns>
+        </member>
         <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropGroupable">
             <summary>
             A specification for a making an IDragAndDropElement groupable 
             </summary>
         </member>
-        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropGroupable.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropGroupable.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropGroupable,System.Boolean)">
             <summary>
-            Groups this element with the specified <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
+            Groups this element with the specified <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropGroupable"/>
             into a new <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
             </summary>
             <param name="element">
-            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to group with
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropGroupable"/> to group with
             </param>
             <param name="showFirst">Whether or not this item should appear first in the new group</param>
             <returns></returns>
+        </member>
+        <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropSeparator">
+            <summary>
+            A specification for a making an IDragAndDropElement into a separator element, 
+            such as drop target (Drop Before, Drop After), or simply an element to 
+            place between Children in a container.
+            </summary>
         </member>
         <member name="T:DragAndDrop.Components.Interfaces.IDraggableElement">
             <summary>

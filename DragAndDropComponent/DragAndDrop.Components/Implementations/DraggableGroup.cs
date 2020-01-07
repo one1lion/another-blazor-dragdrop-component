@@ -10,36 +10,13 @@ namespace DragAndDrop.Components {
   /// moving the entire group (with its children) into the 
   /// target <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer" />
   /// </summary>
-  public class DraggableGroup : IDraggableElement, IDragAndDropContainer {
+  public class DraggableGroup : DragAndDropContainer, IDraggableElement {
     /// <summary>The default constructor</summary>
-    public DraggableGroup() {
-      Id = Guid.NewGuid().ToString();
-    }
+    public DraggableGroup() : base() { }
 
-    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Id" />
-    public string Id { get; }
-    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Name" />
-    public string Name { get; set; }
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
     public bool DragEnabled { get; set; } = true;
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames" />
     public List<string> AllowedTargetNames { get; set; }
-    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent" />
-    public IDragAndDropContainer Parent { get; set; }
-    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children" />
-    public IList<IDragAndDropElement> Children { get; set; }
-
-    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
-    public IDraggableElement Clone() {
-
-      // TODO: Implement
-      throw new NotImplementedException();
-    }
-
-    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith(IDragAndDropElement, bool)"/>
-    public IDragAndDropContainer GroupWith(IDragAndDropElement element, bool showFirst = false) {
-      // TODO: Implement
-      throw new NotImplementedException();
-    }
   }
 }

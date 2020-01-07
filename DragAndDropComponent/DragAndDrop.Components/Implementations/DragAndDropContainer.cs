@@ -24,7 +24,7 @@ namespace DragAndDrop.Components {
     public IList<IDragAndDropElement> Children { get; set; }
 
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
-    public IDraggableElement Clone() {
+    public IDragAndDropElement Clone() {
       // TODO: Implement
       var newDNDContainer = new DragAndDropContainer() {
         Name = $"{Name} (1)"

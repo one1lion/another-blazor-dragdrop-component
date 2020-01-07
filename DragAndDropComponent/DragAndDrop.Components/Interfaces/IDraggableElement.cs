@@ -50,7 +50,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// </param>
     /// <returns>Whether or not the add was successful</returns>
     public bool AddTo(IDragAndDropContainer targetContainer, int? targetIndex = default) {
-      if(!CanDrop(targetContainer)) { return false; }
+      if (!CanDrop(targetContainer)) { return false; }
       targetContainer.AddChild(this, targetIndex);
       return true;
     }
@@ -70,9 +70,9 @@ namespace DragAndDrop.Components.Interfaces {
     /// </param>
     /// <returns>Whether or not the add was successful</returns>
     public bool CopyTo(IDragAndDropContainer targetContainer, int? targetIndex = default) {
-      var copiedElement = Clone();
+      var copiedElement = (IDraggableElement)Clone();
       copiedElement.Parent = targetContainer;
-      if(!copiedElement.AllowedTargetNames.Contains(targetContainer.Name)) { copiedElement.AllowedTargetNames.Add(targetContainer.Name); }
+      if (!copiedElement.AllowedTargetNames.Contains(targetContainer.Name)) { copiedElement.AllowedTargetNames.Add(targetContainer.Name); }
       targetContainer.AddChild(copiedElement, targetIndex);
       return true;
     }
@@ -103,7 +103,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// this item should be added at.  If this is the default value for nullable int,
     /// it will be added to the end
     /// </param>
-    public bool Move(IDragAndDropContainer targetContainer, int? targetIndex = default) {
+    public virtual bool Move(IDragAndDropContainer targetContainer, int? targetIndex = default) {
       var movingWithinGroup = Parent.Name == targetContainer.Name;
       var originalIndex = Parent.Children.IndexOf(this);
 
@@ -111,12 +111,13 @@ namespace DragAndDrop.Components.Interfaces {
       if (!CanDrop(targetContainer)) { return false; }
 
       if (movingWithinGroup) {
-        return targetContainer.MoveChild(this, targetIndex);
+        targetContainer.MoveChild(this, targetIndex);
       } else {
         Parent.RemoveChild(this);
         targetContainer.AddChild(this, targetIndex);
-        return true;
       }
+      // If here, no exceptions have occurred
+      return true;
     }
   }
 }

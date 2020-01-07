@@ -38,7 +38,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// When determining the logic for cloning, keep in mind that if a property or field is a reference type, 
     /// the reference is copied, so it might be best to invoke the "Clone" method for that field as well
     /// </remarks>
-    IDraggableElement Clone();
+    IDragAndDropElement Clone();
 
     /// <summary>
     /// Creates a deep copy of this element
@@ -50,7 +50,18 @@ namespace DragAndDrop.Components.Interfaces {
     public TDragAndDropElement Clone<TDragAndDropElement>() where TDragAndDropElement : IDragAndDropElement {
       // Create a new instance of TDragAndDropElement that will be the copy of this element
       var copiedElement = (TDragAndDropElement)Activator.CreateInstance(typeof(TDragAndDropElement));
+
       // Copy all properties that are not references
+
+      // Gist
+      //var newElem = new TDragAndDropElement<T>() {
+      //  Name = $"{Name}(1)",
+      //  Item = Item, // TODO: Clone the wrapped item
+      //  Parent = Parent
+      //};
+      //Parent.Children.Add(newElem);
+      //return (IDraggableElement)newElem;
+
 
       // For each remaining property that is an implementation of IDragAndDropElement,
       //   set the value of the property to the Clone() method of the IDragAndDropElement
@@ -89,29 +100,45 @@ namespace DragAndDrop.Components.Interfaces {
       //   and this element's index is lower than the element being grouped with's index
       targetIndex -= (Parent is { } && Parent == containerParent && myIndex < targetIndex ? 1 : 0);
 
-      // Determine if this element has a property named "AllowedTargetNames"
-      Type myType = GetType();
-      PropertyInfo myAllowedTargets = myType.GetProperty("AllowedTargetNames");
-      // If this element has an AllowedTargetNames property, add the new group name to it if it doesn't already contain it
-      if (myAllowedTargets is { }) {
-        var curTargets = (List<string>)myAllowedTargets.GetValue(this);
-        if (!curTargets.Contains(newContName)) { curTargets.Add(newContName); }
-      }
-
-      // Determine if the element being grouped with has a property named "AllowedTargetNames"
-      Type elemType = element.GetType();
-      PropertyInfo elemAllowedTargets = elemType.GetProperty("AllowedTargetNames");
-      // If the target element has an AllowedTargetNames property, add the new group name to it if it doesn't already contain it
-      if (elemAllowedTargets is { }) {
-        var curTargets = (List<string>)elemAllowedTargets.GetValue(this);
-        if (!curTargets.Contains(newContName)) { curTargets.Add(newContName); }
-      }
-
       // Make a new container for the elements
       var newContainer = (TDragAndDropContainer)Activator.CreateInstance(typeof(TDragAndDropContainer));
 
       // Set the name value to name constructed above
       newContainer.Name = newContName;
+
+      // Determine if the newContainer has a property named "AllowedTargetNames"
+      PropertyInfo newGroupAllowedTargetsProp = typeof(TDragAndDropContainer).GetProperty("AllowedTargetNames");
+
+      // Prepare to accumulate allowed drop target names
+      var newContAllowedTargetNames = new List<string>();
+
+      // Determine if this element has a property named "AllowedTargetNames"
+      Type myType = GetType();
+      PropertyInfo myAllowedTargetsProp = myType.GetProperty("AllowedTargetNames");
+      // If this element has an AllowedTargetNames property, add the new group name to it if it doesn't already contain it
+      if (myAllowedTargetsProp is { }) {
+        var curTargets = (List<string>)myAllowedTargetsProp.GetValue(this);
+        // Accumulate the current allowed target names
+        newContAllowedTargetNames.AddRange(curTargets);
+        if (!curTargets.Contains(newContName)) { curTargets.Add(newContName); }
+      }
+
+      // Determine if the element being grouped with has a property named "AllowedTargetNames"
+      Type elemType = element.GetType();
+      PropertyInfo elemAllowedTargetsProp = elemType.GetProperty("AllowedTargetNames");
+      // If the target element has an AllowedTargetNames property, add the new group name to it if it doesn't already contain it
+      if (elemAllowedTargetsProp is { }) {
+        var curTargets = (List<string>)elemAllowedTargetsProp.GetValue(this);
+        // Accumulate the current allowed target names
+        newContAllowedTargetNames.AddRange(curTargets);
+        if (!curTargets.Contains(newContName)) { curTargets.Add(newContName); }
+      }
+
+      // If the new group has the AllowedTargetNames property (in other words, it is Draggable), initilize the property
+      // to a new List<string>
+      if (newGroupAllowedTargetsProp is { }) {
+        newGroupAllowedTargetsProp.SetValue(newContainer, newContAllowedTargetNames.Distinct().ToList());
+      }
 
       // Add the elements in order based on the "showFirst" flag
       newContainer.AddChild(element);
@@ -119,10 +146,41 @@ namespace DragAndDrop.Components.Interfaces {
 
       // If the element that this element is being grouped with had a parent,
       //   add the new container to that parent's children at the original element's index
-      if (containerParent is { }) { containerParent.AddChild(newContainer, targetIndex); }
+      if (containerParent is { }) { 
+        containerParent.AddChild(newContainer, targetIndex);
+        // Also, add the container parent's name as an allowed target name if the new group has the AllowedTargetNames property
+        if (newGroupAllowedTargetsProp is { }) {
+          var curTargets = (List<string>)newGroupAllowedTargetsProp.GetValue(this);
+          if (!curTargets.Contains(containerParent.Name)) { curTargets.Add(containerParent.Name); }
+        }
+      }
 
       // Return the newly created IDragAndDropContainer
       return newContainer;
+    }
+
+    /// <summary>
+    /// A convenience method for returning either a 
+    /// <see cref="DragAndDrop.Components.DragAndDropContainer" /> or a
+    /// <see cref="DragAndDrop.Components.DraggableGroup" />
+    /// </summary>
+    /// <param name="element">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDraggableElement"/>
+    /// to group this element with
+    /// </param>
+    /// <param name="makeDraggable">
+    /// If true, this will return a <see cref="DragAndDrop.Components.DraggableGroup" />, otherwise it will return
+    /// a <see cref="DragAndDrop.Components.DragAndDropContainer" />
+    /// </param>
+    /// <param name="showFirst">Whether or not this item should appear first in the new group</param>
+    /// <returns>
+    /// If <paramref name="makeDraggable"/> is true, a <see cref="DragAndDrop.Components.DraggableGroup" />, 
+    /// otherwise a <see cref="DragAndDrop.Components.DragAndDropContainer" />
+    /// </returns>
+    public IDragAndDropContainer GroupWith(IDragAndDropElement element, bool makeDraggable, bool showFirst = false) {
+      return makeDraggable ?
+        GroupWith<DraggableGroup>(element, showFirst) :
+        GroupWith<DragAndDropContainer>(element, showFirst);
     }
   }
 }
