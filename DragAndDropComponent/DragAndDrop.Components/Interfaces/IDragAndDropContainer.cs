@@ -54,8 +54,7 @@ namespace DragAndDrop.Components.Interfaces {
       if (targetIndex.Value < 0) { throw new ArgumentOutOfRangeException("The specified target index must be greater than or equal to 0."); }
       if (targetIndex.Value > Children.Count()) { throw new ArgumentOutOfRangeException("The specified target index must be less than or equal to the count of children."); }
 
-      // TODO: Remove from existing parent
-
+      if (element.Parent is { }) { element.Parent.RemoveChild(element); }
       Children.Insert(targetIndex.Value, element);
       element.Parent = this;
     }
@@ -112,17 +111,18 @@ namespace DragAndDrop.Components.Interfaces {
     /// negative or greater than the count of 
     /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
     /// </exception>
-    public bool MoveChild(IDragAndDropElement existingChild, int? targetIndex = default) {
+    public void MoveChild(IDragAndDropElement existingChild, int? targetIndex = default) {
       if (Children is null) { Children = new List<IDragAndDropElement>(); }
 
-      if (existingChild is null || !Children.Any(ce => ce.Id == existingChild.Id)) { return false; }
+      if (existingChild is null || !Children.Any(ce => ce.Id == existingChild.Id)) { throw new ArgumentNullException("The element to be added is null."); }
 
       if (targetIndex == default) { targetIndex = Children.Count(); }
       if (targetIndex < 0) { throw new ArgumentOutOfRangeException("The specified target index must be greater than or equal to 0."); }
       if (targetIndex > Children.Count()) { throw new ArgumentOutOfRangeException("The specified target index must be less than or equal to the count of children."); }
 
       var originalIndex = existingChild.Parent.Children.IndexOf(existingChild);
-      if (originalIndex == targetIndex.Value) { return true; }
+      // If the from and to indexes are the same, there is nothing more to be done
+      if (originalIndex == targetIndex.Value) { return; }
 
       // Insert the element into the list of children at the new index
       Children.Insert(targetIndex.Value, existingChild);
@@ -131,8 +131,6 @@ namespace DragAndDrop.Components.Interfaces {
       // to the index to remove from if the original element is
       // moving from a higher numbered index to a lower numbered index
       Children.RemoveAt(originalIndex + (originalIndex > targetIndex ? 1 : 0));
-
-      return true;
     }
     #endregion
 
