@@ -103,7 +103,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// this item should be added at.  If this is the default value for nullable int,
     /// it will be added to the end
     /// </param>
-    public virtual bool Move(IDragAndDropContainer targetContainer, int? targetIndex = default) {
+    public bool Move(IDragAndDropContainer targetContainer, int? targetIndex = default) {
       var movingWithinGroup = Parent.Name == targetContainer.Name;
       var originalIndex = Parent.Children.IndexOf(this);
 
