@@ -92,7 +92,9 @@ namespace DragAndDrop.Components.Interfaces {
 
     #region Move an element within this list to a different index
     /// <summary>
-    /// Move an existing element within this list to a target index
+    /// Move an existing element within the list of 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+    /// to a target index
     /// </summary>
     /// <param name="existingChild">
     /// An existing <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
@@ -114,7 +116,57 @@ namespace DragAndDrop.Components.Interfaces {
     public void MoveChild(IDragAndDropElement existingChild, int? targetIndex = default) {
       if (Children is null) { Children = new List<IDragAndDropElement>(); }
 
-      if (existingChild is null || !Children.Any(ce => ce.Id == existingChild.Id)) { throw new ArgumentNullException("The element to be added is null."); }
+      if (existingChild is null) { throw new ArgumentNullException("The element to be added is null."); }
+      if (!Children.Any(ce => ce.Id == existingChild.Id)) { throw new ArgumentNullException("The element does not exist as a child.  Use the AddChild method to add a new child element to the list of Children."); }
+
+      if (targetIndex == default) { targetIndex = Children.Count(); }
+      if (targetIndex < 0) { throw new ArgumentOutOfRangeException("The specified target index must be greater than or equal to 0."); }
+      if (targetIndex > Children.Count()) { throw new ArgumentOutOfRangeException("The specified target index must be less than or equal to the count of children."); }
+
+      var originalIndex = existingChild.Parent.Children.IndexOf(existingChild);
+      // If the from and to indexes are the same, there is nothing more to be done
+      if (originalIndex == targetIndex.Value) { return; }
+
+      // Insert the element into the list of children at the new index
+      Children.Insert(targetIndex.Value, existingChild);
+
+      // Remove the element from the children.  When doing so, add 1
+      // to the index to remove from if the original element is
+      // moving from a higher numbered index to a lower numbered index
+      Children.RemoveAt(originalIndex + (originalIndex > targetIndex ? 1 : 0));
+    }
+
+    /// <summary>
+    /// Move an existing element within the list of 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+    /// to a target index
+    /// </summary>
+    /// <param name="index">
+    /// The index for an existing <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+    /// in this container's list of 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+    /// </param>
+    /// <param name="targetIndex">
+    /// The index position in the list of
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> to
+    /// move the <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to.  If
+    /// this is not specified (default), it will be moved to the end
+    /// </param>
+    /// <returns>Whether moving the child was successful</returns>
+    /// <exception cref="System.ArgumentOutOfRangeException">
+    /// Throws an Argument Exception if the provided <paramref name="targetIndex"/> value is
+    /// negative or greater than the count of 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
+    /// </exception>
+    public void MoveChild(int index, int? targetIndex = default) {
+      if (Children is null) { Children = new List<IDragAndDropElement>(); }
+
+      if (index < 0) { throw new ArgumentOutOfRangeException("The specified target index must be greater than or equal to 0."); }
+      if (index > Children.Count()) { throw new ArgumentOutOfRangeException("The specified target index must be less than the count of children."); }
+
+      var existingChild = Children[index];
+      if (existingChild is null) { throw new ArgumentNullException("The element to be added is null."); }
+      if (!Children.Any(ce => ce.Id == existingChild.Id)) { throw new ArgumentNullException("The element does not exist as a child.  Use the AddChild method to add a new child element to the list of Children."); }
 
       if (targetIndex == default) { targetIndex = Children.Count(); }
       if (targetIndex < 0) { throw new ArgumentOutOfRangeException("The specified target index must be greater than or equal to 0."); }
@@ -183,6 +235,64 @@ namespace DragAndDrop.Components.Interfaces {
       element.Parent = null;
 
       return element;
+    }
+    #endregion
+
+    #region Copy a child element
+    /// <summary>
+    /// Copies a child element to a target 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+    /// at the specified index
+    /// </summary>
+    /// <param name="existingChild">
+    /// An existing <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+    /// in this container's list of 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+    /// </param>
+    /// <param name="toContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+    /// the copy of the <paramref name="existingChild"/> to
+    /// </param>
+    /// <param name="targetIndex">
+    /// The index the copied element should appear in the <paramref name="toContainer"/>.
+    /// If this is default, the copy will be added as the last element
+    /// </param>
+    /// <returns></returns>
+    public IDragAndDropElement CopyChild(IDragAndDropElement existingChild, IDragAndDropContainer toContainer, int? targetIndex = default) {
+      var copyOfChild = existingChild.Clone();
+      toContainer.AddChild(copyOfChild, targetIndex);
+      return copyOfChild;
+    }
+
+    /// <summary>
+    /// Copies a child element by its index to a target 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+    /// at the specified index
+    /// </summary>
+    /// <param name="index">
+    /// The index for an existing <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+    /// in this container's list of 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+    /// </param>
+    /// <param name="toContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+    /// the copy of the <paramref name="existingChild"/> to
+    /// </param>
+    /// <param name="targetIndex">
+    /// The index the copied element should appear in the <paramref name="toContainer"/>.
+    /// If this is default, the copy will be added as the last element
+    /// </param>
+    /// <returns></returns>
+    public IDragAndDropElement CopyChild(int index, IDragAndDropContainer toContainer, int? targetIndex = default) {
+      if (Children is null) { return null; }
+
+      if (index < 0) { throw new ArgumentOutOfRangeException("The specified target index must be greater than or equal to 0."); }
+      if (index > Children.Count()) { throw new ArgumentOutOfRangeException("The specified target index must be less than the count of children."); }
+
+      var existingChild = Children[index];
+      var copyOfChild = existingChild.Clone();
+      toContainer.AddChild(copyOfChild, targetIndex);
+      return copyOfChild;
     }
     #endregion
   }
