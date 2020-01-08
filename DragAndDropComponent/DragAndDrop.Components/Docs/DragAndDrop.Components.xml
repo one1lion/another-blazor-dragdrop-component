@@ -166,10 +166,36 @@
         </member>
         <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.MoveChild(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Nullable{System.Int32})">
             <summary>
-            Move an existing element within this list to a target index
+            Move an existing element within the list of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+            to a target index
             </summary>
             <param name="existingChild">
             An existing <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+            in this container's list of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+            </param>
+            <param name="targetIndex">
+            The index position in the list of
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> to
+            move the <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to.  If
+            this is not specified (default), it will be moved to the end
+            </param>
+            <returns>Whether moving the child was successful</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Throws an Argument Exception if the provided <paramref name="targetIndex"/> value is
+            negative or greater than the count of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
+            </exception>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.MoveChild(System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            Move an existing element within the list of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+            to a target index
+            </summary>
+            <param name="index">
+            The index for an existing <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
             in this container's list of 
             <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
             </param>
@@ -215,6 +241,48 @@
             negative or greater than or equal to the count of 
             <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/>
             </exception>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.CopyChild(DragAndDrop.Components.Interfaces.IDragAndDropElement,DragAndDrop.Components.Interfaces.IDragAndDropContainer,System.Nullable{System.Int32})">
+            <summary>
+            Copies a child element to a target 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            at the specified index
+            </summary>
+            <param name="existingChild">
+            An existing <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+            in this container's list of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+            </param>
+            <param name="toContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+            the copy of the <paramref name="existingChild"/> to
+            </param>
+            <param name="targetIndex">
+            The index the copied element should appear in the <paramref name="toContainer"/>.
+            If this is default, the copy will be added as the last element
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.CopyChild(System.Int32,DragAndDrop.Components.Interfaces.IDragAndDropContainer,System.Nullable{System.Int32})">
+            <summary>
+            Copies a child element by its index to a target 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            at the specified index
+            </summary>
+            <param name="index">
+            The index for an existing <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+            in this container's list of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+            </param>
+            <param name="toContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+            the copy of the <paramref name="existingChild"/> to
+            </param>
+            <param name="targetIndex">
+            The index the copied element should appear in the <paramref name="toContainer"/>.
+            If this is default, the copy will be added as the last element
+            </param>
+            <returns></returns>
         </member>
         <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropElement">
             <summary>
