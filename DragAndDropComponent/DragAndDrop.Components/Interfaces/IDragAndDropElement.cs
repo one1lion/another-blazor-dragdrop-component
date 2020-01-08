@@ -28,7 +28,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// The other elements nested in this 
     /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent"/>'s element
     /// </summary>
-    public List<IDragAndDropElement> Siblings => Parent?.Children?.Where(s => s.Id != Id).ToList();
+    public IList<IDragAndDropElement> Siblings => Parent?.Children?.Where(s => s.Id != Id).ToList();
 
     /// <summary>
     /// Creates a deep copy of this element
@@ -49,30 +49,71 @@ namespace DragAndDrop.Components.Interfaces {
     /// <returns>A deep copy of this element.  This includes a copy of any reference elements</returns>
     public TDragAndDropElement Clone<TDragAndDropElement>() where TDragAndDropElement : IDragAndDropElement {
       // Create a new instance of TDragAndDropElement that will be the copy of this element
-      var copiedElement = (TDragAndDropElement)Activator.CreateInstance(typeof(TDragAndDropElement));
+      var cloneOfElement = (TDragAndDropElement)Activator.CreateInstance(typeof(TDragAndDropElement));
 
-      // Copy all properties that are not references
+      // Get all of the properties for this element
+      var props = cloneOfElement.GetType().GetProperties();
 
-      // Gist
-      //var newElem = new TDragAndDropElement<T>() {
-      //  Name = $"{Name}(1)",
-      //  Item = Item, // TODO: Clone the wrapped item
-      //  Parent = Parent
-      //};
-      //Parent.Children.Add(newElem);
-      //return (IDraggableElement)newElem;
+      foreach (var prop in props) {
+        if (!prop.CanWrite) { continue; }
+
+        switch (prop) {
+          // If the current property is anything that implements IDrangAndDropElement, then
+          //   use the Clone method on this object's corresponding property's value to copy 
+          //   the returned element as the new object's property's value
+          case var p when p.PropertyType.GetTypeInfo().IsAssignableFrom(typeof(IDragAndDropElement).GetTypeInfo()): {
+              // With the exception when the current property is named "Parent", do not clone 
+              //   or copy it.  I.e. leave it null
+              if (p.Name == "Parent") { continue; }
+              p.SetValue(cloneOfElement, ((IDragAndDropElement)p.GetValue(this)).Clone());
+              break;
+            }
+
+          // If the current property type implements IList<IDragAndDropElement> (both IEnumerable<...> and ICollection<...>)
+          case var p when p.PropertyType.GetTypeInfo().IsAssignableFrom(typeof(IList<IDragAndDropElement>).GetTypeInfo()): {
+              var newList = (IList<IDragAndDropElement>)Activator.CreateInstance(p.PropertyType);
+              var curList = (IList<IDragAndDropElement>)p.GetValue(this);
+              for (var i = 0; i < curList.Count(); i++) {
+                newList.Add(curList[i].Clone());
+              }
+              p.SetValue(cloneOfElement, newList);
+              break;
+            }
 
 
-      // For each remaining property that is an implementation of IDragAndDropElement,
-      //   set the value of the property to the Clone() method of the IDragAndDropElement
-      // Note: need to check if the property is an enumerable/iterable of IDragAndDropElements and clone each
-      //       element in the enumerable/iterable
-      // For each remaining property
-      // Try to use the Clone/Copy method for the referenced object
-      // Then try to use MemberwiseClone
-      // Otherwise, use the reference
+          // If the current property type only implements IEnumerable<IDragAndDropElement>
+          case var p when p.PropertyType.GetTypeInfo().IsAssignableFrom(typeof(ICollection<IDragAndDropElement>).GetTypeInfo()): {
+              // TODO: Fill in logic
+              break;
+            }
 
-      return copiedElement;
+          // If the current property type only implements ICollection<IDragAndDropElement>
+          case var p when p.PropertyType.GetTypeInfo().IsAssignableFrom(typeof(ICollection<IDragAndDropElement>).GetTypeInfo()): {
+              // TODO: Fill in logic
+              break;
+            }
+
+          // If the current property type is a value type, set the new object's corresponding
+          //   property's to the value of this object's corresponding value
+          case var p when p.PropertyType.IsValueType: {
+              p.SetValue(cloneOfElement, p.GetValue(this));
+              break;
+            }
+
+          default: {
+              // TODO: Fill in logic for all other property types
+              //   These could be arbitrary classes, other IList, IEnumerable, or ICollections of non IDragAndDropElements
+
+              // For each remaining property type, we could
+              // Try to use the Clone/Copy method for the referenced object
+              // Then try to use MemberwiseClone
+              break;
+            }
+        }
+
+      }
+
+      return cloneOfElement;
     }
 
     /// <summary>
@@ -146,7 +187,7 @@ namespace DragAndDrop.Components.Interfaces {
 
       // If the element that this element is being grouped with had a parent,
       //   add the new container to that parent's children at the original element's index
-      if (containerParent is { }) { 
+      if (containerParent is { }) {
         containerParent.AddChild(newContainer, targetIndex);
         // Also, add the container parent's name as an allowed target name if the new group has the AllowedTargetNames property
         if (newGroupAllowedTargetsProp is { }) {
