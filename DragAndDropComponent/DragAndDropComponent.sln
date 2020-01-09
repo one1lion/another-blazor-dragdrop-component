@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DragAndDrop", "DragAndDrop\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DragAndDrop.Components", "DragAndDrop.Components\DragAndDrop.Components.csproj", "{361EB0F2-81C1-4815-898C-841B34922469}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DragAndDrop.Tests", "DragAndDrop.Tests\DragAndDrop.Tests.csproj", "{38376B6D-69DC-4104-A03F-0203800CC3BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{361EB0F2-81C1-4815-898C-841B34922469}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{361EB0F2-81C1-4815-898C-841B34922469}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{361EB0F2-81C1-4815-898C-841B34922469}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38376B6D-69DC-4104-A03F-0203800CC3BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38376B6D-69DC-4104-A03F-0203800CC3BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38376B6D-69DC-4104-A03F-0203800CC3BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38376B6D-69DC-4104-A03F-0203800CC3BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
