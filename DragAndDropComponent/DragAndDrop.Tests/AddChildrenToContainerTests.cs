@@ -3,7 +3,7 @@ using DragAndDrop.Components.Interfaces;
 using NUnit.Framework;
 
 namespace DragAndDrop.Tests {
-  public class Tests {
+  public class AddChildrenToContainerTests {
     [SetUp]
     public void Setup() {
     }
@@ -15,7 +15,7 @@ namespace DragAndDrop.Tests {
 
       container.AddChild(element);
       
-      Assert.IsTrue(element.Parent is { });
+      Assert.IsNotNull(element.Parent);
       Assert.IsTrue(element.Parent == container);
     }
 
@@ -26,7 +26,7 @@ namespace DragAndDrop.Tests {
 
       container.AddChild(element);
 
-      Assert.IsTrue(container.Children is { });
+      Assert.IsNotNull(container.Children);
       Assert.IsTrue(container.Children.Contains(element));
     }
 
