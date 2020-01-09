@@ -33,16 +33,6 @@ namespace DragAndDrop.Components.Interfaces {
     /// <summary>
     /// Creates a deep copy of this element
     /// </summary>
-    /// <returns>A deep copy of this element</returns>
-    /// <remarks>
-    /// When determining the logic for cloning, keep in mind that if a property or field is a reference type, 
-    /// the reference is copied, so it might be best to invoke the "Clone" method for that field as well
-    /// </remarks>
-    IDragAndDropElement Clone();
-
-    /// <summary>
-    /// Creates a deep copy of this element
-    /// </summary>
     /// <typeparam name="TDragAndDropElement">
     /// The implemented type if <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
     /// </typeparam>
@@ -65,7 +55,7 @@ namespace DragAndDrop.Components.Interfaces {
               // With the exception when the current property is named "Parent", do not clone 
               //   or copy it.  I.e. leave it null
               if (p.Name == "Parent") { continue; }
-              p.SetValue(cloneOfElement, ((IDragAndDropElement)p.GetValue(this)).Clone());
+              p.SetValue(cloneOfElement, ((IDragAndDropElement)p.GetValue(this)).Clone<IDragAndDropElement>());
               break;
             }
 
@@ -74,7 +64,7 @@ namespace DragAndDrop.Components.Interfaces {
               var newList = (IList<IDragAndDropElement>)Activator.CreateInstance(p.PropertyType);
               var curList = (IList<IDragAndDropElement>)p.GetValue(this);
               for (var i = 0; i < curList.Count(); i++) {
-                newList.Add(curList[i].Clone());
+                newList.Add(curList[i].Clone<IDragAndDropElement>());
               }
               p.SetValue(cloneOfElement, newList);
               break;
@@ -95,7 +85,7 @@ namespace DragAndDrop.Components.Interfaces {
 
           // If the current property type is a value type, set the new object's corresponding
           //   property's to the value of this object's corresponding value
-          case var p when p.PropertyType.IsValueType: {
+          case var p when !p.PropertyType.IsPointer: {
               p.SetValue(cloneOfElement, p.GetValue(this));
               break;
             }

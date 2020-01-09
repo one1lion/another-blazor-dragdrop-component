@@ -27,7 +27,7 @@
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children" />
         </member>
         <member name="M:DragAndDrop.Components.DragAndDropContainer.Clone">
-            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
         <member name="M:DragAndDrop.Components.DragAndDropContainer.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith``1(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)"/>
@@ -59,7 +59,7 @@
             </summary>
         </member>
         <member name="M:DragAndDrop.Components.DragAndDropItem`1.Clone">
-            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
         <member name="T:DragAndDrop.Components.DraggableGroup">
             <summary>
@@ -79,6 +79,9 @@
         <member name="P:DragAndDrop.Components.DraggableGroup.AllowedTargetNames">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames" />
         </member>
+        <member name="M:DragAndDrop.Components.DraggableGroup.Clone">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
+        </member>
         <member name="T:DragAndDrop.Components.DraggableItem`1">
             <summary>
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
@@ -94,6 +97,9 @@
         </member>
         <member name="P:DragAndDrop.Components.DraggableItem`1.DragEnabled">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
+        </member>
+        <member name="M:DragAndDrop.Components.DraggableItem`1.Clone">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
         <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer">
             <summary>
@@ -311,16 +317,6 @@
             The other elements nested in this 
             <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent"/>'s element
             </summary>
-        </member>
-        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone">
-            <summary>
-            Creates a deep copy of this element
-            </summary>
-            <returns>A deep copy of this element</returns>
-            <remarks>
-            When determining the logic for cloning, keep in mind that if a property or field is a reference type, 
-            the reference is copied, so it might be best to invoke the "Clone" method for that field as well
-            </remarks>
         </member>
         <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1">
             <summary>

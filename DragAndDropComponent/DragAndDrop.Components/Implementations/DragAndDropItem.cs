@@ -30,8 +30,9 @@ namespace DragAndDrop.Components {
     public T Item { get; set; }
 
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
-    public IDragAndDropElement Clone() {
-      throw new NotImplementedException();
+    public DragAndDropItem<T> Clone() {
+      return ((IDragAndDropElement)this).Clone<DragAndDropItem<T>>();
     }
+
   }
 }

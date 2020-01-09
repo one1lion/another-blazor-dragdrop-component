@@ -70,7 +70,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// </param>
     /// <returns>Whether or not the add was successful</returns>
     public bool CopyTo(IDragAndDropContainer targetContainer, int? targetIndex = default) {
-      var copiedElement = (IDraggableElement)Clone();
+      var copiedElement = (IDraggableElement)Clone<IDragAndDropElement>();
       copiedElement.Parent = targetContainer;
       if (!copiedElement.AllowedTargetNames.Contains(targetContainer.Name)) { copiedElement.AllowedTargetNames.Add(targetContainer.Name); }
       targetContainer.AddChild(copiedElement, targetIndex);
