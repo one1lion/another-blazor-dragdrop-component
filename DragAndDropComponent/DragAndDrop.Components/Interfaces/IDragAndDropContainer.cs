@@ -259,7 +259,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// </param>
     /// <returns></returns>
     public IDragAndDropElement CopyChild(IDragAndDropElement existingChild, IDragAndDropContainer toContainer, int? targetIndex = default) {
-      var copyOfChild = existingChild.Clone();
+      var copyOfChild = existingChild.Clone<IDragAndDropElement>();
       toContainer.AddChild(copyOfChild, targetIndex);
       return copyOfChild;
     }
@@ -290,7 +290,7 @@ namespace DragAndDrop.Components.Interfaces {
       if (index > Children.Count()) { throw new ArgumentOutOfRangeException("The specified target index must be less than the count of children."); }
 
       var existingChild = Children[index];
-      var copyOfChild = existingChild.Clone();
+      var copyOfChild = existingChild.Clone<IDragAndDropElement>();
       toContainer.AddChild(copyOfChild, targetIndex);
       return copyOfChild;
     }

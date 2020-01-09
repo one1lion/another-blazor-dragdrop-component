@@ -17,5 +17,11 @@ namespace DragAndDrop.Components {
 
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
     public bool DragEnabled { get; set; } = true;
+
+    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
+    public new DraggableItem<T> Clone() {
+      return ((IDragAndDropElement)this).Clone<DraggableItem<T>>();
+    }
+
   }
 }
