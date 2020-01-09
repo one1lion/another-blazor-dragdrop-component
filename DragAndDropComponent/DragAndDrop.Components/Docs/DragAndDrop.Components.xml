@@ -326,6 +326,21 @@
             The implemented type if <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
             </typeparam>
             <returns>A deep copy of this element.  This includes a copy of any reference elements</returns>
+            <remark>
+            This copy will recursively invoke the Clone method of properties that are of a type that
+            implements <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>.  It will also
+            make a shallow copy of any properties that are reference types.  If those properties are objects
+            with properties that are also reference types, those reference types will not be copied.  Instead, 
+            they will be assigned to the original reference.
+            </remark>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.ClonePropValue(System.Object,System.Type)">
+            <summary>
+            Creates a shallow copy of an arbitrary object
+            </summary>
+            <param name="obj">The object to copy</param>
+            <param name="objType">The type of the object to be copied</param>
+            <returns></returns>
         </member>
         <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith``1(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
             <summary>

@@ -22,6 +22,7 @@ namespace DragAndDrop.Tests {
 
       Assert.AreEqual(clonedElement.Item, 1);
       Assert.AreEqual(clonedElement.Name, "Item");
+      Assert.IsNull(clonedElement.Parent);
       Assert.AreNotEqual(clonedElement.Id, element.Id);
     }
   }
