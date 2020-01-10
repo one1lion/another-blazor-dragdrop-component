@@ -13,7 +13,7 @@ namespace DragAndDrop.Tests {
 
     [Test]
     public void CloningADragAndDropItemWithPrimitive_ReturnsNewDragAndDropItemWithPrimitive() {
-      var element = new DragAndDropItem<int>() {
+      var element = new DragAndDropItemViewModel<int>() {
         Name = "Item",
         Item = 1
       };

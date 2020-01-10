@@ -10,8 +10,8 @@ namespace DragAndDrop.Tests {
 
     [Test]
     public void AddingANewElementToAContainer_SetsTheElementsParent() {
-      IDragAndDropContainer container = new DragAndDropContainer();
-      var element = new DragAndDropItem<string>();
+      IDragAndDropContainer container = new DragAndDropContainerViewModel();
+      var element = new DragAndDropItemViewModel<string>();
 
       container.AddChild(element);
       
@@ -21,8 +21,8 @@ namespace DragAndDrop.Tests {
 
     [Test]
     public void AddingANewElementToAContainer_AddsElementToChildOfContainer() {
-      IDragAndDropContainer container = new DragAndDropContainer();
-      var element = new DragAndDropItem<string>();
+      IDragAndDropContainer container = new DragAndDropContainerViewModel();
+      var element = new DragAndDropItemViewModel<string>();
 
       container.AddChild(element);
 

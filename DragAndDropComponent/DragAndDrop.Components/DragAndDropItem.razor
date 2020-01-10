@@ -1,0 +1,25 @@
+﻿@typeparam TItem
+<h3>DragAndDropItem</h3>
+@if (model == null) {
+  <p>No item has ever been set</p>
+} else if (model.Item == null) {
+  <p>The drag and drop item model was created, but the item is null</p>
+} else {
+  <p>@model.Item.ToString()</p>
+}
+
+@code {
+  DragAndDropItemViewModel<TItem> model;
+
+  [Parameter] public TItem Item { get; set; }
+  [Parameter] public string Name { get; set; }
+
+  protected override void OnParametersSet() {
+    if (model is null) {
+      model = new DragAndDropItemViewModel<TItem>() {
+        Name = Name
+      };
+    }
+    model.Item = this.Item;
+  }
+}

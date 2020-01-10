@@ -10,11 +10,11 @@ namespace DragAndDrop.Components {
   /// wraps content.  This element is not draggable.
   /// </summary>
   /// <typeparam name="T">The type of data contained within the element</typeparam>
-  public class DragAndDropItem<T> : IDragAndDropElement {
+  public class DragAndDropItemViewModel<T> : IDragAndDropElement {
     /// <summary>
     /// The default constructor
     /// </summary>
-    public DragAndDropItem() {
+    public DragAndDropItemViewModel() {
       Id = Guid.NewGuid().ToString();
     }
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Id"/>
@@ -30,8 +30,8 @@ namespace DragAndDrop.Components {
     public T Item { get; set; }
 
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
-    public DragAndDropItem<T> Clone() {
-      return ((IDragAndDropElement)this).Clone<DragAndDropItem<T>>();
+    public DragAndDropItemViewModel<T> Clone() {
+      return ((IDragAndDropElement)this).Clone<DragAndDropItemViewModel<T>>();
     }
 
   }
