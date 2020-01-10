@@ -88,41 +88,6 @@ namespace DragAndDrop.Components.Interfaces {
       var typeInfo = propType.GetTypeInfo();
 
       switch (propType) {
-        // If the current property is anything that implements IDrangAndDropElement, then
-        //   use the Clone method on this object's corresponding property's value to copy 
-        //   the returned element as the new object's property's value
-        case var p when typeInfo.ImplementedInterfaces is { } && typeInfo.ImplementedInterfaces.Contains(typeof(IDragAndDropElement)): {
-            // With the exception when the current property is named "Parent", do not clone 
-            //   or copy it.  I.e. leave it null
-            return propType.GetMethod("Clone").Invoke(propVal, null);
-          }
-
-        // If the current property type implements IList<IDragAndDropElement> (both IEnumerable<...> and ICollection<...>)
-        case var p when typeInfo.IsAssignableFrom(typeof(IList<IDragAndDropElement>).GetTypeInfo()): {
-            var curList = (IList<IDragAndDropElement>)propVal;
-            if (curList is null) { return null; }
-
-            var newList = (IList<IDragAndDropElement>)Activator.CreateInstance(typeof(List<IDragAndDropElement>));
-            for (var i = 0; i < curList.Count(); i++) {
-              var childType = curList[i].GetType();
-              newList.Add((IDragAndDropElement)childType.GetMethod("Clone").Invoke(curList[i], null));
-            }
-            return newList;
-          }
-
-
-        // If the current property type only implements IEnumerable<IDragAndDropElement>
-        case var p when typeInfo.IsAssignableFrom(typeof(IEnumerable<IDragAndDropElement>).GetTypeInfo()): {
-            // TODO: Fill in logic
-            break;
-          }
-
-        // If the current property type only implements ICollection<IDragAndDropElement>
-        case var p when typeInfo.IsAssignableFrom(typeof(ICollection<IDragAndDropElement>).GetTypeInfo()): {
-            // TODO: Fill in logic
-            break;
-          }
-
         // If the current property type is a value type, set the new object's corresponding
         //   property's to the value of this object's corresponding value
         // TODO: Find a rule that would more accurately identify non-reference types that can be
@@ -133,69 +98,90 @@ namespace DragAndDrop.Components.Interfaces {
             return propVal;
           }
 
-        default: {
-            if (typeInfo.ImplementedInterfaces is { }) {
-              // Try to invoke the Clone method if the object implements ICloneable
-              if (typeInfo.ImplementedInterfaces.Contains(typeof(ICloneable))) {
-                return propType.GetMethod("Clone").Invoke(propVal, null);
-              } else if (typeInfo.ImplementedInterfaces.Contains(typeof(ISerializable))) {
-                // Otherwise, if the object is serializable, try to serialize it using memory stream
-                // Adapted from: https://stackoverflow.com/questions/78536/deep-cloning-objects
-                if (ReferenceEquals(propVal, null)) {
-                  return default;
-                }
+        // If the current property is anything that implements IDrangAndDropElement, then
+        //   use the Clone method on this object's corresponding property's value to copy 
+        //   the returned element as the new object's property's value
+        case var p when typeInfo.ImplementedInterfaces is { } && typeInfo.ImplementedInterfaces.Contains(typeof(IDragAndDropElement)): {
+            // With the exception when the current property is named "Parent", do not clone 
+            //   or copy it.  I.e. leave it null
+            return propType.GetMethod("Clone").Invoke(propVal, null);
+          }
 
-                IFormatter formatter = new BinaryFormatter();
-                Stream stream = new MemoryStream();
-                using (stream) {
-                  formatter.Serialize(stream, propVal);
-                  stream.Seek(0, SeekOrigin.Begin);
-                  return formatter.Deserialize(stream);
-                }
-              }
-            }
+        // If the current property is anything that implements IList, then
+        //   instantiate a new object of the current property's type and add copies of the 
+        //   elements in the list using this method to clone each item
+        case var p when typeInfo.ImplementedInterfaces is { } && typeInfo.ImplementedInterfaces.Contains(typeof(IList)): {
+            var curList = (IList)propVal;
+            if (curList is null) { return null; }
 
-            // Otherwise, try using reflection (slow) to copy all of its properties
             var cloneOfPropVal = Activator.CreateInstance(propType);
+            var newList = (IList)cloneOfPropVal;
+            for (var i = 0; i < curList.Count; i++) {
+              var childType = curList[i].GetType();
+              newList.Add(ClonePropValue(curList[i], childType));
+            }
+            return newList;
+          }
 
-            switch (propType) {
-              case var p when typeInfo.ImplementedInterfaces is { } && typeInfo.ImplementedInterfaces.Contains(typeof(IList)): {
-                  var curList = (IList)propVal;
-                  if (curList is null) { return null; }
+        // If the current property is anything that implements IEnumerable, then
+        //   instantiate a new object of the current property's type and add copies of the 
+        //   elements in the list using this method to clone each item
+        case var p when typeInfo.ImplementedInterfaces is { } && typeInfo.ImplementedInterfaces.Contains(typeof(IEnumerable)): {
+            var curList = (IEnumerable)propVal;
+            if (curList is null) { return null; }
 
-                  var newList = (IList)cloneOfPropVal;
-                  for (var i = 0; i < curList.Count; i++) {
-                    var childType = curList[i].GetType();
-                    newList.Add(ClonePropValue(curList[i], childType));
-                  }
-                  return newList;
-                }
-              case var p when typeInfo.ImplementedInterfaces is { } && typeInfo.ImplementedInterfaces.Contains(typeof(IEnumerable)): {
-                  var curList = (IEnumerable)propVal;
-                  if (curList is null) { return null; }
+            var cloneOfPropVal = Activator.CreateInstance(propType);
+            var newList = (IEnumerable)cloneOfPropVal;
 
-                  var newList = (IEnumerable)cloneOfPropVal;
+            foreach (var child in curList) {
+              var childType = child.GetType();
+              // TODO: add a clone of the child to the IEnumerable
+            }
+            return newList;
+          }
 
-                  foreach (var child in curList) {
-                    var childType = child.GetType();
-                    // TODO: add a clone of the child to the IEnumerable
-                  }
-                  return newList;
-                }
-              case var p when typeInfo.ImplementedInterfaces is { } && typeInfo.ImplementedInterfaces.Contains(typeof(ICollection)): {
-                  var curList = (ICollection)propVal;
-                  if (curList is null) { return null; }
+        // If the current property is anything that implements ICollection, then
+        //   instantiate a new object of the current property's type and add copies of the 
+        //   elements in the list using this method to clone each item
+        case var p when typeInfo.ImplementedInterfaces is { } && typeInfo.ImplementedInterfaces.Contains(typeof(ICollection)): {
+            var curList = (ICollection)propVal;
+            if (curList is null) { return null; }
 
-                  var newList = (ICollection)cloneOfPropVal;
+            var cloneOfPropVal = Activator.CreateInstance(propType);
+            var newList = (ICollection)cloneOfPropVal;
 
-                  foreach (var child in curList) {
-                    var childType = child.GetType();
-                    // TODO: add a clone of the child to the IEnumerable
-                  }
-                  return newList;
-                }
+            foreach (var child in curList) {
+              var childType = child.GetType();
+              // TODO: add a clone of the child to the IEnumerable
+            }
+            return newList;
+          }
+
+        case var p when typeInfo.ImplementedInterfaces is { } && typeInfo.ImplementedInterfaces.Contains(typeof(ICloneable)): {
+            // Try to invoke the Clone method if the object implements ICloneable
+            return propType.GetMethod("Clone").Invoke(propVal, null);
+          }
+
+        case var p when typeInfo.ImplementedInterfaces is { } && typeInfo.ImplementedInterfaces.Contains(typeof(ISerializable)): {
+            // if the object is serializable, try to serialize it using memory stream
+            // Adapted from: https://stackoverflow.com/questions/78536/deep-cloning-objects
+            if (ReferenceEquals(propVal, null)) {
+              return default;
             }
 
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new MemoryStream();
+            using (stream) {
+              formatter.Serialize(stream, propVal);
+              stream.Seek(0, SeekOrigin.Begin);
+              return formatter.Deserialize(stream);
+            }
+          }
+
+        // If the property type is not one of the previous cases
+        default: {
+            // Try using reflection (slow) to copy all of its properties
+            var cloneOfPropVal = Activator.CreateInstance(propType);
             var props = propType.GetProperties();
 
             foreach (var prop in props) {
