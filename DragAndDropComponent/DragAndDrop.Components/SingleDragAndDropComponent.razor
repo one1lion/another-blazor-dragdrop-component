@@ -1,0 +1,43 @@
+﻿
+<h3>SingleDragAndDropItem</h3>
+@if (modelAsNonDraggable == null) {
+  <p>No item has ever been set</p>
+} else if (modelAsNonDraggable.Item == null) {
+  <p>The drag and drop item model was created, but the item is null</p>
+} else {
+  <p>@Item.ToString()</p>
+  <p>@modelAsNonDraggable.Item.ToString()</p>
+  <p>@(modelAsDraggable.Item.ToString())</p>
+}
+
+<button @onclick="ChangeTheItem">Change the item</button>
+
+
+@code {
+  IDragAndDropElement model;
+  DragAndDropItemViewModel<string> modelAsNonDraggable;
+  DraggableItemViewModel<string> modelAsDraggable;
+
+  [Parameter] public string Item { get; set; }
+  [Parameter] public bool Draggable { get; set; }
+
+  protected override void OnParametersSet() {
+    if (model is null) {
+      model = new DraggableItemViewModel<string>() {
+        Name = "Item 1" // TODO: Fix the name
+      };
+
+      modelAsNonDraggable = model as DragAndDropItemViewModel<string>;
+      modelAsDraggable = model as DraggableItemViewModel<string>;
+      // TODO: Set AllowedTargetNames property
+
+    }
+    modelAsNonDraggable.Item = this.Item;
+  }
+
+  void ChangeTheItem(MouseEventArgs e) {
+    var hold = "Here's a new item";
+    Item = hold;
+    modelAsNonDraggable.Item = hold;
+  }
+}

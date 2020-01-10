@@ -10,7 +10,7 @@
   <div class="draganddrop-container" ondragover="event.preventDefault();">
     <h3>@container.Name</h3>
     @for (var i = 0; i < container.Children.Count(); i++) {
-      var group = container.Children[i] as DraggableGroup;
+      var group = container.Children[i] as DraggableGroupViewModel;
       <div class="draganddrop-group"
            draggable="@(group.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))"
            ondragover="event.preventDefault();"
@@ -27,7 +27,7 @@
         </div>
         <div class="draganddrop-item-list">
           @for (var j = 0; j < group.Children.Count(); j++) {
-            var item = (DraggableItem<string>)group.Children[j];
+            var item = (DraggableItemViewModel<string>)group.Children[j];
             var curItemIndex = item.Parent.Children.IndexOf(item);
             <div class="draganddrop-item"
                  draggable="@(item.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))"
@@ -60,12 +60,12 @@
 }
 
 @code {
-  DragAndDropContainer container;
+  DragAndDropContainerViewModel container;
   bool dragging;
   IDraggableElement curDraggedElement;
 
   protected override void OnInitialized() {
-    container = new DragAndDropContainer() {
+    container = new DragAndDropContainerViewModel() {
       Name = "Top-most container element",
       Children = new List<IDragAndDropElement>()
     };
@@ -73,14 +73,14 @@
     // Create 4 sample groups with 6 items each
     var intList = new List<int>() { 1, 2, 3, 4 };
     for (var i = 0; i < 4; i++) {
-      var group = new DraggableGroup() {
+      var group = new DraggableGroupViewModel() {
         Name = $"Group {i + 1}",
         AllowedTargetNames = intList.Where(il => il != i).Select(il => $"Group {il + 1}").ToList(),
         Parent = container,
         Children = new List<IDragAndDropElement>()
       };
       for (var j = 0; j < 5; j++) {
-        var item = new DraggableItem<string>() {
+        var item = new DraggableItemViewModel<string>() {
           Item = $"Group {i + 1}, Item {j + 1}",
           Name = $"Group {i + 1}, Item {j + 1}",
           Parent = group,

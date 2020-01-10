@@ -8,9 +8,9 @@ namespace DragAndDrop.Components {
   /// that allows <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/>s to be
   /// added as child elements
   /// </summary>
-  public class DragAndDropContainer : IDragAndDropContainer {
+  public class DragAndDropContainerViewModel : IDragAndDropContainer {
     /// <summary>The default constructor</summary>
-    public DragAndDropContainer() {
+    public DragAndDropContainerViewModel() {
       Id = Guid.NewGuid().ToString();
     }
 
@@ -24,8 +24,8 @@ namespace DragAndDrop.Components {
     public IList<IDragAndDropElement> Children { get; set; }
 
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
-    public DragAndDropContainer Clone() {
-      return ((IDragAndDropElement)this).Clone<DragAndDropContainer>();
+    public DragAndDropContainerViewModel Clone() {
+      return ((IDragAndDropElement)this).Clone<DragAndDropContainerViewModel>();
     }
 
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith(IDragAndDropElement, bool)"/>

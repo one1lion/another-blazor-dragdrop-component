@@ -1,0 +1,42 @@
+﻿@page "/dnd-structcomp"
+@using DragAndDrop.Components
+@using DragAndDrop.Data
+
+<h3>DragAndDropSampleUsingDataStructureComponents</h3>
+
+<p>Don't touch that heading</p>
+
+<DragAndDropItem Item="@("I am a not draggable")"></DragAndDropItem>
+<DraggableItem Item="listOfStrings" DragEnabled="dragEnabled" Name="Draggable Item 1">
+  <ItemTemplate>
+    <span class="oi oi-lock-@(dragEnabled ? "unlocked" : "locked")"></span>
+    <ul>
+      @foreach (var item in context) {
+        <li>@item</li>
+      }
+    </ul>
+    <button @onclick="ToggleDragEnabled">@(dragEnabled ? "Disable " : "Enable ") Dragging</button>
+  </ItemTemplate>
+</DraggableItem>
+
+@code {
+  bool dragEnabled = true;
+
+  QueryParameter queryParam = new QueryParameter() {
+    Field = "DocTitle",
+    Operator = "Equals",
+    Values = new List<object>() {
+      "I'm a cookie"
+    }
+  };
+
+  List<string> listOfStrings = new List<string> {
+    "First item",
+    "Second item",
+    "Third item"
+  };
+
+  void ToggleDragEnabled(MouseEventArgs e) {
+    dragEnabled = !dragEnabled;
+  }
+}

@@ -4,64 +4,64 @@
         <name>DragAndDrop.Components</name>
     </assembly>
     <members>
-        <member name="T:DragAndDrop.Components.DragAndDropContainer">
+        <member name="T:DragAndDrop.Components.DragAndDropContainerViewModel">
             <summary>
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
             that allows <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>s to be
             added as child elements
             </summary>
         </member>
-        <member name="M:DragAndDrop.Components.DragAndDropContainer.#ctor">
+        <member name="M:DragAndDrop.Components.DragAndDropContainerViewModel.#ctor">
             <summary>The default constructor</summary>
         </member>
-        <member name="P:DragAndDrop.Components.DragAndDropContainer.Id">
+        <member name="P:DragAndDrop.Components.DragAndDropContainerViewModel.Id">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id" />
         </member>
-        <member name="P:DragAndDrop.Components.DragAndDropContainer.Name">
+        <member name="P:DragAndDrop.Components.DragAndDropContainerViewModel.Name">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name" />
         </member>
-        <member name="P:DragAndDrop.Components.DragAndDropContainer.Parent">
+        <member name="P:DragAndDrop.Components.DragAndDropContainerViewModel.Parent">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent" />
         </member>
-        <member name="P:DragAndDrop.Components.DragAndDropContainer.Children">
+        <member name="P:DragAndDrop.Components.DragAndDropContainerViewModel.Children">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children" />
         </member>
-        <member name="M:DragAndDrop.Components.DragAndDropContainer.Clone">
+        <member name="M:DragAndDrop.Components.DragAndDropContainerViewModel.Clone">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
-        <member name="M:DragAndDrop.Components.DragAndDropContainer.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
+        <member name="M:DragAndDrop.Components.DragAndDropContainerViewModel.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith``1(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)"/>
         </member>
-        <member name="T:DragAndDrop.Components.DragAndDropItem`1">
+        <member name="T:DragAndDrop.Components.DragAndDropItemViewModel`1">
             <summary>
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> that
             wraps content.  This element is not draggable.
             </summary>
             <typeparam name="T">The type of data contained within the element</typeparam>
         </member>
-        <member name="M:DragAndDrop.Components.DragAndDropItem`1.#ctor">
+        <member name="M:DragAndDrop.Components.DragAndDropItemViewModel`1.#ctor">
             <summary>
             The default constructor
             </summary>
         </member>
-        <member name="P:DragAndDrop.Components.DragAndDropItem`1.Id">
+        <member name="P:DragAndDrop.Components.DragAndDropItemViewModel`1.Id">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id"/>
         </member>
-        <member name="P:DragAndDrop.Components.DragAndDropItem`1.Name">
+        <member name="P:DragAndDrop.Components.DragAndDropItemViewModel`1.Name">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name"/>
         </member>
-        <member name="P:DragAndDrop.Components.DragAndDropItem`1.Parent">
+        <member name="P:DragAndDrop.Components.DragAndDropItemViewModel`1.Parent">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent"/>
         </member>
-        <member name="P:DragAndDrop.Components.DragAndDropItem`1.Item">
+        <member name="P:DragAndDrop.Components.DragAndDropItemViewModel`1.Item">
             <summary>
             The item being wrapped by this draggable element
             </summary>
         </member>
-        <member name="M:DragAndDrop.Components.DragAndDropItem`1.Clone">
+        <member name="M:DragAndDrop.Components.DragAndDropItemViewModel`1.Clone">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
-        <member name="T:DragAndDrop.Components.DraggableGroup">
+        <member name="T:DragAndDrop.Components.DraggableGroupViewModel">
             <summary>
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
             and <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
@@ -70,35 +70,35 @@
             target <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer" />
             </summary>
         </member>
-        <member name="M:DragAndDrop.Components.DraggableGroup.#ctor">
+        <member name="M:DragAndDrop.Components.DraggableGroupViewModel.#ctor">
             <summary>The default constructor</summary>
         </member>
-        <member name="P:DragAndDrop.Components.DraggableGroup.DragEnabled">
+        <member name="P:DragAndDrop.Components.DraggableGroupViewModel.DragEnabled">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
         </member>
-        <member name="P:DragAndDrop.Components.DraggableGroup.AllowedTargetNames">
+        <member name="P:DragAndDrop.Components.DraggableGroupViewModel.AllowedTargetNames">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames" />
         </member>
-        <member name="M:DragAndDrop.Components.DraggableGroup.Clone">
+        <member name="M:DragAndDrop.Components.DraggableGroupViewModel.Clone">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
-        <member name="T:DragAndDrop.Components.DraggableItem`1">
+        <member name="T:DragAndDrop.Components.DraggableItemViewModel`1">
             <summary>
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
             that can be dragged onto/into <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer" />s
             </summary>
             <typeparam name="T">The type of data contained within the element</typeparam>
         </member>
-        <member name="M:DragAndDrop.Components.DraggableItem`1.#ctor">
+        <member name="M:DragAndDrop.Components.DraggableItemViewModel`1.#ctor">
             <summary>The default constructor</summary>
         </member>
-        <member name="P:DragAndDrop.Components.DraggableItem`1.AllowedTargetNames">
+        <member name="P:DragAndDrop.Components.DraggableItemViewModel`1.AllowedTargetNames">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames" />
         </member>
-        <member name="P:DragAndDrop.Components.DraggableItem`1.DragEnabled">
+        <member name="P:DragAndDrop.Components.DraggableItemViewModel`1.DragEnabled">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
         </member>
-        <member name="M:DragAndDrop.Components.DraggableItem`1.Clone">
+        <member name="M:DragAndDrop.Components.DraggableItemViewModel`1.Clone">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
         <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer">
@@ -318,30 +318,7 @@
             <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent"/>'s element
             </summary>
         </member>
-        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1">
-            <summary>
-            Creates a deep copy of this element
-            </summary>
-            <typeparam name="TDragAndDropElement">
-            The implemented type if <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
-            </typeparam>
-            <returns>A deep copy of this element.  This includes a copy of any reference elements</returns>
-            <remark>
-            This copy will recursively invoke the Clone method of properties that are of a type that
-            implements <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>.  It will also
-            make a shallow copy of any properties that are reference types.  If those properties are objects
-            with properties that are also reference types, those reference types will not be copied.  Instead, 
-            they will be assigned to the original reference.
-            </remark>
-        </member>
-        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.ClonePropValue(System.Object,System.Type)">
-            <summary>
-            Creates a shallow copy of an arbitrary object
-            </summary>
-            <param name="obj">The object to copy</param>
-            <param name="objType">The type of the object to be copied</param>
-            <returns></returns>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1" -->
         <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith``1(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
             <summary>
             Groups this element with the specified <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
@@ -359,21 +336,21 @@
         <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean,System.Boolean)">
             <summary>
             A convenience method for returning either a 
-            <see cref="T:DragAndDrop.Components.DragAndDropContainer" /> or a
-            <see cref="T:DragAndDrop.Components.DraggableGroup" />
+            <see cref="T:DragAndDrop.Components.DragAndDropContainerViewModel" /> or a
+            <see cref="T:DragAndDrop.Components.DraggableGroupViewModel" />
             </summary>
             <param name="element">
             The <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
             to group this element with
             </param>
             <param name="makeDraggable">
-            If true, this will return a <see cref="T:DragAndDrop.Components.DraggableGroup" />, otherwise it will return
-            a <see cref="T:DragAndDrop.Components.DragAndDropContainer" />
+            If true, this will return a <see cref="T:DragAndDrop.Components.DraggableGroupViewModel" />, otherwise it will return
+            a <see cref="T:DragAndDrop.Components.DragAndDropContainerViewModel" />
             </param>
             <param name="showFirst">Whether or not this item should appear first in the new group</param>
             <returns>
-            If <paramref name="makeDraggable"/> is true, a <see cref="T:DragAndDrop.Components.DraggableGroup" />, 
-            otherwise a <see cref="T:DragAndDrop.Components.DragAndDropContainer" />
+            If <paramref name="makeDraggable"/> is true, a <see cref="T:DragAndDrop.Components.DraggableGroupViewModel" />, 
+            otherwise a <see cref="T:DragAndDrop.Components.DragAndDropContainerViewModel" />
             </returns>
         </member>
         <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropGroupable">
@@ -490,15 +467,6 @@
             this item should be added at.  If this is the default value for nullable int,
             it will be added to the end
             </param>
-        </member>
-        <member name="P:DragAndDrop.Components.DragAndDropContainerComponent`1.Items">
-            <summary>The list of child <see cref="!:TItem"/>s</summary>
-        </member>
-        <member name="P:DragAndDrop.Components.DragAndDropContainerComponent`1.GroupNameProperty">
-            <summary>
-            The property of <see cref="!:TItem" /> to be used as the
-            <see cref="P:DragAndDrop.Components.DragAndDropGroup`1.Name"/>
-            </summary>
         </member>
     </members>
 </doc>

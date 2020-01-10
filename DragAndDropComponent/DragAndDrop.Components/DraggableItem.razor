@@ -1,0 +1,33 @@
+﻿@typeparam TItem
+@using System.Globalization
+
+<h3>DraggableItem</h3>
+@if (model == null) {
+  <p>No item has ever been set</p>
+} else if (model.Item == null) {
+  <p>The drag and drop item model was created, but the item is null</p>
+} else {
+  <p draggable="@(DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))">
+    @ItemTemplate(model.Item)<br />
+  </p>
+}
+
+@code {
+  DraggableItemViewModel<TItem> model;
+
+  [Parameter] public TItem Item { get; set; }
+  [Parameter] public string Name { get; set; }
+  [Parameter] public bool DragEnabled { get; set; } = true;
+  [Parameter] public List<string> AllowedTargetNames { get; set; }
+
+  [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+
+
+  protected override void OnParametersSet() {
+    if (model is null) { model = new DraggableItemViewModel<TItem>(); }
+    model.Item = this.Item;
+    model.Name = this.Name;
+    model.DragEnabled = this.DragEnabled;
+    model.AllowedTargetNames = this.AllowedTargetNames;
+  }
+}
