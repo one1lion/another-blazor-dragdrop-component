@@ -15,10 +15,10 @@ namespace DragAndDrop.Pages {
 
     /// <summary>The list of draggable items to be displayed</summary>
     /// <remarks>We are currently using strings as the item type, but this can be any object</remarks>
-    protected List<DraggableItem<string>> draggableItems = new List<DraggableItem<string>>();
+    protected List<DraggableItemSample<string>> draggableItems = new List<DraggableItemSample<string>>();
 
     /// <summary>The most recent <see cref="DragAndDrop.Components.DraggableItem{T}"/> being dragged</summary>
-    protected DraggableItem<string> curItem = null;
+    protected DraggableItemSample<string> curItem = null;
     /// <summary>Whether or not dragging is occurring</summary>
     protected bool dragging;
 
@@ -27,7 +27,7 @@ namespace DragAndDrop.Pages {
     /// </summary>
     /// <param name="e">The arguments related to the drag event</param>
     /// <param name="draggedItem">The <see cref="DragAndDrop.Components.DraggableItem{T}"/> that is being picked up</param>
-    protected void HandleDragStart(DragEventArgs e, DraggableItem<string> draggedItem) {
+    protected void HandleDragStart(DragEventArgs e, DraggableItemSample<string> draggedItem) {
       curItem = draggedItem;
       dragging = true;
     }
