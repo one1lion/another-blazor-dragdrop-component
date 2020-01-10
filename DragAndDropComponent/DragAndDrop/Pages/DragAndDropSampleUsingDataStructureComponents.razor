@@ -7,7 +7,14 @@
 <p>Don't touch that heading</p>
 
 <DragAndDropItem Item="@("I am a not draggable")"></DragAndDropItem>
+
+<h3>Draggable Item Sample</h3>
 <DraggableItem Item="listOfStrings" DragEnabled="dragEnabled" Name="Draggable Item 1">
+  <NullItemTemplate>
+    <div>
+      <p>Item loading.  Please wait...</p>
+    </div>
+  </NullItemTemplate>
   <ItemTemplate>
     <span class="oi oi-lock-@(dragEnabled ? "unlocked" : "locked")"></span>
     <ul>
@@ -30,11 +37,17 @@
     }
   };
 
-  List<string> listOfStrings = new List<string> {
-    "First item",
-    "Second item",
-    "Third item"
-  };
+  List<string> listOfStrings;
+
+  protected override async Task OnInitializedAsync() {
+    await Task.Delay(2000);
+
+    listOfStrings = new List<string> {
+      "First item",
+      "Second item",
+      "Third item"
+    };
+  }
 
   void ToggleDragEnabled(MouseEventArgs e) {
     dragEnabled = !dragEnabled;

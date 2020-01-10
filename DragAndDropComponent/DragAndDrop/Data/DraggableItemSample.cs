@@ -10,8 +10,8 @@ namespace DragAndDrop.Data {
   /// The version for the Component can be found in the DragAndDrop.Components
   /// library project.
   /// </remarks>
-  public class DraggableItem<T> {
-    public DraggableItem() {
+  public class DraggableItemSample<T> {
+    public DraggableItemSample() {
       Id = Guid.NewGuid().ToString();
     }
 

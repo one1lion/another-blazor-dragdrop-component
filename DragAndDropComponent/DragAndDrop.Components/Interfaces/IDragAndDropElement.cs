@@ -107,6 +107,19 @@ namespace DragAndDrop.Components.Interfaces {
             return propType.GetMethod("Clone").Invoke(propVal, null);
           }
 
+        // If the current property type implements IList<IDragAndDropElement> (both IEnumerable<...> and ICollection<...>)
+        case var p when typeInfo.IsAssignableFrom(typeof(IList<IDragAndDropElement>).GetTypeInfo()): {
+            var curList = (IList<IDragAndDropElement>)propVal;
+            if (curList is null) { return null; }
+
+            var newList = (IList<IDragAndDropElement>)Activator.CreateInstance(typeof(List<IDragAndDropElement>));
+            for (var i = 0; i < curList.Count(); i++) {
+              var childType = curList[i].GetType();
+              newList.Add((IDragAndDropElement)childType.GetMethod("Clone").Invoke(curList[i], null));
+            }
+            return newList;
+          }
+
         // If the current property is anything that implements IList, then
         //   instantiate a new object of the current property's type and add copies of the 
         //   elements in the list using this method to clone each item
