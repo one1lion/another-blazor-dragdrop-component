@@ -16,6 +16,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// </summary>
     IList<IDragAndDropElement> Children { get; set; }
 
+    #region Non-static versions of the default methods (applicable to "this" object)
     #region Add to list
     /// <summary>
     /// Add an element that does not already exist as a child of this 
@@ -259,6 +260,10 @@ namespace DragAndDrop.Components.Interfaces {
     /// </param>
     /// <returns></returns>
     public IDragAndDropElement CopyChild(IDragAndDropElement existingChild, IDragAndDropContainer toContainer, int? targetIndex = default) {
+      if (Children is null) { return null; }
+
+      if (!Children.Contains(existingChild)) { throw new ArgumentException("The specified element must be a child of this container."); }
+
       var copyOfChild = existingChild.Clone<IDragAndDropElement>();
       toContainer.AddChild(copyOfChild, targetIndex);
       return copyOfChild;
@@ -294,6 +299,78 @@ namespace DragAndDrop.Components.Interfaces {
       toContainer.AddChild(copyOfChild, targetIndex);
       return copyOfChild;
     }
+    #endregion
+    #endregion
+
+    #region Static versions of the default methods (Call using IDragAndDropContainer.{method_name})
+    #region Copy a child element
+    /// <summary>
+    /// Copies an existing <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> child from 
+    /// a specified <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+    /// </summary>
+    /// <param name="fromContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to copy 
+    /// the child from
+    /// </param>
+    /// <param name="existingChild">
+    /// An existing <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+    /// in this container's list of 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+    /// </param>
+    /// <param name="toContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+    /// the copy of the <paramref name="existingChild"/> to
+    /// </param>
+    /// <param name="targetIndex">
+    /// The index the copied element should appear in the <paramref name="toContainer"/>.
+    /// If this is default, the copy will be added as the last element
+    /// </param>
+    /// <returns></returns>
+    public IDragAndDropElement CopyChild(IDragAndDropContainer fromContainer, IDragAndDropElement existingChild, IDragAndDropContainer toContainer, int? targetIndex = default) {
+      if (Children is null) { return null; }
+
+      if (!Children.Contains(existingChild)) { throw new ArgumentException("The specified element must be a child of this container."); }
+
+      var copyOfChild = existingChild.Clone<IDragAndDropElement>();
+      toContainer.AddChild(copyOfChild, targetIndex);
+      return copyOfChild;
+    }
+
+    /// <summary>
+    /// Copies an existing <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> child from 
+    /// a specified <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> at the specified 
+    /// <paramref name="index"/>
+    /// </summary>
+    /// <param name="fromContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to copy 
+    /// the child located at the specified <paramref name="index"/> from
+    /// </param>
+    /// <param name="index">
+    /// The index for an existing <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+    /// in this container's list of 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+    /// </param>
+    /// <param name="toContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+    /// the copy of the child located at the specified <paramref name="index"/>
+    /// </param>
+    /// <param name="targetIndex">
+    /// The index the copied element should appear in the <paramref name="toContainer"/>.
+    /// If this is default, the copy will be added as the last element
+    /// </param>
+    /// <returns></returns>
+    public static IDragAndDropElement CopyChild(IDragAndDropContainer fromContainer, int index, IDragAndDropContainer toContainer, int? targetIndex = default) {
+      if (fromContainer.Children is null) { return null; }
+
+      if (index < 0) { throw new ArgumentOutOfRangeException("The specified target index must be greater than or equal to 0."); }
+      if (index > fromContainer.Children.Count()) { throw new ArgumentOutOfRangeException("The specified target index must be less than the count of children."); }
+
+      var existingChild = fromContainer.Children[index];
+      var copyOfChild = existingChild.Clone<IDragAndDropElement>();
+      toContainer.AddChild(copyOfChild, targetIndex);
+      return copyOfChild;
+    }
+    #endregion
     #endregion
   }
 }
