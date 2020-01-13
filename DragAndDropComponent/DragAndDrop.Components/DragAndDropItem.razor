@@ -1,25 +1,41 @@
-﻿@typeparam TItem
-<h3>DragAndDropItem</h3>
-@if (model == null) {
-  <p>No item has ever been set</p>
-} else if (model.Item == null) {
-  <p>The drag and drop item model was created, but the item is null</p>
-} else {
-  <p>@model.Item.ToString()</p>
-}
+﻿@inherits DragAndDropElement
+@typeparam TItem
+
+<div>
+  @if (model is null) {
+    if (LoadingTemplate is null) {
+      <p>Loading...</p>
+    } else {
+      @LoadingTemplate
+    }
+  } else if (model.Item is null) {
+    if (NullItemTemplate is null) {
+      <div>&nbsp;</div>
+    } else {
+      @NullItemTemplate(default(TItem))
+    }
+  } else {
+    if (ItemTemplate is null) {
+      <p>@Item.ToString()</p>
+    } else {
+      @ItemTemplate(model.Item) <text>@Id</text>
+    }
+  }
+</div>
 
 @code {
   DragAndDropItemViewModel<TItem> model;
 
   [Parameter] public TItem Item { get; set; }
-  [Parameter] public string Name { get; set; }
+
+  [Parameter] public RenderFragment LoadingTemplate { get; set; }
+  [Parameter] public RenderFragment<TItem> NullItemTemplate { get; set; }
+  [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
 
   protected override void OnParametersSet() {
-    if (model is null) {
-      model = new DragAndDropItemViewModel<TItem>() {
-        Name = Name
-      };
-    }
+    if (model is null) { model = new DragAndDropItemViewModel<TItem>(); }
+    // TODO: Validation: We can throw errors or show messages when some required field is not present, such as AllowedTargetNames
     model.Item = this.Item;
+    model.Name = this.Name;
   }
 }

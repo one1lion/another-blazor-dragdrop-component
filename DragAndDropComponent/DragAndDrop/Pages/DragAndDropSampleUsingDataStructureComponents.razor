@@ -6,25 +6,108 @@
 
 <p>Don't touch that heading</p>
 
-<DragAndDropItem Item="@("I am a not draggable")"></DragAndDropItem>
-
-<h3>Draggable Item Sample</h3>
-<DraggableItem Item="listOfStrings" DragEnabled="dragEnabled" Name="Draggable Item 1">
+<h3>Non-draggable Item Sample</h3>
+<DragAndDropItem Item="@("Non-draggable Item")" Name="DND Item 1">
   <NullItemTemplate>
     <div>
       <p>Item loading.  Please wait...</p>
     </div>
   </NullItemTemplate>
   <ItemTemplate>
-    <span class="oi oi-lock-@(dragEnabled ? "unlocked" : "locked")"></span>
-    <ul>
-      @foreach (var item in context) {
-        <li>@item</li>
-      }
-    </ul>
-    <button @onclick="ToggleDragEnabled">@(dragEnabled ? "Disable " : "Enable ") Dragging</button>
+    <p>@context</p>
+  </ItemTemplate>
+</DragAndDropItem>
+<br />
+<h3>Draggable Item Sample</h3>
+<DraggableItem Item="@("Draggable Item")" DragEnabled="dragEnabled" Name="Draggable Item 1">
+  <NullItemTemplate>
+    <div>
+      <p>Item loading.  Please wait...</p>
+    </div>
+  </NullItemTemplate>
+  <ItemTemplate>
+    <span class="oi oi-lock-@(dragEnabled ? "unlocked" : "locked")" style="cursor:pointer;" @onclick="ToggleDragEnabled"></span>
+    <p>@context</p>
   </ItemTemplate>
 </DraggableItem>
+<br />
+<h3>Drag and Drop Container Sample (Manual Items)</h3>
+<DragAndDropContainer Name="Outer Group Container">
+  <DragAndDropItem Item="@("Outer Group Item 1")" Name="Outer Group Item 1">
+    <NullItemTemplate>
+      <div>
+        <p>Item loading.  Please wait...</p>
+      </div>
+    </NullItemTemplate>
+    <ItemTemplate>
+      <p>Print it out like this: @context</p>
+    </ItemTemplate>
+  </DragAndDropItem>
+  <DraggableItem Item="@("Outer Group Item 2")" Name="Outer Group Item 2">
+    <NullItemTemplate>
+      <div>
+        <p>Item loading.  Please wait...</p>
+      </div>
+    </NullItemTemplate>
+    <ItemTemplate>
+      <p>Print it out like this: @context</p>
+    </ItemTemplate>
+  </DraggableItem>
+  <DraggableContainer Name="Inner Group Container">
+    <DragAndDropItem Item="@("Inner Group Item 1")" Name="Inner Group Item 1">
+      <NullItemTemplate>
+        <div>
+          <p>Item loading.  Please wait...</p>
+        </div>
+      </NullItemTemplate>
+      <ItemTemplate>
+        <p>Print it out like this: @context</p>
+      </ItemTemplate>
+    </DragAndDropItem>
+    <DragAndDropItem Item="@("Inner Group Item 2")" Name="Inner Group Item 2">
+      <NullItemTemplate>
+        <div>
+          <p>Item loading.  Please wait...</p>
+        </div>
+      </NullItemTemplate>
+      <ItemTemplate>
+        <p>Print it out like this: @context</p>
+      </ItemTemplate>
+    </DragAndDropItem>
+  </DraggableContainer>
+</DragAndDropContainer>
+
+<br />
+<h3>Drag and Drop Container Sample (Variable Holding List of Items)</h3>
+<DragAndDropContainer Name="Outer Group Container 2">
+  @if (queryParams is null || queryParams.Count == 0) {
+    <p>There are no query parameters</p>
+  } else {
+    var i = 0;
+
+    foreach (var qParm in queryParams) {
+      var curname = $"Query Param {i++}";
+      <DraggableItem Item="qParm" Name="@curname">
+        <NullItemTemplate>
+          <div>
+            <p>Item loading.  Please wait...</p>
+          </div>
+        </NullItemTemplate>
+        <ItemTemplate>
+          <div>@context.ToString()</div>
+          @if (i > 0 && i < queryParams.Count()) {
+            <div style="cursor:pointer;"
+                 @ondblclick="((e) => ToggleAndOr(e, qParm))"
+                 @ondblclick:preventDefault="true"
+                 @ondblclick:stopPropagation="true">&nbsp;&nbsp;@(qParm.AndWithNext ? "And" : "Or")</div>
+          }
+        </ItemTemplate>
+      </DraggableItem>
+    }
+  }
+</DragAndDropContainer>
+
+<div style="margin-top: 200px;"></div>
 
 @code {
   bool dragEnabled = true;
@@ -37,19 +120,41 @@
     }
   };
 
-  List<string> listOfStrings;
+  List<QueryParameter> queryParams = new List<QueryParameter>();
 
   protected override async Task OnInitializedAsync() {
     await Task.Delay(2000);
-
-    listOfStrings = new List<string> {
-      "First item",
-      "Second item",
-      "Third item"
-    };
+    queryParams.Add(new QueryParameter() {
+      Field = "DocTitle",
+      Operator = "Contains",
+      Values = new List<object>() {
+        "I'm a cookie"
+      }
+    });
+    queryParams.Add(new QueryParameter() {
+      Field = "DocStatus",
+      Operator = "In List",
+      Values = new List<object>() {
+        "RPT",
+        "MEM",
+        "COM",
+        "Log"
+      }
+    });
+    queryParams.Add(new QueryParameter() {
+      Field = "DocTitle",
+      Operator = "Does Not Contain",
+      Values = new List<object>() {
+        "There was a err"
+      }
+    });
   }
 
   void ToggleDragEnabled(MouseEventArgs e) {
     dragEnabled = !dragEnabled;
+  }
+
+  void ToggleAndOr(MouseEventArgs e, QueryParameter curParm) {
+    curParm.AndWithNext = !curParm.AndWithNext;
   }
 }

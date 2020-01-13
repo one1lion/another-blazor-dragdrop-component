@@ -10,7 +10,7 @@
   <div class="draganddrop-container" ondragover="event.preventDefault();">
     <h3>@container.Name</h3>
     @for (var i = 0; i < container.Children.Count(); i++) {
-      var group = container.Children[i] as DraggableGroupViewModel;
+      var group = container.Children[i] as DraggableContainerViewModel;
       <div class="draganddrop-group"
            draggable="@(group.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))"
            ondragover="event.preventDefault();"
@@ -73,7 +73,7 @@
     // Create 4 sample groups with 6 items each
     var intList = new List<int>() { 1, 2, 3, 4 };
     for (var i = 0; i < 4; i++) {
-      var group = new DraggableGroupViewModel() {
+      var group = new DraggableContainerViewModel() {
         Name = $"Group {i + 1}",
         AllowedTargetNames = intList.Where(il => il != i).Select(il => $"Group {il + 1}").ToList(),
         Parent = container,

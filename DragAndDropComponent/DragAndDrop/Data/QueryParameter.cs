@@ -19,7 +19,7 @@ namespace DragAndDrop.Data {
     public string Field { get; set; }
     public string Operator { get; set; }
     public List<object> Values { get; set; }
-
+    public bool AndWithNext { get; set; } = true;
     public override string ToString() => $"{Field} {Operator} {string.Join(", ", Values)}";
   }
 }

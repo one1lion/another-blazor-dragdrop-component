@@ -47,7 +47,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// own type as the generic type.  E.g.:
     /// <code>
     /// public DragAndDropContainerViewModel Clone() {
-    ///   return ((IDragAndDropElement)this).Clone<DragAndDropContainerViewModel>();
+    ///   return ((IDragAndDropElement)this).Clone&lt;DragAndDropContainerViewModel&gt;();
     /// }
     /// </code>
     /// </remarks>
@@ -84,6 +84,8 @@ namespace DragAndDrop.Components.Interfaces {
       return cloneOfElement;
     }
 
+    // Look at: https://stackoverflow.com/questions/863881/how-do-i-tell-if-a-type-is-a-simple-type-i-e-holds-a-single-value/863944
+    // for another example on testing types
     private object ClonePropValue(object propVal, Type propType) {
       var typeInfo = propType.GetTypeInfo();
 
@@ -302,24 +304,24 @@ namespace DragAndDrop.Components.Interfaces {
     /// <summary>
     /// A convenience method for returning either a 
     /// <see cref="DragAndDrop.Components.DragAndDropContainerViewModel" /> or a
-    /// <see cref="DragAndDrop.Components.DraggableGroupViewModel" />
+    /// <see cref="DragAndDrop.Components.DraggableContainerViewModel" />
     /// </summary>
     /// <param name="element">
     /// The <see cref="DragAndDrop.Components.Interfaces.IDraggableElement"/>
     /// to group this element with
     /// </param>
     /// <param name="makeDraggable">
-    /// If true, this will return a <see cref="DragAndDrop.Components.DraggableGroupViewModel" />, otherwise it will return
+    /// If true, this will return a <see cref="DragAndDrop.Components.DraggableContainerViewModel" />, otherwise it will return
     /// a <see cref="DragAndDrop.Components.DragAndDropContainerViewModel" />
     /// </param>
     /// <param name="showFirst">Whether or not this item should appear first in the new group</param>
     /// <returns>
-    /// If <paramref name="makeDraggable"/> is true, a <see cref="DragAndDrop.Components.DraggableGroupViewModel" />, 
+    /// If <paramref name="makeDraggable"/> is true, a <see cref="DragAndDrop.Components.DraggableContainerViewModel" />, 
     /// otherwise a <see cref="DragAndDrop.Components.DragAndDropContainerViewModel" />
     /// </returns>
     public IDragAndDropContainer GroupWith(IDragAndDropElement element, bool makeDraggable, bool showFirst = false) {
       return makeDraggable ?
-        GroupWith<DraggableGroupViewModel>(element, showFirst) :
+        GroupWith<DraggableContainerViewModel>(element, showFirst) :
         GroupWith<DragAndDropContainerViewModel>(element, showFirst);
     }
   }
