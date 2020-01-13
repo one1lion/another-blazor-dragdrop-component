@@ -1,0 +1,52 @@
+﻿@using System.Reflection;
+
+@if (Model is null) {
+  <p>No model specified</p>
+} else {
+  <DraggableContainer Name="@Model.Name" ShowTitle="ShowTitle" DragEnabled="@isDraggable">
+    @if (Model.Children is null || Model.Children.Count() == 0) {
+      <p>No children added</p>
+    } else {
+      foreach (var child in Model.Children) {
+        var childTypeInfo = child.GetType().GetTypeInfo();
+        switch (childTypeInfo) {
+          case var ti when ti.ImplementedInterfaces.Contains(typeof(IDragAndDropContainer)): {
+              <DragAndDropAutoBuilder Model="(IDragAndDropContainer)child" />
+              break;
+            }
+          case var ti when ti.ImplementedInterfaces.Contains(typeof(IDraggableElement)): {
+              <DraggableItem Item="child" DragEnabled="((IDraggableElement)child).DragEnabled">
+                <ItemTemplate>
+                  @ItemTemplate(context)
+                </ItemTemplate>
+              </DraggableItem>
+              break;
+            }
+          default: {
+              <DraggableItem Item="child" DragEnabled="false">
+                <ItemTemplate>
+                  @ItemTemplate(context)
+                </ItemTemplate>
+              </DraggableItem>
+              break;
+            }
+
+        }
+      }
+    }
+  </DraggableContainer>
+}
+
+@code {
+  [Parameter] public IDragAndDropContainer Model { get; set; }
+  [Parameter] public bool ShowTitle { get; set; }
+  [Parameter] public RenderFragment<IDragAndDropElement> ItemTemplate { get; set; }
+  bool isDraggable = false;
+
+  protected override void OnParametersSet() {
+    var typeInfo = Model.GetType().GetTypeInfo();
+    if (typeInfo.ImplementedInterfaces.Contains(typeof(IDraggableElement))) {
+      isDraggable = ((IDraggableElement)Model).DragEnabled;
+    }
+  }
+}
