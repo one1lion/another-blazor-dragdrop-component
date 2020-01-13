@@ -1,13 +1,13 @@
-﻿@inherits DragAndDropElement
+﻿@inherits DragAndDropElementBase
 
-<div class="draganddrop-group">
+<div>
   @if (model is null) {
     <p>Model is null</p>
   } else {
     @if (!string.IsNullOrWhiteSpace(model.Name) && ShowTitle) {
-      <div class="draganddrop-groupname h4">@model.Name</div>
+      <div>@model.Name</div>
     }
-    <div class="draganddrop-item-list">
+    <div>
       @if (ChildContent is null) {
         <p>No children</p>
       } else {

@@ -1,14 +1,14 @@
-﻿@inherits DragAndDropElement
+﻿@inherits DragAndDropElementBase
 @using System.Globalization
 
-<div class="draganddrop-group" draggable="@(model is null ? "false" : model.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))">
+<div draggable="@(model is null ? "false" : model.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))">
   @if (model is null) {
     <p>Model is null</p>
   } else {
     @if (!string.IsNullOrWhiteSpace(model.Name) && ShowTitle) {
-      <div class="draganddrop-groupname h4">@model.Name</div>
+      <div>@model.Name</div>
     }
-    <div class="draganddrop-item-list">
+    <div>
       @if (ChildContent is null) {
         <p>No children</p>
       } else {
