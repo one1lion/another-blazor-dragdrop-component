@@ -61,7 +61,7 @@
         <member name="M:DragAndDrop.Components.DragAndDropItemViewModel`1.Clone">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
-        <member name="T:DragAndDrop.Components.DraggableGroupViewModel">
+        <member name="T:DragAndDrop.Components.DraggableContainerViewModel">
             <summary>
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
             and <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
@@ -70,16 +70,16 @@
             target <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer" />
             </summary>
         </member>
-        <member name="M:DragAndDrop.Components.DraggableGroupViewModel.#ctor">
+        <member name="M:DragAndDrop.Components.DraggableContainerViewModel.#ctor">
             <summary>The default constructor</summary>
         </member>
-        <member name="P:DragAndDrop.Components.DraggableGroupViewModel.DragEnabled">
+        <member name="P:DragAndDrop.Components.DraggableContainerViewModel.DragEnabled">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
         </member>
-        <member name="P:DragAndDrop.Components.DraggableGroupViewModel.AllowedTargetNames">
+        <member name="P:DragAndDrop.Components.DraggableContainerViewModel.AllowedTargetNames">
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames" />
         </member>
-        <member name="M:DragAndDrop.Components.DraggableGroupViewModel.Clone">
+        <member name="M:DragAndDrop.Components.DraggableContainerViewModel.Clone">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
         <member name="T:DragAndDrop.Components.DraggableItemViewModel`1">
@@ -282,7 +282,7 @@
             </param>
             <param name="toContainer">
             The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
-            the copy of the <paramref name="existingChild"/> to
+            the copy of the child located at the specified <paramref name="index"/>
             </param>
             <param name="targetIndex">
             The index the copied element should appear in the <paramref name="toContainer"/>.
@@ -318,7 +318,25 @@
             <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent"/>'s element
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1" -->
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1">
+            <summary>
+            Creates a deep copy of this element
+            </summary>
+            <typeparam name="TDragAndDropElement">
+            The implemented type if <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
+            </typeparam>
+            <returns>A deep copy of this element.  This includes a copy of any reference elements</returns>
+            <remarks>
+            An implementation of IDragAndDropElement or derivation should include a Clone() method that
+            does not have any parameters and is not Generic.  It should wrap this method specifying its
+            own type as the generic type.  E.g.:
+            <code>
+            public DragAndDropContainerViewModel Clone() {
+              return ((IDragAndDropElement)this).Clone&lt;DragAndDropContainerViewModel&gt;();
+            }
+            </code>
+            </remarks>
+        </member>
         <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith``1(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
             <summary>
             Groups this element with the specified <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
@@ -337,19 +355,19 @@
             <summary>
             A convenience method for returning either a 
             <see cref="T:DragAndDrop.Components.DragAndDropContainerViewModel" /> or a
-            <see cref="T:DragAndDrop.Components.DraggableGroupViewModel" />
+            <see cref="T:DragAndDrop.Components.DraggableContainerViewModel" />
             </summary>
             <param name="element">
             The <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
             to group this element with
             </param>
             <param name="makeDraggable">
-            If true, this will return a <see cref="T:DragAndDrop.Components.DraggableGroupViewModel" />, otherwise it will return
+            If true, this will return a <see cref="T:DragAndDrop.Components.DraggableContainerViewModel" />, otherwise it will return
             a <see cref="T:DragAndDrop.Components.DragAndDropContainerViewModel" />
             </param>
             <param name="showFirst">Whether or not this item should appear first in the new group</param>
             <returns>
-            If <paramref name="makeDraggable"/> is true, a <see cref="T:DragAndDrop.Components.DraggableGroupViewModel" />, 
+            If <paramref name="makeDraggable"/> is true, a <see cref="T:DragAndDrop.Components.DraggableContainerViewModel" />, 
             otherwise a <see cref="T:DragAndDrop.Components.DragAndDropContainerViewModel" />
             </returns>
         </member>

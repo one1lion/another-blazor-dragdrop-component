@@ -1,7 +1,40 @@
-﻿<h3>DragAndDropContainer</h3>
+﻿@inherits DragAndDropElement
+
+<div class="draganddrop-group">
+  @if (model is null) {
+    <p>Model is null</p>
+  } else {
+    @if (!string.IsNullOrWhiteSpace(model.Name)) {
+      <div class="draganddrop-groupname h4">@model.Name (@Id)</div>
+    }
+    <div class="draganddrop-item-list">
+      @*@if(ChildElements is null) {
+        <p>No children</p>
+      } else {
+        @ChildElements
+      }*@
+      @if (ChildContent is null) { //model.Children is null || model.Children.Count() == 0) {
+          <p>No children</p>
+        } else {
+          @ChildContent
+        }
+    </div>
+  }
+</div>
 
 
 @code {
-  IDragAndDropContainer model;
+  DragAndDropContainerViewModel model;
 
+  [Parameter] public RenderFragment ChildContent { get; set; }
+  //[Parameter] public List<IDragAndDropElement> Children { get; set; }
+  //[Parameter] public RenderFragment ChildElements { get; set; }
+
+  protected override void OnInitialized() {
+    model = new DragAndDropContainerViewModel();
+  }
+
+  protected override void OnParametersSet() {
+    model.Name = Name;
+  }
 }

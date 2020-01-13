@@ -10,9 +10,9 @@ namespace DragAndDrop.Components {
   /// moving the entire group (with its children) into the 
   /// target <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer" />
   /// </summary>
-  public class DraggableGroupViewModel : DragAndDropContainerViewModel, IDraggableElement {
+  public class DraggableContainerViewModel : DragAndDropContainerViewModel, IDraggableElement {
     /// <summary>The default constructor</summary>
-    public DraggableGroupViewModel() : base() { }
+    public DraggableContainerViewModel() : base() { }
 
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
     public bool DragEnabled { get; set; } = true;
@@ -20,8 +20,8 @@ namespace DragAndDrop.Components {
     public List<string> AllowedTargetNames { get; set; }
 
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
-    public new DraggableGroupViewModel Clone() {
-      return ((IDragAndDropElement)this).Clone<DraggableGroupViewModel>();
+    public new DraggableContainerViewModel Clone() {
+      return ((IDragAndDropElement)this).Clone<DraggableContainerViewModel>();
     }
 
   }

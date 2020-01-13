@@ -276,7 +276,7 @@ namespace DragAndDrop.Components.Interfaces {
     /// </param>
     /// <param name="toContainer">
     /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
-    /// the copy of the <paramref name="existingChild"/> to
+    /// the copy of the child located at the specified <paramref name="index"/>
     /// </param>
     /// <param name="targetIndex">
     /// The index the copied element should appear in the <paramref name="toContainer"/>.

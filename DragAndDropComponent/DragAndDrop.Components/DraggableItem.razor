@@ -1,4 +1,5 @@
-﻿@typeparam TItem
+﻿@inherits DragAndDropElement
+@typeparam TItem
 @using System.Globalization
 
 <div draggable="@(model is null ? "false" : model.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))">
@@ -9,13 +10,13 @@
       @LoadingTemplate
     }
   } else if (model.Item is null) {
-    if(NullItemTemplate is null) {
+    if (NullItemTemplate is null) {
       <div>&nbsp;</div>
     } else {
       @NullItemTemplate(default(TItem))
     }
   } else {
-    @ItemTemplate(model.Item)
+    @ItemTemplate(model.Item) <text>@Id</text>
   }
 </div>
 
@@ -23,7 +24,6 @@
   DraggableItemViewModel<TItem> model;
 
   [Parameter] public TItem Item { get; set; }
-  [Parameter] public string Name { get; set; }
   [Parameter] public bool DragEnabled { get; set; } = true;
   [Parameter] public List<string> AllowedTargetNames { get; set; }
 

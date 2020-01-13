@@ -30,7 +30,7 @@ namespace DragAndDrop.Tests {
           new DragAndDropContainerViewModel() {
             Name = "Item 3"
           },
-          new DraggableGroupViewModel() {
+          new DraggableContainerViewModel() {
             Name = "Item 4",
             AllowedTargetNames = new List<string>() { "Group inside an item" }
           }
@@ -60,7 +60,7 @@ namespace DragAndDrop.Tests {
       Assert.IsInstanceOf(clonedElement.Children[2].GetType(), typeof(DragAndDropContainerViewModel));
       Assert.AreNotSame(element.Children[3], clonedElement.Children[3]);
       Assert.AreNotEqual(element.Children[3].Name, clonedElement.Children[3].Name);
-      Assert.IsInstanceOf(clonedElement.Children[3].GetType(), typeof(DraggableGroupViewModel));
+      Assert.IsInstanceOf(clonedElement.Children[3].GetType(), typeof(DraggableContainerViewModel));
 
     }
   }

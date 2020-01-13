@@ -10,7 +10,7 @@
   <div class="draganddrop-container" ondragover="event.preventDefault();">
     <h3>@container.Name</h3>
     @for (var i = 0; i < container.Children.Count(); i++) {
-      var group = container.Children[i] as DraggableGroupViewModel;
+      var group = container.Children[i] as DraggableContainerViewModel;
       <div class="draganddrop-group"
            draggable="@(group.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))"
            ondragover="event.preventDefault();"
@@ -73,7 +73,7 @@
     // Create 4 sample groups with 6 items each
     var intList = new List<int>() { 1, 2, 3, 4 };
     for (var i = 0; i < 4; i++) {
-      var group = new DraggableGroupViewModel() {
+      var group = new DraggableContainerViewModel() {
         Name = $"Group {i + 1}",
         AllowedTargetNames = intList.Where(il => il != i).Select(il => $"Group {il + 1}").ToList(),
         Parent = container,
@@ -95,21 +95,21 @@
       Name = "MyName",
       AllowedTargetNames = new List<string>() { "Group 1" },
       DragEnabled = true,
-      Parent = (DraggableGroupViewModel)container.Children[0],
+      Parent = (DraggableContainerViewModel)container.Children[0],
       Item = "Part of new group"
     };
 
-    ((DraggableGroupViewModel)container.Children[0]).Children.Add(item1);
+    ((DraggableContainerViewModel)container.Children[0]).Children.Add(item1);
 
     var item2 = new DraggableItemViewModel<string>() {
       Name = "OtherName",
       AllowedTargetNames = new List<string>() { "Group 2" },
       DragEnabled = true,
-      Parent = (DraggableGroupViewModel)container.Children[1],
+      Parent = (DraggableContainerViewModel)container.Children[1],
       Item = "Other part of new group"
     };
 
-    ((DraggableGroupViewModel)container.Children[1]).Children.Add(item2);
+    ((DraggableContainerViewModel)container.Children[1]).Children.Add(item2);
 
     var item3 = new DragAndDropItemViewModel<string>() {
       Name = "ImmovableDnDItem",
@@ -137,7 +137,7 @@
     thisIsTrue = (item2.AllowedTargetNames.Contains(compositeName));
 
     // Truths about order
-    var otherNewGroup = newGroup.GroupWith<DraggableGroupViewModel>(item3, true);
+    var otherNewGroup = newGroup.GroupWith<DraggableContainerViewModel>(item3, true);
     thisIsTrue = (otherNewGroup.Parent == container);
     thisIsTrue = (newGroup.Parent == otherNewGroup);
     thisIsTrue = (item3.Parent == otherNewGroup);
