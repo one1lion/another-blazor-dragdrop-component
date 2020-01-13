@@ -4,20 +4,15 @@
   @if (model is null) {
     <p>Model is null</p>
   } else {
-    @if (!string.IsNullOrWhiteSpace(model.Name)) {
-      <div class="draganddrop-groupname h4">@model.Name (@Id)</div>
+    @if (!string.IsNullOrWhiteSpace(model.Name) && ShowTitle) {
+      <div class="draganddrop-groupname h4">@model.Name</div>
     }
     <div class="draganddrop-item-list">
-      @*@if(ChildElements is null) {
+      @if (ChildContent is null) {
         <p>No children</p>
       } else {
-        @ChildElements
-      }*@
-      @if (ChildContent is null) { //model.Children is null || model.Children.Count() == 0) {
-          <p>No children</p>
-        } else {
-          @ChildContent
-        }
+        @ChildContent
+      }
     </div>
   }
 </div>
@@ -26,9 +21,9 @@
 @code {
   DragAndDropContainerViewModel model;
 
+  [Parameter] public bool ShowTitle { get; set; } = true;
+
   [Parameter] public RenderFragment ChildContent { get; set; }
-  //[Parameter] public List<IDragAndDropElement> Children { get; set; }
-  //[Parameter] public RenderFragment ChildElements { get; set; }
 
   protected override void OnInitialized() {
     model = new DragAndDropContainerViewModel();

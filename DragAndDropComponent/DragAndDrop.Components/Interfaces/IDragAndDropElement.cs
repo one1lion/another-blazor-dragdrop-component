@@ -324,5 +324,52 @@ namespace DragAndDrop.Components.Interfaces {
         GroupWith<DraggableContainerViewModel>(element, showFirst) :
         GroupWith<DragAndDropContainerViewModel>(element, showFirst);
     }
+
+    #region CopyTo
+    /// <summary>
+    /// Copies this <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to a target 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+    /// at the specified index
+    /// </summary>
+    /// <param name="toContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+    /// a copy of this <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
+    /// </param>
+    /// <param name="targetIndex">
+    /// The index the copied element should appear in the <paramref name="toContainer"/>.
+    /// If this is default, the copy will be added as the last element
+    /// </param>
+    /// <returns></returns>
+    public IDragAndDropElement CopyTo(IDragAndDropContainer toContainer, int? targetIndex = default) {
+      var copyOfElement = Clone<IDragAndDropElement>();
+      toContainer.AddChild(copyOfElement, targetIndex);
+      return copyOfElement;
+    }
+
+    /// <summary>
+    /// Copies an <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to a target 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+    /// at the specified index
+    /// </summary>
+    /// <param name="existingElement">
+    /// An existing <see cref="DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+    /// in this container's list of 
+    /// <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+    /// </param>
+    /// <param name="toContainer">
+    /// The <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+    /// the copy of the <paramref name="existingElement"/> to
+    /// </param>
+    /// <param name="targetIndex">
+    /// The index the copied element should appear in the <paramref name="toContainer"/>.
+    /// If this is default, the copy will be added as the last element
+    /// </param>
+    /// <returns></returns>
+    public static IDragAndDropElement CopyTo(IDragAndDropElement existingElement, IDragAndDropContainer toContainer, int? targetIndex = default) {
+      var copyOfElement = existingElement.Clone<IDragAndDropElement>();
+      toContainer.AddChild(copyOfElement, targetIndex);
+      return copyOfElement;
+    }
+    #endregion
   }
 }

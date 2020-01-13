@@ -290,6 +290,55 @@
             </param>
             <returns></returns>
         </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.CopyChild(DragAndDrop.Components.Interfaces.IDragAndDropContainer,DragAndDrop.Components.Interfaces.IDragAndDropElement,DragAndDrop.Components.Interfaces.IDragAndDropContainer,System.Nullable{System.Int32})">
+            <summary>
+            Copies an existing <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> child from 
+            a specified <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            </summary>
+            <param name="fromContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to copy 
+            the child from
+            </param>
+            <param name="existingChild">
+            An existing <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+            in this container's list of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+            </param>
+            <param name="toContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+            the copy of the <paramref name="existingChild"/> to
+            </param>
+            <param name="targetIndex">
+            The index the copied element should appear in the <paramref name="toContainer"/>.
+            If this is default, the copy will be added as the last element
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.CopyChild(DragAndDrop.Components.Interfaces.IDragAndDropContainer,System.Int32,DragAndDrop.Components.Interfaces.IDragAndDropContainer,System.Nullable{System.Int32})">
+            <summary>
+            Copies an existing <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> child from 
+            a specified <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> at the specified 
+            <paramref name="index"/>
+            </summary>
+            <param name="fromContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to copy 
+            the child located at the specified <paramref name="index"/> from
+            </param>
+            <param name="index">
+            The index for an existing <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+            in this container's list of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+            </param>
+            <param name="toContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+            the copy of the child located at the specified <paramref name="index"/>
+            </param>
+            <param name="targetIndex">
+            The index the copied element should appear in the <paramref name="toContainer"/>.
+            If this is default, the copy will be added as the last element
+            </param>
+            <returns></returns>
+        </member>
         <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropElement">
             <summary>
             The basic element for a Drag And Drop Component of which all elements are derived
@@ -370,6 +419,43 @@
             If <paramref name="makeDraggable"/> is true, a <see cref="T:DragAndDrop.Components.DraggableContainerViewModel" />, 
             otherwise a <see cref="T:DragAndDrop.Components.DragAndDropContainerViewModel" />
             </returns>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.CopyTo(DragAndDrop.Components.Interfaces.IDragAndDropContainer,System.Nullable{System.Int32})">
+            <summary>
+            Copies this <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to a target 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            at the specified index
+            </summary>
+            <param name="toContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+            a copy of this <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/>
+            </param>
+            <param name="targetIndex">
+            The index the copied element should appear in the <paramref name="toContainer"/>.
+            If this is default, the copy will be added as the last element
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.CopyTo(DragAndDrop.Components.Interfaces.IDragAndDropElement,DragAndDrop.Components.Interfaces.IDragAndDropContainer,System.Nullable{System.Int32})">
+            <summary>
+            Copies an <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> to a target 
+            <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
+            at the specified index
+            </summary>
+            <param name="existingElement">
+            An existing <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> 
+            in this container's list of 
+            <see cref="P:DragAndDrop.Components.Interfaces.IDragAndDropContainer.Children"/> 
+            </param>
+            <param name="toContainer">
+            The <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/> to add
+            the copy of the <paramref name="existingElement"/> to
+            </param>
+            <param name="targetIndex">
+            The index the copied element should appear in the <paramref name="toContainer"/>.
+            If this is default, the copy will be added as the last element
+            </param>
+            <returns></returns>
         </member>
         <member name="T:DragAndDrop.Components.Interfaces.IDragAndDropGroupable">
             <summary>

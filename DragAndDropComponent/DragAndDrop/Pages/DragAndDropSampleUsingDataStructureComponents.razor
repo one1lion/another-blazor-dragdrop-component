@@ -1,5 +1,6 @@
 ﻿@page "/dnd-structcomp"
 @using DragAndDrop.Components
+@using DragAndDrop.Components.Interfaces
 @using DragAndDrop.Data
 
 <h3>DragAndDropSampleUsingDataStructureComponents</h3>
@@ -86,23 +87,32 @@
     var i = 0;
 
     foreach (var qParm in queryParams) {
-      var curname = $"Query Param {i++}";
-      <DraggableItem Item="qParm" Name="@curname">
-        <NullItemTemplate>
-          <div>
-            <p>Item loading.  Please wait...</p>
-          </div>
-        </NullItemTemplate>
-        <ItemTemplate>
-          <div>@context.ToString()</div>
-          @if (i > 0 && i < queryParams.Count()) {
-            <div style="cursor:pointer;"
-                 @ondblclick="((e) => ToggleAndOr(e, qParm))"
-                 @ondblclick:preventDefault="true"
-                 @ondblclick:stopPropagation="true">&nbsp;&nbsp;@(qParm.AndWithNext ? "And" : "Or")</div>
-          }
-        </ItemTemplate>
-      </DraggableItem>
+      var curName = $"Query Param {i++}";
+      var displayAndOr = i < queryParams.Count();
+      <DraggableContainer Name="@curName" ShowTitle="false">
+        @{ curName += "_Item"; }
+        <DragAndDropItem Item="qParm" Name="@curName">
+          <NullItemTemplate>
+            <div>
+              <p>Item loading.  Please wait...</p>
+            </div>
+          </NullItemTemplate>
+          <ItemTemplate>
+            <div>@context.ToString()</div>
+          </ItemTemplate>
+        </DragAndDropItem>
+        @if (displayAndOr) {
+          var curAndOr = qParm.AndWithNext ? "And" : "Or";
+          <DragAndDropItem Item="qParm">
+            <ItemTemplate>
+              <div style="cursor:pointer;"
+                   @ondblclick="((e) => ToggleAndOr(e, context))"
+                   @ondblclick:preventDefault="true"
+                   @ondblclick:stopPropagation="true">&nbsp;&nbsp;@(context.AndWithNext ? "And" : "Or")</div>
+            </ItemTemplate>
+          </DragAndDropItem>
+        }
+      </DraggableContainer>
     }
   }
 </DragAndDropContainer>
@@ -123,7 +133,7 @@
   List<QueryParameter> queryParams = new List<QueryParameter>();
 
   protected override async Task OnInitializedAsync() {
-    await Task.Delay(2000);
+    await Task.Delay(1000);
     queryParams.Add(new QueryParameter() {
       Field = "DocTitle",
       Operator = "Contains",
