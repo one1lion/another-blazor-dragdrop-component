@@ -79,7 +79,12 @@
 </DragAndDropContainer>
 
 <br />
-<h3>Drag and Drop Container Sample (Variable Holding List of Items)</h3>
+<h3>Drag and Drop Container Sample (Using a Variable That Holds a List of Items)</h3>
+<p>
+  This one uses draggable groups to surround 2 non-draggable elements.  The first element represent
+  a search criteria.  The second represents the "AndWithNext" item that displays "And" or "Or" between
+  two search criteria.
+</p>
 <DragAndDropContainer Name="Outer Group Container 2">
   @if (queryParams is null || queryParams.Count == 0) {
     <p>There are no query parameters</p>
@@ -91,24 +96,27 @@
       var displayAndOr = i < queryParams.Count();
       <DraggableContainer Name="@curName" ShowTitle="false">
         @{ curName += "_Item"; }
-        <DragAndDropItem Item="qParm" Name="@curName">
+        <DragAndDropItem Name="@curName" Item="qParm">
           <NullItemTemplate>
             <div>
               <p>Item loading.  Please wait...</p>
             </div>
           </NullItemTemplate>
           <ItemTemplate>
-            <div>@context.ToString()</div>
+            <div style="cursor:move;">@context.ToString()</div>
           </ItemTemplate>
         </DragAndDropItem>
         @if (displayAndOr) {
           var curAndOr = qParm.AndWithNext ? "And" : "Or";
-          <DragAndDropItem Item="qParm">
+          curName += "_AndOr";
+          <DragAndDropItem Name="@curName" Item="qParm">
             <ItemTemplate>
               <div style="cursor:pointer;"
                    @ondblclick="((e) => ToggleAndOr(e, context))"
                    @ondblclick:preventDefault="true"
-                   @ondblclick:stopPropagation="true">&nbsp;&nbsp;@(context.AndWithNext ? "And" : "Or")</div>
+                   @ondblclick:stopPropagation="true">
+                &nbsp;&nbsp;@(context.AndWithNext ? "And" : "Or")
+              </div>
             </ItemTemplate>
           </DragAndDropItem>
         }
@@ -116,7 +124,92 @@
     }
   }
 </DragAndDropContainer>
+<br />
+<h3>Drag and Drop Container Sample Alternate (Using a Variable That Holds a List of Items)</h3>
+<p>
+  This version uses a DraggableItem immediately followed by a non-draggable item (DragAndDropItem).
+  The draggable item represents the search criteria and the non-draggable item represents the
+  "AndWithNext" item that displays the "And" or "Or" between two search criteria.
+</p>
+<DragAndDropContainer Name="Outer Group Container 2">
+  @if (queryParams is null || queryParams.Count == 0) {
+    <p>There are no query parameters</p>
+  } else {
+    var i = 0;
 
+    foreach (var qParm in queryParams) {
+      var curName = $"Query Param {i++}";
+      var displayAndOr = i < queryParams.Count();
+      <DraggableItem Name="@curName" Item="qParm">
+        <NullItemTemplate>
+          <div>
+            <p>Item loading.  Please wait...</p>
+          </div>
+        </NullItemTemplate>
+        <ItemTemplate>
+          <div style="cursor:move">@context.ToString()</div>
+        </ItemTemplate>
+      </DraggableItem>
+      curName += "_AndOr";
+      if (displayAndOr) {
+        var curAndOr = qParm.AndWithNext ? "And" : "Or";
+        <DragAndDropItem Name="@curName" Item="qParm">
+          <ItemTemplate>
+            <div style="cursor:pointer;"
+                 @ondblclick="((e) => ToggleAndOr(e, context))"
+                 @ondblclick:preventDefault="true"
+                 @ondblclick:stopPropagation="true">
+              &nbsp;&nbsp;@(context.AndWithNext ? "And" : "Or")
+            </div>
+          </ItemTemplate>
+        </DragAndDropItem>
+      }
+    }
+  }
+</DragAndDropContainer>
+<br />
+<h3>Drag and Drop Container Sample Alternate 2 (Using a Variable That Holds a List of Items)</h3>
+<p>
+  This version uses a DraggableItem immediately followed by a DragAndDropElement.
+  The draggable item represents the search criteria and the DragAndDropElement represents the
+  "AndWithNext" item that displays the "And" or "Or" between two search criteria.
+</p>
+<DragAndDropContainer Name="Outer Group Container 2">
+  @if (queryParams is null || queryParams.Count == 0) {
+    <p>There are no query parameters</p>
+  } else {
+    var i = 0;
+
+    foreach (var qParm in queryParams) {
+      var curName = $"Query Param {i++}";
+      var displayAndOr = i < queryParams.Count();
+      <DraggableItem Name="@curName" Item="qParm">
+        <NullItemTemplate>
+          <div>
+            <p>Item loading.  Please wait...</p>
+          </div>
+        </NullItemTemplate>
+        <ItemTemplate>
+          <div style="cursor:move">@context.ToString()</div>
+        </ItemTemplate>
+      </DraggableItem>
+      curName += "_AndOr";
+      if (displayAndOr) {
+        var curAndOr = qParm.AndWithNext ? "And" : "Or";
+        <DragAndDropElement Name="@curName">
+          <div style="cursor:pointer;"
+               @ondblclick="((e) => ToggleAndOr(e, qParm))"
+               @ondblclick:preventDefault="true"
+               @ondblclick:stopPropagation="true">
+            &nbsp;&nbsp;@(qParm.AndWithNext ? "And" : "Or")
+          </div>
+        </DragAndDropElement>
+      }
+    }
+  }
+</DragAndDropContainer>
+
+<br />
 <div style="margin-top: 200px;"></div>
 
 @code {

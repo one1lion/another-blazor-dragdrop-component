@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace DragAndDrop.Components {
-  public class DragAndDropElement : ComponentBase, IDragAndDropElement {
+  public class DragAndDropElementBase : ComponentBase, IDragAndDropElement {
     public string Id { get; }
-    public DragAndDropElement() {
+    public DragAndDropElementBase() {
       Id = Guid.NewGuid().ToString();
     }
 
