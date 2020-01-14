@@ -12,26 +12,25 @@
         var childTypeInfo = child.GetType().GetTypeInfo();
         switch (childTypeInfo) {
           case var ti when ti.ImplementedInterfaces.Contains(typeof(IDragAndDropContainer)): {
-              <DragAndDropAutoBuilder Model="(IDragAndDropContainer)child" TItem="TItem"/>
+              <DragAndDropAutoBuilder Model="(IDragAndDropContainer)child" TItem="TItem" />
               break;
             }
           case var ti when ti.ImplementedInterfaces.Contains(typeof(IDraggableElement)): {
-              <DraggableItem Name="@child.Name" Item="((DraggableItemViewModel<TItem>)child).Item" DragEnabled="((IDraggableElement)child).DragEnabled">
-                <ItemTemplate>
-                  @ItemTemplate((IDragAndDropElement)context)
-                </ItemTemplate>
-              </DraggableItem>
+              <DraggableItem Name="@child.Name" Item="((DraggableItemViewModel)child).Item" DragEnabled="((IDraggableElement)child).DragEnabled" ItemTemplate="ItemTemplate" />
+              break;
+            }
+          case var ti when ti.IsGenericType: {
+              <DraggableItem Name="@child.Name" Item="((DragAndDropItemViewModel)child).Item" DragEnabled="false" ItemTemplate="ItemTemplate" />
               break;
             }
           default: {
-              <DraggableItem Name="@child.Name" Item="((DragAndDropItemViewModel<TItem>)child).Item" DragEnabled="false">
-                <ItemTemplate>
-                  @ItemTemplate((IDragAndDropElement)context)
-                </ItemTemplate>
-              </DraggableItem>
+              <DragAndDropElement Name="@child.Name">
+                @child
+              </DragAndDropElement>
+            
               break;
             }
-
+        
         }
       }
     }
@@ -41,7 +40,7 @@
 @code {
   [Parameter] public IDragAndDropContainer Model { get; set; }
   [Parameter] public bool ShowTitle { get; set; }
-  [Parameter] public RenderFragment<IDragAndDropElement> ItemTemplate { get; set; }
+  [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
   bool isDraggable = false;
 
   protected override void OnParametersSet() {
