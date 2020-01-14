@@ -1,0 +1,17 @@
+﻿@page "/dnd-simplelist"
+@using DragAndDrop.Components
+
+<h3>Drag And Drop Simple List</h3>
+<p>This uses the component library to create a simple list of drag and drop items</p>
+
+<DragAndDropSimpleList List="items"></DragAndDropSimpleList>
+
+@code {
+  List<string> items = new List<string>() {
+    "Cat",
+    "Other Cat",
+    "Otter Cat",
+    "More Cat",
+    "Mere Cat"
+  };
+}

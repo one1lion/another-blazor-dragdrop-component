@@ -50,6 +50,9 @@
         <member name="M:DragAndDrop.Components.DragAndDropContainerViewModel.Clone">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
+        <member name="M:DragAndDrop.Components.DragAndDropContainerViewModel.AddChildElement(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Nullable{System.Int32})">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropContainer.AddChild(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Nullable{System.Int32})"/>
+        </member>
         <member name="M:DragAndDrop.Components.DragAndDropContainerViewModel.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith``1(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)"/>
         </member>
@@ -86,7 +89,7 @@
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> that
             wraps content.  This element is not draggable.
             </summary>
-            <typeparam name="T">The type of data contained within the element</typeparam>
+            <typeparam name="TItem">The type of data contained within the element</typeparam>
         </member>
         <member name="M:DragAndDrop.Components.DragAndDropItemViewModel`1.#ctor">
             <summary>
@@ -154,7 +157,7 @@
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
             that can be dragged onto/into <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer" />s
             </summary>
-            <typeparam name="T">The type of data contained within the element</typeparam>
+            <typeparam name="TItem">The type of data contained within the element</typeparam>
         </member>
         <member name="M:DragAndDrop.Components.DraggableItemViewModel`1.#ctor">
             <summary>The default constructor</summary>

@@ -211,7 +211,28 @@
 
 <br />
 <h3>Using AutoBuilder</h3>
-<div></div>
+<DragAndDropAutoBuilder Model="autoBuilderModel" ShowTitle="true" TItem="QueryParameter">
+  <DraggableGroupTemplate></DraggableGroupTemplate>
+  <NonDraggableGroupTemplate></NonDraggableGroupTemplate>
+  <DraggableItemTemplate>
+    <div class="draganddrop-item" style="cursor:move">@context.ToString()</div>
+    <div style="cursor:pointer;"
+         @ondblclick="((e) => ToggleAndOr(e, context))"
+         @ondblclick:preventDefault="true"
+         @ondblclick:stopPropagation="true">
+      &nbsp;&nbsp;@(context.AndWithNext ? "And" : "Or")
+    </div>
+  </DraggableItemTemplate>
+  <NonDraggableItemTemplate>
+    <div style="cursor:default">@context.ToString()</div>
+    <div style="cursor:pointer;"
+         @ondblclick="((e) => ToggleAndOr(e, context))"
+         @ondblclick:preventDefault="true"
+         @ondblclick:stopPropagation="true">
+      &nbsp;&nbsp;@(context.AndWithNext ? "And" : "Or")
+    </div>
+  </NonDraggableItemTemplate>
+</DragAndDropAutoBuilder>
 <div style="margin-top: 200px;"></div>
 
 @code {
@@ -244,7 +265,8 @@
         "MEM",
         "COM",
         "Log"
-      }
+      },
+      AndWithNext = false
     });
     queryParams.Add(new QueryParameter() {
       Field = "DocTitle",
@@ -253,6 +275,8 @@
         "There was a err"
       }
     });
+
+    BuildModel();
   }
 
   void ToggleDragEnabled(MouseEventArgs e) {
@@ -261,5 +285,39 @@
 
   void ToggleAndOr(MouseEventArgs e, QueryParameter curParm) {
     curParm.AndWithNext = !curParm.AndWithNext;
+  }
+
+  DragAndDropContainerViewModel autoBuilderModel;
+  void BuildModel() {
+    autoBuilderModel = new DragAndDropContainerViewModel() {
+      Name = "SQL Query"
+    };
+
+    var newGroup = new DraggableContainerViewModel() {
+      Name = "SQL Query"
+    };
+
+    newGroup.AddChildElement(new DraggableItemViewModel<QueryParameter>() {
+      Name = "QueryParameter",
+      Item = queryParams[0],
+      AllowedTargetNames = new List<string>() { "SQL Query", "QueryParameter" }
+    });
+    newGroup.AddChildElement(new DraggableItemViewModel<QueryParameter>() {
+      Name = "QueryParameter",
+      Item = queryParams[1],
+      AllowedTargetNames = new List<string>() { "SQL Query", "QueryParameter" }
+    });
+
+    autoBuilderModel.AddChildElement(newGroup);
+    autoBuilderModel.AddChildElement(new DraggableItemViewModel<QueryParameter>() {
+      Name = "QueryParameter",
+      Item = queryParams[2],
+      AllowedTargetNames = new List<string>() { "SQL Query", "QueryParameter" }
+    });
+
+  }
+
+  RenderFragment<QueryParameter> MakeView() {
+    throw new NotImplementedException();
   }
 }
