@@ -1,4 +1,5 @@
-﻿@using System.Reflection;
+﻿@typeparam TItem
+@using System.Reflection;
 
 @if (Model is null) {
   <p>No model specified</p>
@@ -11,21 +12,21 @@
         var childTypeInfo = child.GetType().GetTypeInfo();
         switch (childTypeInfo) {
           case var ti when ti.ImplementedInterfaces.Contains(typeof(IDragAndDropContainer)): {
-              <DragAndDropAutoBuilder Model="(IDragAndDropContainer)child" />
+              <DragAndDropAutoBuilder Model="(IDragAndDropContainer)child" TItem="TItem"/>
               break;
             }
           case var ti when ti.ImplementedInterfaces.Contains(typeof(IDraggableElement)): {
-              <DraggableItem Item="child" DragEnabled="((IDraggableElement)child).DragEnabled">
+              <DraggableItem Name="@child.Name" Item="((DraggableItemViewModel<TItem>)child).Item" DragEnabled="((IDraggableElement)child).DragEnabled">
                 <ItemTemplate>
-                  @ItemTemplate(context)
+                  @ItemTemplate((IDragAndDropElement)context)
                 </ItemTemplate>
               </DraggableItem>
               break;
             }
           default: {
-              <DraggableItem Item="child" DragEnabled="false">
+              <DraggableItem Name="@child.Name" Item="((DragAndDropItemViewModel<TItem>)child).Item" DragEnabled="false">
                 <ItemTemplate>
-                  @ItemTemplate(context)
+                  @ItemTemplate((IDragAndDropElement)context)
                 </ItemTemplate>
               </DraggableItem>
               break;
