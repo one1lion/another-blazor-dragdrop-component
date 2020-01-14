@@ -4,6 +4,27 @@
         <name>DragAndDrop.Components</name>
     </assembly>
     <members>
+        <member name="T:DragAndDrop.Components.DragAndDropElementBase">
+            <summary>
+            An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> that
+            wraps content that extends Blazor's <see cref="T:Microsoft.AspNetCore.Components.ComponentBase"/>.  
+            This element is not draggable.
+            </summary>
+        </member>
+        <member name="M:DragAndDrop.Components.DragAndDropElementBase.#ctor">
+            <summary>
+            The default constructor
+            </summary>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropElementBase.Id">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id"/>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropElementBase.Name">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name"/>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropElementBase.Parent">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent"/>
+        </member>
         <member name="T:DragAndDrop.Components.DragAndDropContainerViewModel">
             <summary>
             An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer"/>
@@ -31,6 +52,34 @@
         </member>
         <member name="M:DragAndDrop.Components.DragAndDropContainerViewModel.GroupWith(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith``1(DragAndDrop.Components.Interfaces.IDragAndDropElement,System.Boolean)"/>
+        </member>
+        <member name="T:DragAndDrop.Components.DragAndDropItemViewModel">
+            <summary>
+            An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropElement"/> that
+            wraps content.  This element is not draggable.
+            </summary>
+        </member>
+        <member name="M:DragAndDrop.Components.DragAndDropItemViewModel.#ctor">
+            <summary>
+            The default constructor
+            </summary>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropItemViewModel.Id">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Id"/>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropItemViewModel.Name">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Name"/>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropItemViewModel.Parent">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent"/>
+        </member>
+        <member name="P:DragAndDrop.Components.DragAndDropItemViewModel.Item">
+            <summary>
+            The item being wrapped by this draggable element
+            </summary>
+        </member>
+        <member name="M:DragAndDrop.Components.DragAndDropItemViewModel.Clone">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
         <member name="T:DragAndDrop.Components.DragAndDropItemViewModel`1">
             <summary>
@@ -80,6 +129,24 @@
             <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames" />
         </member>
         <member name="M:DragAndDrop.Components.DraggableContainerViewModel.Clone">
+            <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
+        </member>
+        <member name="T:DragAndDrop.Components.DraggableItemViewModel">
+            <summary>
+            An implementation of <see cref="T:DragAndDrop.Components.Interfaces.IDraggableElement"/>
+            that can be dragged onto/into <see cref="T:DragAndDrop.Components.Interfaces.IDragAndDropContainer" />s
+            </summary>
+        </member>
+        <member name="M:DragAndDrop.Components.DraggableItemViewModel.#ctor">
+            <summary>The default constructor</summary>
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableItemViewModel.AllowedTargetNames">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.AllowedTargetNames" />
+        </member>
+        <member name="P:DragAndDrop.Components.DraggableItemViewModel.DragEnabled">
+            <inheritdoc cref="P:DragAndDrop.Components.Interfaces.IDraggableElement.DragEnabled" />
+        </member>
+        <member name="M:DragAndDrop.Components.DraggableItemViewModel.Clone">
             <inheritdoc cref="M:DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone``1"/>
         </member>
         <member name="T:DragAndDrop.Components.DraggableItemViewModel`1">

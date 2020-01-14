@@ -16,12 +16,12 @@
       @NullItemTemplate(default(TItem))
     }
   } else {
-    @ItemTemplate(model.Item)
+    @ItemTemplate(Item)
   }
 </div>
 
 @code {
-  DraggableItemViewModel<TItem> model;
+  DraggableItemViewModel model;
 
   [Parameter] public TItem Item { get; set; }
   [Parameter] public bool DragEnabled { get; set; } = true;
@@ -32,7 +32,7 @@
   [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
 
   protected override void OnParametersSet() {
-    if (model is null) { model = new DraggableItemViewModel<TItem>(); }
+    if (model is null) { model = new DraggableItemViewModel(); }
     // TODO: Validation: We can throw errors or show messages when some required field is not present, such as AllowedTargetNames
     model.Item = this.Item;
     model.Name = this.Name;
