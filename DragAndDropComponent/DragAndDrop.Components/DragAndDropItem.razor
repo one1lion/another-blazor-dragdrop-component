@@ -8,7 +8,7 @@
     } else {
       @LoadingTemplate
     }
-  } else if (model.Item is null) {
+  } else if (Item is null) {
     if (NullItemTemplate is null) {
       <div>&nbsp;</div>
     } else {
@@ -18,13 +18,13 @@
     if (ItemTemplate is null) {
       <p>@Item.ToString()</p>
     } else {
-      @ItemTemplate(model.Item)
+      @ItemTemplate(Item)
     }
   }
 </div>
 
 @code {
-  DragAndDropItemViewModel<TItem> model;
+  DragAndDropItemViewModel model;
 
   [Parameter] public TItem Item { get; set; }
 
@@ -33,7 +33,7 @@
   [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
 
   protected override void OnParametersSet() {
-    if (model is null) { model = new DragAndDropItemViewModel<TItem>(); }
+    if (model is null) { model = new DragAndDropItemViewModel(); }
     // TODO: Validation: We can throw errors or show messages when some required field is not present, such as AllowedTargetNames
     model.Item = this.Item;
     model.Name = this.Name;
