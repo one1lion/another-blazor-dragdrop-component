@@ -120,4 +120,8 @@ namespace DragAndDrop.Components.Interfaces {
       return true;
     }
   }
+
+  public interface IDraggableElement<TItem> : IDraggableElement {
+    TItem Item { get; set; }
+  }
 }

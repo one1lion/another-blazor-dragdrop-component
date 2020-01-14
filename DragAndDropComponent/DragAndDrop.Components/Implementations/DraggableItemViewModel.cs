@@ -28,8 +28,8 @@ namespace DragAndDrop.Components {
   /// An implementation of <see cref="DragAndDrop.Components.Interfaces.IDraggableElement"/>
   /// that can be dragged onto/into <see cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer" />s
   /// </summary>
-  /// <typeparam name="T">The type of data contained within the element</typeparam>
-  public class DraggableItemViewModel<T> : DragAndDropItemViewModel<T>, IDraggableElement {
+  /// <typeparam name="TItem">The type of data contained within the element</typeparam>
+  public class DraggableItemViewModel<TItem> : DragAndDropItemViewModel<TItem>, IDraggableElement<TItem> {
     /// <summary>The default constructor</summary>
     public DraggableItemViewModel() : base() { }
 
@@ -40,8 +40,8 @@ namespace DragAndDrop.Components {
     public bool DragEnabled { get; set; } = true;
 
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Clone"/>
-    public new DraggableItemViewModel<T> Clone() {
-      return ((IDragAndDropElement)this).Clone<DraggableItemViewModel<T>>();
+    public new DraggableItemViewModel<TItem> Clone() {
+      return ((IDragAndDropElement)this).Clone<DraggableItemViewModel<TItem>>();
     }
 
   }

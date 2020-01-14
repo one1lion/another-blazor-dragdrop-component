@@ -28,6 +28,11 @@ namespace DragAndDrop.Components {
       return ((IDragAndDropElement)this).Clone<DragAndDropContainerViewModel>();
     }
 
+    /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropContainer.AddChild(IDragAndDropElement, int?)"/>
+    public void AddChildElement(IDragAndDropElement element, int? targetIndex = default) {
+      ((IDragAndDropContainer)this).AddChild(element, targetIndex);
+    }
+
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.GroupWith(IDragAndDropElement, bool)"/>
     public IDragAndDropContainer GroupWith(IDragAndDropElement element, bool showFirst = false) {
       // TODO: Implement

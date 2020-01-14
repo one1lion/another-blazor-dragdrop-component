@@ -372,4 +372,8 @@ namespace DragAndDrop.Components.Interfaces {
     }
     #endregion
   }
+
+  public interface IDragAndDropElement<TItem> : IDragAndDropElement {
+    TItem Item { get; set; }
+  }
 }
