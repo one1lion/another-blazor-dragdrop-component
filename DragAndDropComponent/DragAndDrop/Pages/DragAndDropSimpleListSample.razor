@@ -1,10 +1,17 @@
 ﻿@page "/dnd-simplelist"
 @using DragAndDrop.Components
+@using DragAndDrop.Data
 
-<h3>Drag And Drop Simple List</h3>
+<h3>Drag And Drop Simple Reorderable List Using Components</h3>
 <p>This uses the component library to create a simple list of drag and drop items</p>
 
-<DragAndDropSimpleList List="items"></DragAndDropSimpleList>
+<DragAndDropSimpleList List="items" />
+
+<DragAndDropSimpleList List="genericItems">
+  <ItemTemplate>
+    @context.ToString()
+  </ItemTemplate>
+</DragAndDropSimpleList>
 
 @code {
   List<string> items = new List<string>() {
@@ -12,6 +19,35 @@
     "Other Cat",
     "Otter Cat",
     "More Cat",
+    "Other Cat",
     "Mere Cat"
+  };
+
+  List<QueryParameter> genericItems = new List<QueryParameter>() {
+    new QueryParameter() {
+      Field = "DocTitle",
+      Operator = "Contains",
+      Values = new List<object>() {
+        "I'm a cookie"
+      }
+    },
+    new QueryParameter() {
+      Field = "DocStatus",
+      Operator = "In List",
+      Values = new List<object>() {
+        "RPT",
+        "MEM",
+        "COM",
+        "Log"
+      },
+      AndWithNext = false
+    },
+    new QueryParameter() {
+      Field = "DocTitle",
+      Operator = "Does Not Contain",
+      Values = new List<object>() {
+        "There was a err"
+      }
+    }
   };
 }
