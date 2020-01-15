@@ -1,0 +1,101 @@
+﻿@typeparam TItem
+@if (!string.IsNullOrWhiteSpace(Title) && ShowTitle) {
+  <h3>@Title</h3>
+}
+
+<p>@dragState</p>
+<DragAndDropContainer Name="@Name" ShowTitle="ShowTitle" Title="@Title">
+  @if (List is null) {
+    <p>Loading...</p>
+  } else if (List.Count() == 0) {
+    <p>No items added</p>
+  } else {
+    var childName = $"{Name}_Item";
+    var allowedTargets = new List<string>() { Name, childName };
+    foreach (var item in List) {
+      <DraggableItem Item="item" Name="@childName" AllowedTargetNames="allowedTargets">
+        <ItemTemplate>
+          @if (ItemTemplate is null) {
+            <text>@context</text>
+          } else {
+            <text>@ItemTemplate(context)</text>
+          }
+        </ItemTemplate>
+      </DraggableItem>
+    }
+  }
+</DragAndDropContainer>
+<ul ondragover="event.preventDefault();">
+  @if (List is null || List.Count() == 0) {
+    <li>No items added</li>
+  } else {
+    var i = 0;
+    foreach (var curItem in List) {
+      var curItemIndex = i;
+      <li draggable="true"
+          data-value="@curItem"
+          @ondragstart="@((e) => HandleDragStart(e, curItemIndex))"
+          @ondragend="HandleDragEnd">
+        <div @ondrop="@((e) => HandleMove(e, curItemIndex))"
+             @ondrop:stopPropagation="true"
+             style="height:1em; overflow-y:visible;">
+          @if (ItemTemplate is null) {
+            <text>@curItem</text>
+          } else {
+            <text>@ItemTemplate(curItem)</text>
+          }
+        </div>
+        <div @ondrop="@((e) => HandleMove(e, curItemIndex + 1))"
+             @ondrop:stopPropagation="true"
+             style="height:.4em;"></div>
+      </li>
+      i++;
+    }
+  }
+</ul>
+
+@code {
+  [Parameter] public List<TItem> List { get; set; }
+  [Parameter] public string Name { get; set; }
+  [Parameter] public string Title { get; set; }
+  [Parameter] public bool ShowTitle { get; set; }
+  [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+
+  DragAndDropContainerViewModel container;
+  int indexOfItemBeingDragged = -1;
+  string dragState = "Not Dragging";
+
+  protected override void OnParametersSet() {
+    if (List is null) { return; }
+    container = new DragAndDropContainerViewModel() {
+      Name = this.Name
+    };
+    foreach (var curItem in List) {
+      container.AddChildElement(new DraggableItemViewModel<TItem>() {
+        Name = $"{Name}_Item",
+        AllowedTargetNames = new List<string>() { $"{Name}_Item", Name },
+        Item = curItem
+      });
+    }
+  }
+
+  void HandleDragStart(DragEventArgs e, int index) {
+    indexOfItemBeingDragged = index;
+    dragState = $"Dragging \"{indexOfItemBeingDragged}\"";
+  }
+
+  void HandleDragEnd(DragEventArgs e) {
+    indexOfItemBeingDragged = -1;
+    if (indexOfItemBeingDragged >= List.Count()) { dragState = "Item index was out of range"; return; }
+    dragState = "Not Dragging";
+  }
+
+  void HandleMove(DragEventArgs e, int index) {
+    dragState = $"Dropping at {index}";
+    if (indexOfItemBeingDragged < 0) { dragState = "No item to drop"; return; }
+    if (indexOfItemBeingDragged >= List.Count()) { dragState = "Item index was out of range"; return; }
+    var item = List[indexOfItemBeingDragged];
+    List.Insert(index, item);
+    List.RemoveAt(indexOfItemBeingDragged + (indexOfItemBeingDragged > index ? 1 : 0));
+  }
+}
