@@ -23,6 +23,6 @@ namespace DragAndDrop.Components {
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Name"/>
     [Parameter] public string Name { get; set; }
     /// <inheritdoc cref="DragAndDrop.Components.Interfaces.IDragAndDropElement.Parent"/>
-    public IDragAndDropContainer Parent { get; set; }
+    [Parameter] public IDragAndDropContainer Parent { get; set; }
   }
 }

@@ -1,35 +1,42 @@
-﻿@inherits DragAndDropElementBase
+﻿@implements IDragAndDropContainer
+@inherits DragAndDropElementBase
 
-<div>
+<div ondragover="event.preventDefault();">
   @if (model is null) {
     <p>Model is null</p>
   } else {
-    @if (!string.IsNullOrWhiteSpace(model.Name) && ShowTitle) {
-      <div>@model.Name</div>
+    @if (!string.IsNullOrWhiteSpace(Title) && ShowTitle) {
+      <div>@Title</div>
     }
     <div>
       @if (ChildContent is null) {
         <p>No children</p>
       } else {
-        @ChildContent
+        <CascadingValue Name="ParentContainer" Value="this">
+          @ChildContent
+        </CascadingValue>
       }
     </div>
   }
 </div>
 
-
 @code {
   DragAndDropContainerViewModel model;
 
-  [Parameter] public bool ShowTitle { get; set; } = true;
+  [CascadingParameter] public IDragAndDropContainer ParentContainer { get; set; }
 
+  [Parameter] public string Title { get; set; }
+  [Parameter] public bool ShowTitle { get; set; } = true;
   [Parameter] public RenderFragment ChildContent { get; set; }
 
   protected override void OnInitialized() {
-    model = new DragAndDropContainerViewModel();
+    model = new DragAndDropContainerViewModel() {
+      Name = Name
+    };
   }
 
   protected override void OnParametersSet() {
     model.Name = Name;
   }
+
 }
