@@ -30,6 +30,13 @@
       </li>
       i++;
     }
+    <li style="display:@(showDropAtEnd ? "initial" : "none")">
+      <div @ondrop="@((e) => HandleMove(e, List.Count()))"
+           @ondrop:stopPropagation="true"
+           style="height:1em; overflow-y:visible;">
+        &nbsp;
+      </div>      
+    </li>
   }
 </ul>
 
@@ -40,16 +47,19 @@
   [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
 
   int indexOfItemBeingDragged = -1;
+  bool showDropAtEnd = false;
 
   string dragState = "Not Dragging";
   void HandleDragStart(DragEventArgs e, int index) {
     indexOfItemBeingDragged = index;
+    showDropAtEnd = true;
     dragState = $"Dragging \"{indexOfItemBeingDragged}\"";
   }
 
   void HandleDragEnd(DragEventArgs e) {
     indexOfItemBeingDragged = -1;
     if(indexOfItemBeingDragged >= List.Count() ) { dragState = "Item index was out of range"; return; }
+    showDropAtEnd = false;
     dragState = "Not Dragging";
   }
 
