@@ -1,0 +1,256 @@
+﻿@typeparam TItem
+@typeparam TListItem
+@typeparam TGroup
+@using Microsoft.AspNetCore.Components.Forms
+
+@{ var curPayloadAddress = Parent?.BaseContainer?.GetPayload().address; }
+@if (new[] { SeparatorDisplay.BeforeAndAfter, SeparatorDisplay.BeforeOnly }.Contains(SeparatorDisplay) && !(SeparatorItemTemplate is null)) {
+  <li class="dragondrop-separator dragondrop-separator-before">
+    @SeparatorItemTemplate(Item)
+  </li>
+}
+
+<li class="dragondrop-item @(curPayloadAddress == Address ? "dragondrop-picked-up" : "")"
+    draggable="@((DragEnabled && !EditMode).ToString().ToLower(System.Globalization.CultureInfo.CurrentCulture))"
+    data-value="@Item"
+    ondragover="event.preventDefault();"
+    @ondragstart="OnDragStart"
+    @ondragstart:stopPropagation="true"
+    @ondragend="OnDragEnd"
+    @ondragend:stopPropagation="true"
+    @ondrop:stopPropagation="true"
+    @ondblclick="ShowEdit">
+  <div class="dragondrop-item-display" @ondrop="OnDrop">
+    @if (ShowDebugInfo) {
+      <span>(@($"{(EditMode && !ReadOnly ? (IsAdd ? "To add new at" : "Editing") : "")} {Address}")) &nbsp;</span>
+    }
+
+    @if (EditMode && !ReadOnly) {
+      if (EditItemTemplate is null) {
+        // Built-in editors for basic types
+        var typeCode = Type.GetTypeCode(typeof(TItem));
+        <EditForm Model="(IsAdd ? Item : EditItem)" Context="item">
+          @switch (typeCode) {
+            case TypeCode.String:
+              itemAsString = (string)(object)item;
+              <InputText @bind-Value="itemAsString" @onchange="((e) => UpdateItemValue(e, typeCode))" />
+              break;
+            case TypeCode.Byte:
+            case TypeCode.Decimal:
+            case TypeCode.Double:
+            case TypeCode.Int16:
+            case TypeCode.Int32:
+            case TypeCode.Int64:
+            case TypeCode.SByte:
+            case TypeCode.Single:
+            case TypeCode.UInt16:
+            case TypeCode.UInt32:
+            case TypeCode.UInt64:
+              itemAsString = (string)(object)item;
+              <InputNumber @bind-Value="itemAsString" @onchange="((e) => UpdateItemValue(e, typeCode))" />
+              break;
+            case TypeCode.DateTime:
+              itemAsString = (string)(object)item;
+              <InputDate @bind-Value="itemAsBool" @onchange="((e) => UpdateItemValue(e, typeCode))" />
+              break;
+            case TypeCode.Boolean:
+              itemAsBool = (bool)(object)item;
+              <InputCheckbox @bind-Value="itemAsBool" @onchange="((e) => UpdateItemValue(e, typeCode))" />
+              break;
+            default:
+              <span>
+                There is no built in editor for @(typeof(TItem)).  You can customize this using the
+                EditItemTemplate RenderFragment.  If you would not like to allow editing of this item,
+                set the ReadOnly parameter to true.
+              </span>
+              break;
+          }
+        </EditForm>
+      } else {
+        if (!IsAdd && EditItem == null) {
+          <span>Preparing the item for editing...</span>
+        } else {
+          @EditItemTemplate(IsAdd ? Item : EditItem)
+        }
+      }
+    } else {
+      if (ItemTemplate is null) {
+        <text>@Item</text>
+      } else {
+        @ItemTemplate(Item)
+      }
+    }
+  </div>
+  <div class="dragondrop-controls">
+    @if (!HideEditControlButtons) {
+      if (!EditMode) {
+        <button type="button" class="edit" title="Edit" @onclick="ShowEdit"><img src="/_content/DragonDrop/img/Edit_Pencil.svg" width="16" height="16" /></button>
+        <button type="button" class="remove" title="Remove" @onclick="RemoveItem">&times;</button>
+      } else {
+        <button type="button" class="save" title="Save" @onclick="HandleSave">@(IsAdd ? "Add" : "Save")</button>
+        <button type="button" class="cancel" title="Cancel" @onclick="HandleCancel">Cancel</button>
+      }
+    }
+  </div>
+</li>
+
+@if (new[] { SeparatorDisplay.BeforeAndAfter, SeparatorDisplay.AfterOnly }.Contains(SeparatorDisplay) && !(SeparatorItemTemplate is null)) {
+  <li class="dragondrop-separator dragondrop-separator-after">
+    @SeparatorItemTemplate(EditMode ? EditItem : Item)
+  </li>
+}
+
+@if (SeparatorDisplay == SeparatorDisplay.Between && !(SeparatorItemTemplate is null)) {
+  <li class="dragondrop-separator dragondrop-separator-between">
+    @SeparatorItemTemplate(EditMode ? EditItem : Item)
+  </li>
+}
+
+@code {
+  [Parameter] public TItem Item { get; set; }
+  [Parameter] public DnDContainer<TListItem, TItem, TGroup> Parent { get; set; }
+  [Parameter] public EventCallback<DragEventArgs> OnDragStart { get; set; }
+  [Parameter] public EventCallback<DragEventArgs> OnDragEnd { get; set; }
+  [Parameter] public EventCallback<DragEventArgs> OnDrop { get; set; }
+  [Parameter] public EventCallback<DnDItem<TItem, TListItem, TGroup>> OnCancel { get; set; }
+  [Parameter] public EventCallback<DnDItem<TItem, TListItem, TGroup>> OnSave { get; set; }
+  [Parameter] public EventCallback<ListUpdateEventArgs> OnStatusUpdated { get; set; }
+  [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+  [Parameter] public RenderFragment<TItem> EditItemTemplate { get; set; }
+  [Parameter] public RenderFragment<TItem> SeparatorItemTemplate { get; set; }
+  [Parameter] public SeparatorDisplay SeparatorDisplay { get; set; }
+  [Parameter] public string Address { get; set; }
+  [Parameter] public bool ShowDebugInfo { get; set; }
+  [Parameter] public bool DragEnabled { get; set; } = true;
+  [Parameter] public bool EditMode { get; set; } = false;
+  [Parameter] public bool ReadOnly { get; set; } = false;
+  [Parameter] public bool IsAdd { get; set; } = false;
+  [Parameter] public bool HideEditControlButtons { get; set; } = false;
+
+  TItem EditItem;
+  string dropStyleCss = DropStyleCss.NotSet;
+  string itemAsString;
+  bool itemAsBool;
+
+  protected override void OnParametersSet() {
+    if (Parent is null || string.IsNullOrWhiteSpace(Address)) { Address = "0"; }
+  }
+
+  void HandleDragEnter(DragEventArgs e) {
+    if (Parent?.BaseContainer is null) { return; }
+    var pl = Parent.BaseContainer.GetPayload();
+    if (Address.StartsWith(pl.address) && pl.isContainer) {
+      dropStyleCss = DropStyleCss.NoDrop;
+    } else {
+      dropStyleCss = DropStyleCss.CanDrop;
+    }
+  }
+
+  void HandleDragLeave(DragEventArgs e) {
+    dropStyleCss = DropStyleCss.NotSet;
+  }
+
+  void UpdateItemValue(ChangeEventArgs e, TypeCode typeCode) {
+    switch (typeCode) {
+      case TypeCode.String:
+      case TypeCode.Byte:
+      case TypeCode.DateTime:
+      case TypeCode.Decimal:
+      case TypeCode.Double:
+      case TypeCode.Int16:
+      case TypeCode.Int32:
+      case TypeCode.Int64:
+      case TypeCode.SByte:
+      case TypeCode.Single:
+      case TypeCode.UInt16:
+      case TypeCode.UInt32:
+      case TypeCode.UInt64:
+        if (IsAdd) {
+          Item = (TItem)(object)itemAsString;
+        } else {
+          EditItem = (TItem)(object)itemAsString;
+        }
+        break;
+      case TypeCode.Boolean:
+        if (IsAdd) {
+          Item = (TItem)(object)itemAsBool;
+        } else {
+          EditItem = (TItem)(object)itemAsBool;
+        }
+        break;
+    }
+  }
+
+  async Task RemoveItem(MouseEventArgs e) {
+    if (Parent is null) {
+      Console.Error.WriteLine("This item does not have a parent to be removed from.");
+      return;
+    }
+    if (ShowDebugInfo) { Console.WriteLine($"Removing {Address} from {Parent.Address} due to remove item event."); }
+    if (!int.TryParse(Address.Split('.').Last(), out int indexInParentContainer)) {
+      Console.Error.WriteLine("Could not determine the container's index in the parent container during remove.");
+      return;
+    }
+    var itemBeingRemoved = Parent.List[indexInParentContainer];
+    Parent.List.RemoveAt(indexInParentContainer);
+    if (ShowDebugInfo) { Console.WriteLine($"Checking parent at {Parent.Address} for ungrouping."); }
+    Parent.CheckForUngroup();
+    var updateEventArgs = new ListUpdateEventArgs() {
+      UpdateEventType = UpdateEventType.ItemRemoved,
+      AffectedFromAddress = Address,
+      AffectedFromList = Parent.List,
+      AffectedIndexInFromList = indexInParentContainer,
+      AffectedItem = Item
+    };
+    await Parent.NotifyStateChanged(updateEventArgs);
+  }
+
+  void ShowEdit(MouseEventArgs e) {
+    EditMode = true;
+    // Copy the Item to an EditItem object (to allow for Cancel to work properly)
+    if (EditItem == null || EditItem.Equals(default(TItem))) {
+      EditItem = Utils.SimpleClone<TItem>(Item);
+    }
+  }
+
+  async Task HandleSave(MouseEventArgs e) {
+    if (Parent is null) {
+      Console.Error.WriteLine("This item does not have a parent to be removed from.");
+      return;
+    }
+    if (ShowDebugInfo) { Console.WriteLine($"Removing {Address} from {Parent.Address} due to remove item event."); }
+    if (!int.TryParse(Address.Split('.').Last(), out int indexInParentContainer)) {
+      Console.Error.WriteLine("Could not determine the container's index in the parent container during remove.");
+      return;
+    }
+
+    if (IsAdd) {
+      Parent.List.Insert(indexInParentContainer, (TListItem)(object)Item);
+      Parent.UpdateArrayLengths();
+    } else {
+      var holdItem = Item;
+      Utils.CopyValues<TItem>(EditItem, ref holdItem);
+    }
+    var updateEventArgs = new ListUpdateEventArgs() {
+      UpdateEventType = IsAdd ? UpdateEventType.ItemAdded : UpdateEventType.ItemEdited,
+      AffectedFromAddress = Address,
+      AffectedFromList = Parent.List,
+      AffectedIndexInFromList = indexInParentContainer,
+      AffectedToAddress = Address,
+      AffectedToList = Parent.List,
+      AffectedIndexInToList = indexInParentContainer,
+      AffectedItem = Item
+    };
+    IsAdd = false;
+    EditMode = false; // Only toggle edit mode off if this is not the Add New Item element
+    await OnSave.InvokeAsync(this);
+    await OnStatusUpdated.InvokeAsync(updateEventArgs);
+  }
+
+  async Task HandleCancel(MouseEventArgs e) {
+    EditItem = default;
+    EditMode = IsAdd; // Only toggle edit mode off if this is not the Add New Item element
+    await OnCancel.InvokeAsync(this);
+  }
+
+}

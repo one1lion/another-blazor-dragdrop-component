@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DragAndDrop.Components", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DragAndDrop.Tests", "DragAndDrop.Tests\DragAndDrop.Tests.csproj", "{38376B6D-69DC-4104-A03F-0203800CC3BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DragonDrop", "DragonDrop\DragonDrop.csproj", "{6D4D17B3-8583-4702-9F19-96E5F67049FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DragonDrop", "DragonDrop\DragonDrop.csproj", "{6D4D17B3-8583-4702-9F19-96E5F67049FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
