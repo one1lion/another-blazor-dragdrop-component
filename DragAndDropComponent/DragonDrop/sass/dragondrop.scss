@@ -1,0 +1,229 @@
+﻿/* 
+  The styles below include the element type for brevity.
+  If a rule does not specify the element type, it is 
+  applied to any element type. That is, if a rule is
+  applied to a finite list of element types, the element
+  type is included in the rule.
+
+  Also, each DragonDrop component surrounds its content 
+  with <div class="dragondrop"></div>.
+*/
+div.dragondrop {
+  /* ----------------- General rules ----------------- */
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: .2em;
+  }
+
+  li {
+    list-style: none;
+    margin: 0 .2em;
+    padding: 0 .2em;
+  }
+
+  p.dragondrop-info {
+    /* Displayed in debug only */
+  }
+  /*  Gradients  */
+  .sheen {
+    background: linear-gradient(45deg, rgba(0,0,0,.1) 0%, rgba(210, 210, 210, .7) 40%, rgb(230, 230, 230) 41%, rgb(230, 230, 230) 43%, rgba(210, 210, 210, .7) 44%, rgba(0,0,0,.1) 100%);
+  }
+  /* 
+    Used with elements with classes like .drop-before 
+    to work like visibility: hidden, but also allows
+    for mouse events like onclick
+  */
+  .opac-0 {
+    opacity: 0;
+  }
+  /*
+    Used with elements on drag enter when dropping
+    is not allowed
+  */
+  ul.no-drop, li.no-drop {
+    cursor: no-drop;
+    border: dashed .2em red;
+  }
+  /*
+    Used with elements on drag enter when dropping
+    is allowed
+  */
+  ul.can-drop, li.can-drop {
+    border: dashed .2em green;
+  }
+  /*
+    Used with elements on drag enter when grouping
+    is allowed
+  */
+  ul.group-drop, li.group-drop {
+    cursor: auto;
+  }
+  /* Applied to the title element for an item or container */
+  .dragondrop-title {
+    font-size: 1.8em;
+    font-weight: bold;
+  }
+  /* ----------------- Rules for DragonDrop items ----------------- */
+  li.dragondrop-item {
+    display: flex;
+    /* Applied to the display portion of the item */
+    div.dragondrop-item-display {
+      flex: 1 1 auto;
+    }
+    /* Applied to elements for items representing the control bar or area */
+    div.dragondrop-controls {
+      flex: 0 0 auto;
+      align-self: end;
+      align-content: space-around;
+      /* Applied to all buttons */
+      button {
+        /* Applied to the edit button */
+        &.edit {
+        }
+        /* Applied to the remove button */
+        &.remove {
+          color: red;
+        }
+
+        &.save {
+        }
+
+        &.cancel {
+        }
+      }
+    }
+  }
+  /* ----------------- Rules for DragonDrop containers ----------------- */
+  .dragondrop-container {
+    &:first-of-type {
+      border: 1px solid rgba(0,0,0,0.15);
+      box-shadow: 0 1px 1px rgba(50,50,50,0.1);
+      border-radius: 7px;
+    }
+
+    li {
+      border: none;
+    }
+    /* Extra rules to be applied to titles of containers */
+    .dragondrop-title {
+      font-size: 1.8em;
+      font-weight: bold;
+    }
+    /* Applied to items (that are also not containers) nested inside of containers */
+    li.dragondrop-item:not(.dragondrop-container) {
+      border-radius: 7px;
+      border: 1px solid rgba(0,0,0,0.15);
+      box-shadow: 0 1px 1px rgba(50,50,50,0.1);
+    }
+
+    li.dragondrop-item:not(.dragondrop-container) div {
+      align-self: center;
+    }
+    /* Applied to elements for containers representing the control bar or area */
+    div.dragondrop-controls {
+      /* Applied to the remove button */
+      button.remove {
+      }
+    }
+    /* ----------------- Rules for containers nested inside of other containers ----------------- */
+    /* Applied to the LI wrapper element for the nested UL container */
+    li.dragondrop-container {
+      border: none;
+      box-shadow: none;
+    }
+    /* Applied to the nested UL container */
+    ul.dragondrop-container {
+      border-top: none;
+      border-bottom: none;
+      box-shadow: none;
+      /* Further rules to be applied to titles of containers nested inside of other containers */
+      .dragondrop-title {
+        font-size: 1.8em;
+        font-weight: bold;
+      }
+    }
+    /* Applied to elements for containers inside of other containers representing the control bar or area */
+    div.dragondrop-controls {
+      padding-right: 5px;
+      /* Applied to buttons in the control bar/area */
+      button {
+        background: none;
+        border: none;
+        padding: 2px 2px;
+        /* Applied to the remove button */
+        .remove {
+        }
+        /* Applied to the edit button */
+        .edit {
+          background-color: blue;
+          padding: 0 2px;
+
+          img {
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+    }
+    /* 
+      Applied to items that are also containers 
+      NOTE: This is another way of accessing a container that is
+            child item of another container
+    */
+    &.dragondrop-item {
+    }
+  }
+  /* Applied to elements that represent an empty list for a container */
+  li.dragondrop-empty-list {
+  }
+  /* Applied to elements that represent an drop target locations */
+  li.dragondrop-dropbefore, li.dragondrop-dropafter,
+  li.dragondrop-addbefore, li.dragondrop-addafter {
+    display: block;
+    color: black;
+    height: .4em;
+    border: dashed .1em transparent;
+    overflow-y: hidden;
+  }
+  /* Applied to the debug element that shows the payload status */
+  p.dragondrop-info {
+    color: gray;
+    text-decoration-style: dotted;
+    border: dashed 1px darkgray;
+  }
+  /* 
+    Applied to the element that is picked up (is set as the payload)
+    NOTE: This is not the element that is attached to the mouse,
+          this is the element that is on the page
+  */
+  li.dragondrop-picked-up {
+    opacity: 0.4;
+  }
+  /* Applied to elements that the payload is being dragged over */
+  li.drop-hovering {
+    height: auto;
+    border: dashed .2em rgba(175, 175, 175, 1.0);
+  }
+  /* Applied to "drop before" drop target elements that the payload is being dragged over */
+  li.dragondrop-dropbefore.drop-hovering {
+    background: linear-gradient(180deg, rgba(215, 215, 215, 1.0) 0%, rgba(215, 215, 215, 0.2) 60%, rgba(215, 215, 215, 1.0) 100%);
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+  /* Applied to "drop after" drop target elements that the payload is being dragged over */
+  li.dragondrop-dropafter.drop-hovering {
+    background: linear-gradient(0deg, rgba(215, 215, 215, 0.0) 0%, rgba(215, 215, 215, 0.2) 40%, rgba(215, 215, 215, 1.0) 100%);
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+  /* Applied to "drop before" drop target elements that are being moused over (when there is no payload) */
+  li.dragondrop-dropbefore:hover:not(.drop-hovering),
+  li.dragondrop-dropafter:hover:not(.drop-hovering) {
+    opacity: 1;
+    background-color: rgb(220, 240, 220);
+    height: .4em;
+  }
+}
