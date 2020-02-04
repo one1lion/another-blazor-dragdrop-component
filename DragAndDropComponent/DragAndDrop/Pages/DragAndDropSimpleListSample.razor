@@ -1,17 +1,16 @@
 ﻿@page "/dnd-simplelist"
-@using DragAndDrop.Components
 @using DragAndDrop.Data
 
 <h3>Drag And Drop Simple Reorderable List Using Components</h3>
 <p>This uses the component library to create a simple list of drag and drop items</p>
 
-<DragAndDropSimpleList List="items" />
+<DragonDrop.DragAndDrop.SimpleReorderable List="items" />
 
-<DragAndDropSimpleList List="genericItems">
+<DragonDrop.DragAndDrop.SimpleReorderable List="genericItems">
   <ItemTemplate>
     @context.ToString()
   </ItemTemplate>
-</DragAndDropSimpleList>
+</DragonDrop.DragAndDrop.SimpleReorderable>
 
 @code {
   List<string> items = new List<string>() {

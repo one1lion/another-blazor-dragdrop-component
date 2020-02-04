@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DragAndDrop.Components\DragAndDrop.Components.csproj" />
     <ProjectReference Include="..\DragonDrop\DragonDrop.csproj" />
   </ItemGroup>
 
