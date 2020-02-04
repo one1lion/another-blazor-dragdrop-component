@@ -4,15 +4,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DragAndDrop", "DragAndDrop\DragAndDrop.csproj", "{172DA64C-7832-4EBD-97DC-9AF17FCC6A12}"
-	ProjectSection(ProjectDependencies) = postProject
-		{AB78701D-35C4-41CD-91F5-38576260CCC3} = {AB78701D-35C4-41CD-91F5-38576260CCC3}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DragAndDrop.Tests", "DragAndDrop.Tests\DragAndDrop.Tests.csproj", "{38376B6D-69DC-4104-A03F-0203800CC3BA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DragonDrop", "DragonDrop\DragonDrop.csproj", "{6D4D17B3-8583-4702-9F19-96E5F67049FE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DragAndDrop.Components", "DragAndDrop.Components\DragAndDrop.Components.csproj", "{AB78701D-35C4-41CD-91F5-38576260CCC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,18 +17,10 @@ Global
 		{172DA64C-7832-4EBD-97DC-9AF17FCC6A12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{172DA64C-7832-4EBD-97DC-9AF17FCC6A12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{172DA64C-7832-4EBD-97DC-9AF17FCC6A12}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38376B6D-69DC-4104-A03F-0203800CC3BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38376B6D-69DC-4104-A03F-0203800CC3BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38376B6D-69DC-4104-A03F-0203800CC3BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38376B6D-69DC-4104-A03F-0203800CC3BA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6D4D17B3-8583-4702-9F19-96E5F67049FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6D4D17B3-8583-4702-9F19-96E5F67049FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D4D17B3-8583-4702-9F19-96E5F67049FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D4D17B3-8583-4702-9F19-96E5F67049FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB78701D-35C4-41CD-91F5-38576260CCC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB78701D-35C4-41CD-91F5-38576260CCC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB78701D-35C4-41CD-91F5-38576260CCC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB78701D-35C4-41CD-91F5-38576260CCC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

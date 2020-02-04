@@ -128,7 +128,6 @@
   [Parameter] public bool HideEditControlButtons { get; set; } = false;
 
   TItem EditItem;
-  string dropStyleCss = DropStyleCss.NotSet;
   string itemAsString;
   bool itemAsBool;
 
@@ -139,15 +138,9 @@
   void HandleDragEnter(DragEventArgs e) {
     if (Parent?.BaseContainer is null) { return; }
     var pl = Parent.BaseContainer.GetPayload();
-    if (Address.StartsWith(pl.address) && pl.isContainer) {
-      dropStyleCss = DropStyleCss.NoDrop;
-    } else {
-      dropStyleCss = DropStyleCss.CanDrop;
-    }
   }
 
   void HandleDragLeave(DragEventArgs e) {
-    dropStyleCss = DropStyleCss.NotSet;
   }
 
   void UpdateItemValue(ChangeEventArgs e, TypeCode typeCode) {
