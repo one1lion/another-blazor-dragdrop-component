@@ -28,7 +28,7 @@ The main focus of this component library is to provide a reusable component that
 The current, specific implementation of the Drag And Drop component library is shown below, along with the sample classes used as the items and groups.
 
 On the `.razor` the component is to be used on:
-```csharp
+```razor
 @using DragonDrop.DragAndDrop
 @* Note that this could also be added to the _Imports.razor file to be available to all `.razor` components *@
 
