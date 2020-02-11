@@ -78,18 +78,28 @@ div.dragondrop {
       align-content: space-around;
       /* Applied to all buttons */
       button {
+        color: Highlight;
+
+        &:hover {
+          text-decoration: underline;
+        }
         /* Applied to the edit button */
         &.edit {
         }
         /* Applied to the remove button */
         &.remove {
           color: red;
+          font-size: 1.2em;
+          margin: 2px 0;
+          padding: 0 2px;
         }
 
         &.save {
+          color: darkgreen;
         }
 
         &.cancel {
+          color: darkred;
         }
       }
     }
@@ -199,6 +209,42 @@ div.dragondrop {
   */
   li.dragondrop-picked-up {
     opacity: 0.4;
+  }
+  /*
+    Applied to an element that is being hovered over when grouping
+    is allowed with the current payload item
+  */
+  li.dragondrop-grouphovering {
+    background: none;
+    background-color: #eee;
+
+    ul {
+      height: 2em;
+      width: 100%;
+      padding: 0 2px;
+
+      li.dragondrop-dropfirst,
+      li.dragondrop-dropsecond {
+        height: .8em;
+        padding: 0;
+        width: 100%;
+      }
+
+      li.dragondrop-dropfirst {
+        margin-top: .1em;
+        margin-bottom: .05em;
+      }
+
+      li.dragondrop-dropsecond {
+        margin-top: .05em;
+        margin-bottom: .1em;
+      }
+
+      li.dragondrop-dropfirst.target,
+      li.dragondrop-dropsecond.target {
+        background-color: #888;
+      }
+    }
   }
   /* Applied to elements that the payload is being dragged over */
   li.drop-hovering {

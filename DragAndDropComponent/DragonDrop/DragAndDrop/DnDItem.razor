@@ -1,9 +1,9 @@
-﻿@typeparam TItem
-@typeparam TListItem
+﻿@typeparam TListItem
+@typeparam TItem
 @typeparam TGroup
 @using Microsoft.AspNetCore.Components.Forms
 
-@{ var curPayloadAddress = Parent?.BaseContainer?.GetPayload().address; }
+@{ var curPayloadAddress = Parent?.GetPayload().Address; }
 @if (new[] { SeparatorDisplay.BeforeAndAfter, SeparatorDisplay.BeforeOnly }.Contains(SeparatorDisplay) && !(SeparatorItemTemplate is null)) {
   <li class="dragondrop-separator dragondrop-separator-before">
     @SeparatorItemTemplate(Item)
@@ -19,7 +19,8 @@
     @ondragend="OnDragEnd"
     @ondragend:stopPropagation="true"
     @ondrop:stopPropagation="true"
-    @ondblclick="ShowEdit">
+    @ondblclick="ShowEdit"
+    @ondragenter="HandleDragEnter">
   <div class="dragondrop-item-display" @ondrop="OnDrop">
     @if (ShowDebugInfo) {
       <span>(@($"{(EditMode && !ReadOnly ? (IsAdd ? "To add new at" : "Editing") : "")} {Address}")) &nbsp;</span>
@@ -84,7 +85,7 @@
   <div class="dragondrop-controls">
     @if (!HideEditControlButtons) {
       if (!EditMode) {
-        <button type="button" class="edit" title="Edit" @onclick="ShowEdit"><img src="/_content/DragonDrop/img/Edit_Pencil.svg" width="16" height="16" /></button>
+        <button type="button" class="edit" title="Edit" @onclick="ShowEdit">Edit</button>
         <button type="button" class="remove" title="Remove" @onclick="RemoveItem">&times;</button>
       } else {
         <button type="button" class="save" title="Save" @onclick="HandleSave">@(IsAdd ? "Add" : "Save")</button>
@@ -111,10 +112,12 @@
   [Parameter] public DnDContainer<TListItem, TItem, TGroup> Parent { get; set; }
   [Parameter] public EventCallback<DragEventArgs> OnDragStart { get; set; }
   [Parameter] public EventCallback<DragEventArgs> OnDragEnd { get; set; }
+  [Parameter] public EventCallback<DragEventArgs> OnDragEnter { get; set; }
+  [Parameter] public EventCallback<DragEventArgs> OnDragLeave { get; set; }
   [Parameter] public EventCallback<DragEventArgs> OnDrop { get; set; }
-  [Parameter] public EventCallback<DnDItem<TItem, TListItem, TGroup>> OnCancel { get; set; }
-  [Parameter] public EventCallback<DnDItem<TItem, TListItem, TGroup>> OnSave { get; set; }
-  [Parameter] public EventCallback<ListUpdateEventArgs> OnStatusUpdated { get; set; }
+  [Parameter] public EventCallback<DnDItem<TListItem, TItem, TGroup>> OnCancel { get; set; }
+  [Parameter] public EventCallback<DnDItem<TListItem, TItem, TGroup>> OnSave { get; set; }
+  [Parameter] public EventCallback<Lib.ListUpdateEventArgs> OnStatusUpdated { get; set; }
   [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
   [Parameter] public RenderFragment<TItem> EditItemTemplate { get; set; }
   [Parameter] public RenderFragment<TItem> SeparatorItemTemplate { get; set; }
@@ -128,6 +131,7 @@
   [Parameter] public bool HideEditControlButtons { get; set; } = false;
 
   TItem EditItem;
+  string dropStyleCss = DropStyleCss.NotSet;
   string itemAsString;
   bool itemAsBool;
 
@@ -135,12 +139,24 @@
     if (Parent is null || string.IsNullOrWhiteSpace(Address)) { Address = "0"; }
   }
 
-  void HandleDragEnter(DragEventArgs e) {
-    if (Parent?.BaseContainer is null) { return; }
-    var pl = Parent.BaseContainer.GetPayload();
+  async Task HandleDragEnter(DragEventArgs e) {
+    if (Parent is null) { return; }
+    var pl = Parent.GetPayload();
+    if (string.IsNullOrWhiteSpace(pl.Address) || (Address.StartsWith(pl.Address) && pl.IsContainer)) {
+      dropStyleCss = DropStyleCss.NoDrop;
+    } else {
+      dropStyleCss = DropStyleCss.CanDrop;
+    }
+    if (OnDragEnter.HasDelegate) {
+      await OnDragEnter.InvokeAsync(e);
+    }
   }
 
-  void HandleDragLeave(DragEventArgs e) {
+  async Task HandleDragLeave(DragEventArgs e) {
+    dropStyleCss = DropStyleCss.NotSet;
+    if (OnDragLeave.HasDelegate) {
+      await OnDragLeave.InvokeAsync(e);
+    }
   }
 
   void UpdateItemValue(ChangeEventArgs e, TypeCode typeCode) {
@@ -204,6 +220,7 @@
     if (EditItem == null || EditItem.Equals(default(TItem))) {
       EditItem = Utils.SimpleClone<TItem>(Item);
     }
+    Console.WriteLine($"IsAdd: {IsAdd}");
   }
 
   async Task HandleSave(MouseEventArgs e) {
@@ -211,7 +228,6 @@
       Console.Error.WriteLine("This item does not have a parent to be removed from.");
       return;
     }
-    if (ShowDebugInfo) { Console.WriteLine($"Removing {Address} from {Parent.Address} due to remove item event."); }
     if (!int.TryParse(Address.Split('.').Last(), out int indexInParentContainer)) {
       Console.Error.WriteLine("Could not determine the container's index in the parent container during remove.");
       return;
@@ -219,10 +235,10 @@
 
     if (IsAdd) {
       Parent.List.Insert(indexInParentContainer, (TListItem)(object)Item);
-      Parent.UpdateArrayLengths();
     } else {
       var holdItem = Item;
       Utils.CopyValues<TItem>(EditItem, ref holdItem);
+      EditItem = default(TItem);
     }
     var updateEventArgs = new ListUpdateEventArgs() {
       UpdateEventType = IsAdd ? UpdateEventType.ItemAdded : UpdateEventType.ItemEdited,
@@ -238,6 +254,7 @@
     EditMode = false; // Only toggle edit mode off if this is not the Add New Item element
     await OnSave.InvokeAsync(this);
     await OnStatusUpdated.InvokeAsync(updateEventArgs);
+    if (Parent != null) { }
   }
 
   async Task HandleCancel(MouseEventArgs e) {

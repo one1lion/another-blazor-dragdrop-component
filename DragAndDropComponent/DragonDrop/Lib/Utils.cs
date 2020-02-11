@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace DragonDrop.Lib {
   public class Utils {
@@ -47,6 +45,7 @@ namespace DragonDrop.Lib {
 
     public static void CopyValues<T>(T fromObj, ref T toObj) {
       if (typeof(T).GetTypeInfo().IsValueType) { toObj = fromObj; }
+      Console.WriteLine($"Copying values from object of type {fromObj.GetType().FullName} to {toObj.GetType().FullName}");
       switch (Type.GetTypeCode(typeof(T))) {
         case TypeCode.Boolean:
         case TypeCode.Byte:
@@ -67,7 +66,9 @@ namespace DragonDrop.Lib {
         default:
           var props = typeof(T).GetProperties();
           foreach (var prop in props) {
+            Console.WriteLine($"Field {typeof(T).FullName}.{prop.Name} - Read/Write: {prop.CanRead}/{prop.CanWrite}");
             if (!prop.CanRead || !prop.CanWrite) { continue; }
+            Console.WriteLine($"From Val: {prop.GetValue(toObj)}; To Val: {prop.GetValue(fromObj)}");
             prop.SetValue(toObj, prop.GetValue(fromObj));
           }
           break;

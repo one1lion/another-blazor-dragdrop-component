@@ -39,6 +39,10 @@ div.dragondrop {
     NOTE: This is not the element that is attached to the mouse,
           this is the element that is on the page
   */
+  /*
+    Applied to an element that is being hovered over when grouping
+    is allowed with the current payload item
+  */
   /* Applied to elements that the payload is being dragged over */
   /* Applied to "drop before" drop target elements that the payload is being dragged over */
   /* Applied to "drop after" drop target elements that the payload is being dragged over */
@@ -79,10 +83,20 @@ div.dragondrop {
       align-content: space-around;
       /* Applied to all buttons */ }
       div.dragondrop li.dragondrop-item div.dragondrop-controls button {
+        color: Highlight;
         /* Applied to the edit button */
         /* Applied to the remove button */ }
+        div.dragondrop li.dragondrop-item div.dragondrop-controls button:hover {
+          text-decoration: underline; }
         div.dragondrop li.dragondrop-item div.dragondrop-controls button.remove {
-          color: red; }
+          color: red;
+          font-size: 1.2em;
+          margin: 2px 0;
+          padding: 0 2px; }
+        div.dragondrop li.dragondrop-item div.dragondrop-controls button.save {
+          color: darkgreen; }
+        div.dragondrop li.dragondrop-item div.dragondrop-controls button.cancel {
+          color: darkred; }
   div.dragondrop .dragondrop-container {
     /* Extra rules to be applied to titles of containers */
     /* Applied to items (that are also not containers) nested inside of containers */
@@ -152,6 +166,27 @@ div.dragondrop {
     border: dashed 1px darkgray; }
   div.dragondrop li.dragondrop-picked-up {
     opacity: 0.4; }
+  div.dragondrop li.dragondrop-grouphovering {
+    background: none;
+    background-color: #eee; }
+    div.dragondrop li.dragondrop-grouphovering ul {
+      height: 2em;
+      width: 100%;
+      padding: 0 2px; }
+      div.dragondrop li.dragondrop-grouphovering ul li.dragondrop-dropfirst,
+      div.dragondrop li.dragondrop-grouphovering ul li.dragondrop-dropsecond {
+        height: .8em;
+        padding: 0;
+        width: 100%; }
+      div.dragondrop li.dragondrop-grouphovering ul li.dragondrop-dropfirst {
+        margin-top: .1em;
+        margin-bottom: .05em; }
+      div.dragondrop li.dragondrop-grouphovering ul li.dragondrop-dropsecond {
+        margin-top: .05em;
+        margin-bottom: .1em; }
+      div.dragondrop li.dragondrop-grouphovering ul li.dragondrop-dropfirst.target,
+      div.dragondrop li.dragondrop-grouphovering ul li.dragondrop-dropsecond.target {
+        background-color: #888; }
   div.dragondrop li.drop-hovering {
     height: auto;
     border: dashed 0.2em #afafaf; }
