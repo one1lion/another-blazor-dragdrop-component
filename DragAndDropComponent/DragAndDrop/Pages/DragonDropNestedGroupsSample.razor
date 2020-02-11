@@ -1,0 +1,157 @@
+﻿@page "/dnd-nested"
+@using DragonDrop.DragAndDrop
+@using DragonDrop.Lib
+@using DragAndDrop.Data
+
+<DragAndDropSampleIntroduction />
+<h3>DragonDrop Sample - Nested Groups</h3>
+
+@if (itemToWrapGroup.Children is null || itemToWrapGroup.Children.Count() == 0) {
+  <p>Loading sample...</p>
+} else {
+  <DnDContainer TListItem="ItemToWrapBase"
+                TItem="ItemToWrap"
+                TGroup="ItemToWrapGroup"
+                List="itemToWrapGroup.Children"
+                Title="Nested Groups Sample"
+                ShowTitle="false"
+                AllowDropToGroup="true"
+                ShowGlobalAddNew="true"
+                SeparatorDisplay="SeparatorDisplay.Between"
+                ChildrenPropertyName="@(nameof(ItemToWrapGroup.Children))"
+                OnStatusUpdated="HandleStatusUpdated"
+                ShowDebugInfo="false"
+                Name="Top Level Container">
+    <ItemTemplate Context="curItem">
+      @curItem.ItemContent
+    </ItemTemplate>
+    <EditItemTemplate Context="curItem">
+      <EditForm Model="curItem">
+        <InputText @bind-Value="curItem.ItemContent" />
+      </EditForm>
+    </EditItemTemplate>
+    <SeparatorItemTemplate Context="curItem">
+      <hr />
+    </SeparatorItemTemplate>
+  </DnDContainer>
+}
+
+@code {
+  ItemToWrapGroup itemToWrapGroup;
+
+  protected override void OnInitialized() {
+    itemToWrapGroup = new ItemToWrapGroup();
+
+    var group1 = new ItemToWrapGroup() { Parent = itemToWrapGroup };
+    group1.Children = new List<ItemToWrapBase>() {
+      new ItemToWrap() {
+        ItemContent = "Group 1, Item 1",
+        Parent = group1
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 1, Item 2",
+        Parent = group1
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 1, Item 3",
+        Parent = group1
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 1, Item 4",
+        Parent = group1
+      }
+    };
+    var group2 = new ItemToWrapGroup() { Parent = itemToWrapGroup };
+    group2.Children = new List<ItemToWrapBase>() {
+      new ItemToWrap() {
+        ItemContent = "Group 2, Item 1",
+        Parent = group2
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 2, Item 2",
+        Parent = group2
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 2, Item 3",
+        Parent = group2
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 2, Item 4",
+        Parent = group2
+      }
+    };
+    var group3 = new ItemToWrapGroup() { Parent = itemToWrapGroup };
+    var group3_1 = new ItemToWrapGroup() { Parent = group3 };
+    group3_1.Children = new List<ItemToWrapBase>() {
+      new ItemToWrap() {
+        ItemContent = "Group 3.1, Item 1",
+        Parent = group3_1
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 3.1, Item 2",
+        Parent = group3_1
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 3.1, Item 3",
+        Parent = group3_1
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 3.1, Item 4",
+        Parent = group3_1
+      }
+    };
+    group3.Children = new List<ItemToWrapBase>() {
+      new ItemToWrap() {
+        ItemContent = "Group 3, Item 1",
+        Parent = group3
+      },
+      group3_1,
+      new ItemToWrap() {
+        ItemContent = "Group 3, Item 3",
+        Parent = group3
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 3, Item 4",
+        Parent = group3
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 3, Item 5",
+        Parent = group3
+      }
+    };
+    var group4 = new ItemToWrapGroup() { Parent = itemToWrapGroup };
+    group4.Children = new List<ItemToWrapBase>() {
+      new ItemToWrap() {
+        ItemContent = "Group 4, Item 1",
+        Parent = group4
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 4, Item 2",
+        Parent = group4
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 4, Item 3",
+        Parent = group4
+      },
+      new ItemToWrap() {
+        ItemContent = "Group 4, Item 4",
+        Parent = group4
+      }
+    };
+
+    itemToWrapGroup.Children = new List<ItemToWrapBase>() {
+      new ItemToWrap() {
+        ItemContent = "Base Group, Item 1",
+        Parent = itemToWrapGroup
+      },
+      group1,
+      group2,
+      group3,
+      group4
+    };
+  }
+
+  void HandleStatusUpdated(ListUpdateEventArgs e) {
+
+  }
+}

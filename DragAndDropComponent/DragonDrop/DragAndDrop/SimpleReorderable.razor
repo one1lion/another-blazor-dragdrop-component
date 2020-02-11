@@ -1,0 +1,74 @@
+﻿@typeparam TItem
+
+@if (!string.IsNullOrWhiteSpace(Title) && ShowTitle) {
+<span class="dragondrop-title" style="display:block;">@Title</span>
+}
+
+<ul ondragover="event.preventDefault();">
+  @if (List is null || List.Count() == 0) {
+  <li @ondrop="@((e) => HandleMove(e, 0))"
+      @ondrop:stopPropagation="true">No items added</li>
+  } else {
+    var i = 0;
+    foreach (var curItem in List) {
+      var curItemIndex = i++;
+  <li draggable="true"
+      data-value="@curItem"
+      @ondragstart="@((e) => HandleDragStart(e, curItemIndex))"
+      @ondragend="HandleDragEnd">
+    <div @ondrop="@((e) => HandleMove(e, curItemIndex))"
+         @ondrop:stopPropagation="true">
+      @if (ItemTemplate is null) {
+      <text>@curItem</text>
+          } else {
+      <text>@ItemTemplate(curItem)</text>
+          }
+    </div>
+    <div @ondrop="@((e) => HandleMove(e, curItemIndex + 1))"
+         @ondrop:stopPropagation="true"
+         style="display:@(showDropAtEnd ? "block" : "none");background-color:gray;"></div>
+  </li>
+
+    }
+  <li style="display:@(showDropAtEnd ? "block" : "none");background-color:gray;">
+    <div @ondrop="@((e) => HandleMove(e, List.Count()))"
+         @ondrop:stopPropagation="true"
+         style="height:1em; overflow-y:visible;">
+      &nbsp;
+    </div>
+  </li>
+  }
+</ul>
+
+@code {
+  [Parameter] public List<TItem> List { get; set; }
+  [Parameter] public string Title { get; set; }
+  [Parameter] public bool ShowTitle { get; set; }
+  [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+
+  int indexOfItemBeingDragged = -1;
+  bool showDropAtEnd = false;
+
+  string dragState = "Not Dragging";
+  void HandleDragStart(DragEventArgs e, int index) {
+    indexOfItemBeingDragged = index;
+    showDropAtEnd = true;
+    dragState = $"Dragging \"{indexOfItemBeingDragged}\"";
+  }
+
+  void HandleDragEnd(DragEventArgs e) {
+    indexOfItemBeingDragged = -1;
+    if (indexOfItemBeingDragged >= List.Count()) { dragState = "Item index was out of range"; return; }
+    showDropAtEnd = false;
+    dragState = "Not Dragging";
+  }
+
+  void HandleMove(DragEventArgs e, int index) {
+    dragState = $"Dropping at {index}";
+    if (indexOfItemBeingDragged < 0) { dragState = "No item to drop"; return; }
+    if (indexOfItemBeingDragged >= List.Count()) { dragState = "Item index was out of range"; return; }
+    var item = List[indexOfItemBeingDragged];
+    List.Insert(index, item);
+    List.RemoveAt(indexOfItemBeingDragged + (indexOfItemBeingDragged > index ? 1 : 0));
+  }
+}

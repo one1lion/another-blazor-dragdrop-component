@@ -2,29 +2,32 @@
 
 <div class="preview-panel">
   <div class="preview-panel-title">
-    Drag and Drop - Live Reorder
+    Drag and Drop - Simple Reorderable List
   </div>
   <div class="preview-panel-description">
     <p>
-      The samples below show pages that use the HTML5 <code>draggable=&quot;true&quot;</code> attribute to enable drag 
-      and drop of structured div elements (first) or li elements (second). The order updates while dragging. It seems 
-      like I would have more freedom to customize the div soup version rather than being constrained to the unordered 
-      list. I will continue exploring both, however.
-    </p>
-    <p>
-      Speaking of exploring further, while setting up this page, I am now seeing what happens when there are multiple 
-      drag and drop containers on the same page. At the moment, I have simply instructed the event handler for
-      dropping to ignore the drop if that component does not have its curItem populated. This will need to be 
-      modified for cases when the intended use is for allowing dropping of items from outside sources (such as an
-      image from another page or application.)
+      Use a list of any type to display in a re-orderable drag and drop list.
     </p>
   </div>
   <div class="preview-panel-samples">
     <div class="preview-panel-page">
-      <DragAndDropSampleDiv />
+      <DragAndDropSimpleListSample />
     </div>
+  </div>
+</div>
+
+<div class="preview-panel">
+  <div class="preview-panel-title">
+    Drag and Drop - Groupable and Reorderable
+  </div>
+  <div class="preview-panel-description">
+    <p>
+      Use a list of any type to display in a re-orderable drag and drop list.
+    </p>
+  </div>
+  <div class="preview-panel-samples">
     <div class="preview-panel-page">
-      <DragAndDropSampleList />
+      <DragonDropNestedGroupsSample />
     </div>
   </div>
 </div>

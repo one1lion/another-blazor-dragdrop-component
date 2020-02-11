@@ -1,0 +1,361 @@
+﻿@typeparam TListItem
+@typeparam TItem
+@typeparam TGroup
+@inherits DnDContainerBase<TListItem, TItem, TGroup>
+@using System.Linq
+
+<CascadingValue Value="@DnDState">
+  @if (DnDState is null) {
+    <p>Preparing.  Please wait...</p>
+  } else {
+    <div class="dragondrop" ondragover="event.preventDefault();" ondragenter="event.preventDefault();" ondragleave="event.preventDefault();">
+      @if (DnDState.ShowDebugInfo && DnDState.BaseContainer == this) {
+
+        Console.Write("Rendering debug info for picked up item: ");
+        <p class="dragondrop-info">
+          @if (!string.IsNullOrEmpty(DnDState.Payload.Address)) {
+            Console.WriteLine($"Item is picked up ({DnDState.Payload.Address})");
+            <text>Picked up: @DnDState.Payload.Address</text>
+          } else {
+            Console.WriteLine("No item is picked up");
+            <text>Nothing is picked up</text>
+          }
+        </p>
+      }
+      @if (!string.IsNullOrWhiteSpace(Title) && ShowTitle) {
+        if (DnDState.ShowDebugInfo) {
+          Console.Write("Rendering the title ");
+        }
+        <p class="dragondrop-title">
+          @if (DnDState.ShowDebugInfo) {
+            Console.Write($"and the address ({Address}) ");
+          }
+          @Title
+        </p>
+        if (DnDState.ShowDebugInfo) {
+          Console.WriteLine("of the current container");
+        }
+      }
+
+      @if (!ShowTitle && DnDState.ShowDebugInfo) {
+        Console.WriteLine($"Displaying the address of the current container: {Address}");
+        <p>(@Address)</p>
+      }
+      @* TODO: Change this to only use DnDState *@
+      @if (DnDState.BaseContainer == this && (DnDState.ShowGlobalAddNew || ShowGlobalAddNew)) {
+        if (DnDState.ShowDebugInfo) { Console.WriteLine("Rendering the new item component"); }
+        <DnDItem TListItem="TListItem"
+                 TItem="TItem"
+                 TGroup="TGroup"
+                 Item="DnDState.NewItem"
+                 ShowDebugInfo="DnDState.ShowDebugInfo"
+                 OnDragStart="@((e) => HandleDragStart(e, List.Count(), this, "0"))"
+                 OnDragEnd="HandleDragEnd"
+                 OnDrop="@((e) => HandleMove(e, List.Count(), true))"
+                 Parent="this"
+                 ItemTemplate="ItemTemplate"
+                 EditItemTemplate="EditItemTemplate"
+                 EditMode="true"
+                 IsAdd="true"
+                 SeparatorDisplay="SeparatorDisplay.None"
+                 Address="@($"{Address}.{List.Count()}")"
+                 HideEditControlButtons="true" />
+        <button type="button" @onclick="@((e) => AddItem(e, List.Count()))">Add</button>
+      }
+
+      @if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the container frame for {Address}"); }
+
+      @{
+        var curPayloadAddress = DnDState.Payload.Address;
+      }
+      <ul class="dragondrop-container"
+          ondragover="event.preventDefault();">
+        @if (List is null || List.Count() == 0) {
+          if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the empty list element for {Address}"); }
+          <li class="dragondrop-item dragondrop-empty-list"
+              @ondrop="@((e) => HandleMove(e, 0))"
+              @ondrop:stopPropagation="true">No items added</li>
+        } else {
+          if (DnDState.ShowDebugInfo) { Console.WriteLine($"Beginning the loop over the children while rendering the component at {Address}"); }
+
+          var i = 0;
+          if (DnDState.ShowDebugInfo && !string.IsNullOrWhiteSpace(curPayloadAddress)) { Console.WriteLine($"Storing DnDState.Payload aDdress into a variable ({curPayloadAddress})"); }
+          for (var j = 0; j < List.Count(); j++) {
+            if (DnDState.ShowDebugInfo) {
+              Console.WriteLine($"Getting a reference to the current jth child (item index {j}) of {Address}");
+            }
+            var curItem = List[j];
+            if (DnDState.ShowDebugInfo) { Console.WriteLine($"Preparing the variables to determine if the current item is a Group or an Item (in Container {Address})"); }
+            var childProp = string.IsNullOrWhiteSpace(DnDState.ChildrenPropertyName) ? null : curItem.GetType().GetProperty(DnDState.ChildrenPropertyName);
+            var childrens = (List<TListItem>)childProp?.GetValue(curItem);
+            if (childProp != null) {
+              if (DnDState.ShowDebugInfo) { Console.WriteLine($"The current item has a Children property, checking to see if it is empty or has only one item (in container {Address})"); }
+
+              if (childrens is null || childrens.Count() == 0) {
+                if (DnDState.ShowDebugInfo) { Console.WriteLine($"The current item is a group that is empty, so removing it from the list (in container {Address})"); }
+                List.RemoveAt(j);
+                j--;
+                if (DnDState.ShowDebugInfo) { Console.WriteLine($"Moving to the next item in the list (in container {Address})"); }
+                continue;
+              } else if (childrens.Count() == 1) {
+                if (DnDState.ShowDebugInfo) { Console.WriteLine($"The current item is a group that only has one child, so replacing the group with just the one item (in container {Address})"); }
+                curItem = childrens[0];
+                List.RemoveAt(j);
+                List.Insert(j, curItem);
+              } else if (DnDState.ShowDebugInfo) {
+                Console.WriteLine($"The current item is a group that has more than one element, not doing anything special with it (in container {Address})");
+              }
+            }
+            var curItemIndex = i++;
+            var curItemAddress = $"{Address}.{curItemIndex}";
+            if (DnDState.ShowDebugInfo) { Console.WriteLine($"Checking if the before separator should be rendered (in container {Address})"); }
+            if (new[] { SeparatorDisplay.BeforeAndAfter, SeparatorDisplay.BeforeOnly }.Contains(DnDState.SeparatorDisplay) && !(SeparatorItemTemplate is null)) {
+              if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the before separator (in container {Address})"); }
+              <li class="dragondrop-separator dragondrop-separator-before">
+                @SeparatorItemTemplate(curItem)
+              </li>
+            }
+
+            if (curItemIndex == 0) {
+              if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the drop before drop target (in container {Address})"); }
+              <li class="dragondrop-dropbefore
+                 @(string.IsNullOrWhiteSpace(curPayloadAddress) || (curItemAddress.StartsWith(curPayloadAddress) && curPayloadAddress != curItemAddress) ? "opac-0" : "")
+                 @(DnDState.IsDropBefore ? $"{DnDState.GetDropCssStyle(curItemAddress)}" : "")"
+                  @ondragenter="@((e) => HandleDropTargetDragEnter(e, curItemIndex, true))"
+                  @ondragleave="@((e) => HandleDropTargetDragLeave(e, curItemIndex))"
+                  @ondragenter:stopPropagation="true"
+                  @ondragleave:stopPropagation="true"
+                  @ondragenter:preventDefault="true"
+                  @ondragleave:preventDefault="true"
+                  @ondrop="@((e) => HandleMove(e, curItemIndex))"
+                  @ondrop:stopPropagation="true"
+                  @onclick="@((e) => ToggleShowNewItem(e, curItemIndex, true))">
+                &nbsp;
+              </li>
+            }
+            if (DnDState.ShowDebugInfo) { Console.WriteLine($"Checking if the Add Item LI should be rendered before the current item (in container {Address})"); }
+            if (DnDState.IsAddBefore && DnDState.GetShowNewItem(curItemAddress)) {
+              if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the Add Item LI before the current item (in container {Address})"); }
+              <li>
+                <DnDItem TListItem="TListItem"
+                         TItem="TItem"
+                         TGroup="TGroup"
+                         Item="DnDState.NewItem"
+                         ShowDebugInfo="DnDState.ShowDebugInfo"
+                         OnDragStart="@((e) => HandleDragStart(e, curItemIndex, this, Address))"
+                         OnDragEnd="HandleDragEnd"
+                         OnDrop="@((e) => HandleMove(e, curItemIndex, true))"
+                         OnStatusUpdated="OnStatusUpdated"
+                         OnSave="OnSaveComplete"
+                         OnCancel="OnCancelComplete"
+                         Parent="this"
+                         ItemTemplate="ItemTemplate"
+                         EditItemTemplate="EditItemTemplate"
+                         EditMode="true"
+                         IsAdd="true"
+                         SeparatorDisplay="SeparatorDisplay.None"
+                         Address="@curItemAddress"
+                         HideEditControlButtons="false" />
+              </li>
+              if (new[] { SeparatorDisplay.BeforeAndAfter, SeparatorDisplay.AfterOnly }.Contains(DnDState.SeparatorDisplay) && !(SeparatorItemTemplate is null)) {
+                if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the separator after for {curItemAddress} (in container {Address})"); }
+                <li class="dragondrop-separator dragondrop-separator-after">
+                  @SeparatorItemTemplate((TListItem)(object)DnDState.NewItem)
+                </li>
+              }
+              if (DnDState.ShowDebugInfo) { Console.WriteLine($"Determining whether to show the separator between for new item before {curItemAddress} (in container {Address})"); }
+              if (DnDState.SeparatorDisplay == SeparatorDisplay.Between && !(SeparatorItemTemplate is null)) {
+                if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the separator between for {curItemAddress} (in container {Address})"); }
+                <li class="dragondrop-separator dragondrop-separator-between">
+                  @SeparatorItemTemplate((TListItem)(object)DnDState.NewItem)
+                </li>
+              }
+            }
+            if (DnDState.ShowDebugInfo) { Console.WriteLine($"Determining if {curItemAddress} is a group or an item (in container {Address})"); }
+            var showGroupForThisItem = AllowDropToGroup && !(string.IsNullOrWhiteSpace(curPayloadAddress) || curItemAddress.StartsWith(curPayloadAddress)) && DnDState.GetShowGroupWith(curItemAddress);
+            if (DnDState.ShowDebugInfo && showGroupForThisItem) { Console.WriteLine($"Rendering drop to group for {curItemAddress} (in container {Address})"); }
+
+            if (childProp is null) {
+              if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering {curItemAddress} as an item (in container {Address})"); }
+              @if (showGroupForThisItem) {
+                if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering drop to gorup for {curItemAddress} (in container {Address})"); }
+                <li class="dragondrop-item can-drop dragondrop-grouphovering"
+                    @ondragleave="@((e) => HandleDropTargetDragLeave(e, curItemIndex))"
+                    @ondragenter:stopPropagation="true"
+                    @ondragleave:stopPropagation="true">
+                  <ul @ondragenter:preventDefault="true"
+                      @ondragleave:preventDefault="true"
+                      @ondragenter:stopPropagation="true"
+                      @ondragleave:stopPropagation="true">
+                    <li class="dragondrop-item dragondrop-dropfirst @(DnDState.ShowGroupDropFirst ? "target" : "")"
+                        @ondrop="@((e) => HandleMove(e, curItemIndex, true, true))"
+                        @ondragenter="((e) => HandleDragOverGroup(e, groupFirst:true))"
+                        @ondragenter:preventDefault="true"
+                        @ondragleave:preventDefault="true"
+                        @ondragenter:stopPropagation="true"
+                        @ondragleave:stopPropagation="true"
+                        title="Drop first"></li>
+                    <li class="dragondrop-item dragondrop-dropsecond @(DnDState.ShowGroupDropSecond ? "target" : "")"
+                        @ondrop="@((e) => HandleMove(e, curItemIndex, true))"
+                        @ondragenter="((e) => HandleDragOverGroup(e, groupSecond:true))"
+                        @ondragenter:preventDefault="true"
+                        @ondragleave:preventDefault="true"
+                        @ondragenter:stopPropagation="true"
+                        @ondragleave:stopPropagation="true"
+                        title="Drop second"></li>
+                  </ul>
+                </li>
+              } else {
+                <DnDItem TListItem="TListItem"
+                         TItem="TItem"
+                         TGroup="TGroup"
+                         Item="(TItem)(object)curItem"
+                         ShowDebugInfo="DnDState.ShowDebugInfo"
+                         OnDragStart="@((e) => HandleDragStart(e, curItemIndex, this, curItemAddress))"
+                         OnDragEnd="HandleDragEnd"
+                         OnDragEnter="@((e) => HandleDropTargetDragEnter(e, curItemIndex, checkForGroup:true))"
+                         OnDrop="@((e) => HandleMove(e, curItemIndex, true))"
+                         OnStatusUpdated="OnStatusUpdated"
+                         Parent="this"
+                         ItemTemplate="ItemTemplate"
+                         EditItemTemplate="EditItemTemplate"
+                         SeparatorDisplay="SeparatorDisplay.None"
+                         Address="@curItemAddress" />
+              }
+              /**/
+            } else {
+              if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering {curItemAddress} as a group{(curPayloadAddress == curItemAddress ? " that is picked up" : "")} (in container {Address})"); }
+              <li class="dragondrop-container @(curPayloadAddress == curItemAddress ? "dragondrop-picked-up" : $"{(showGroupForThisItem ? "dragondrop-grouphovering" : "")}")"
+                  draggable="true"
+                  @ondragstart="@((e) => HandleDragStart(e, curItemIndex, this, curItemAddress, true))"
+                  @ondragstart:stopPropagation="true"
+                  @ondragend="HandleDragEnd"
+                  @ondragend:stopPropagation="true"
+                  @ondrop="@((e) => HandleMove(e, curItemIndex, true))"
+                  @ondrop:stopPropagation="true">
+
+                <DnDContainer List="childrens"
+                              TListItem="TListItem"
+                              TItem="TItem"
+                              TGroup="TGroup"
+                              Title="@Title"
+                              ShowTitle="ShowTitle"
+                              Parent="this"
+                              ItemTemplate="ItemTemplate"
+                              EditItemTemplate="EditItemTemplate"
+                              SeparatorItemTemplate="SeparatorItemTemplate"
+                              Address="@curItemAddress"
+                              AllowDropToGroup="AllowDropToGroup" />
+              </li>
+            }
+
+            if (DnDState.ShowDebugInfo) { Console.WriteLine($"Determining whether to show the separator after for {curItemAddress} (in container {Address})"); }
+            if (new[] { SeparatorDisplay.BeforeAndAfter, SeparatorDisplay.AfterOnly }.Contains(DnDState.SeparatorDisplay) && !(SeparatorItemTemplate is null)) {
+              if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the separator after for {curItemAddress} (in container {Address})"); }
+              <li class="dragondrop-separator dragondrop-separator-after">
+                @SeparatorItemTemplate(curItem)
+              </li>
+            }
+            if (DnDState.ShowDebugInfo) { Console.WriteLine($"Determining whether to show the separator between for {curItemAddress} (in container {Address})"); }
+            if (DnDState.SeparatorDisplay == SeparatorDisplay.Between && !(SeparatorItemTemplate is null) && (curItemIndex < List.Count() - 1 || (!DnDState.IsAddBefore && DnDState.GetShowNewItem(curItemAddress)))) {
+              if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the separator between for {curItemAddress} (in container {Address})"); }
+              <li class="dragondrop-separator dragondrop-separator-between">
+                @SeparatorItemTemplate(curItem)
+              </li>
+            }
+
+            if (DnDState.ShowDebugInfo) {
+              Console.WriteLine($"Rendering the drop after for {curItemAddress} (in container {Address})");
+            }
+            <li class="dragondrop-dropafter
+                   @(string.IsNullOrWhiteSpace(curPayloadAddress) || (curItemAddress.StartsWith(curPayloadAddress) && curPayloadAddress != curItemAddress) ? "opac-0" : "")
+                   @(!DnDState.IsDropBefore ? $"{DnDState.GetDropCssStyle(curItemAddress)}" : "")"
+                @ondragenter="@((e) => HandleDropTargetDragEnter(e, curItemIndex))"
+                @ondragleave="@((e) => HandleDropTargetDragLeave(e, curItemIndex))"
+                @ondragenter:stopPropagation="true"
+                @ondragleave:stopPropagation="true"
+                @ondragenter:preventDefault="true"
+                @ondragleave:preventDefault="true"
+                @ondrop="@((e) => HandleMove(e, curItemIndex + 1))"
+                @ondrop:stopPropagation="true"
+                @onclick="@((e) => ToggleShowNewItem(e, curItemIndex))">
+              &nbsp;
+            </li>
+            if (DnDState.ShowDebugInfo) { Console.WriteLine($"Checking if the Add Item LI should be rendered after the current item (in container {Address})"); }
+            if (!DnDState.IsAddBefore && DnDState.GetShowNewItem(curItemAddress)) {
+              if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the Add Item LI before the current item (in container {Address})"); }
+              <li>
+                <DnDItem TListItem="TListItem"
+                         TItem="TItem"
+                         TGroup="TGroup"
+                         Item="DnDState.NewItem"
+                         DragEnabled="false"
+                         OnDragStart="@((e) => HandleDragStart(e, curItemIndex + 1, this, Address))"
+                         OnDragEnd="HandleDragEnd"
+                         OnDrop="@((e) => HandleMove(e, curItemIndex + 1, true))"
+                         OnStatusUpdated="OnStatusUpdated"
+                         OnSave="OnSaveComplete"
+                         OnCancel="OnCancelComplete"
+                         Parent="this"
+                         ItemTemplate="ItemTemplate"
+                         EditItemTemplate="EditItemTemplate"
+                         EditMode="true"
+                         IsAdd="true"
+                         SeparatorDisplay="SeparatorDisplay.None"
+                         Address="@($"{Address}.{curItemIndex + 1}")"
+                         HideEditControlButtons="false" />
+              </li>
+              if (new[] { SeparatorDisplay.BeforeAndAfter, SeparatorDisplay.AfterOnly }.Contains(DnDState.SeparatorDisplay) && !(SeparatorItemTemplate is null)) {
+                if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the separator after for {curItemAddress} (in container {Address})"); }
+                <li class="dragondrop-separator dragondrop-separator-after">
+                  @SeparatorItemTemplate((TListItem)(object)DnDState.NewItem)
+                </li>
+              }
+              if (DnDState.ShowDebugInfo) { Console.WriteLine($"Determining whether to show the separator between for new item before {curItemAddress} (in container {Address})"); }
+              if (DnDState.SeparatorDisplay == SeparatorDisplay.Between && !(SeparatorItemTemplate is null) && curItemIndex < List.Count() - 1) {
+                if (DnDState.ShowDebugInfo) { Console.WriteLine($"Rendering the separator between for {curItemAddress} (in container {Address})"); }
+                <li class="dragondrop-separator dragondrop-separator-between">
+                  @SeparatorItemTemplate((TListItem)(object)DnDState.NewItem)
+                </li>
+              }
+            }
+
+            if (DnDState.ShowDebugInfo) { Console.WriteLine($"Completed item {curItemAddress} (in container {Address})"); }
+          }
+          if (DnDState.ShowDebugInfo) { Console.WriteLine($"Completed looping through children for container {Address}"); }
+        }
+        @if (DnDState.ShowDebugInfo) { Console.WriteLine($"Determining whether to show the Add New Item after the last element in the container {Address}"); }
+      </ul>
+    </div>
+    if (DnDState.ShowDebugInfo) { Console.WriteLine($"Completed container {Address}"); }
+  }
+</CascadingValue>
+
+@code {
+  bool listInfoSet = false;
+  protected override void OnInitialized() {
+    if (DnDState is null ? ShowDebugInfo : DnDState.ShowDebugInfo) { Console.WriteLine($"OnInitialized for {Address}"); }
+  }
+
+  protected override void OnParametersSet() {
+    if (DnDState is null ? ShowDebugInfo : DnDState.ShowDebugInfo) { Console.WriteLine($"OnParametersSet for {Address}"); }
+    if (DnDState is null) {
+      DnDState = new Lib.DnDState<TListItem, TItem, TGroup>() {
+        AllowDropToGroup = AllowDropToGroup,
+        BaseContainer = this,
+        ChildrenPropertyName = ChildrenPropertyName,
+        SeparatorDisplay = SeparatorDisplay,
+        ShowGlobalAddNew = ShowGlobalAddNew,
+        ShowTitle = ShowTitle,
+        ShowDebugInfo = ShowDebugInfo
+      };
+    }
+
+    if (Parent is null || string.IsNullOrWhiteSpace(Address)) { Address = "0"; }
+    if (!(List is null) && !listInfoSet) {
+      if (DnDState.ShowDebugInfo) { Console.WriteLine($"List count is: {List.Count()}"); }
+      if (DnDState.BaseContainer == this) { DnDState.List = List; }
+      listInfoSet = true;
+    }
+  }
+}
