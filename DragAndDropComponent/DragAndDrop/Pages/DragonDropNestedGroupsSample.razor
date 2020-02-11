@@ -13,15 +13,15 @@
                 TItem="ItemToWrap"
                 TGroup="ItemToWrapGroup"
                 List="itemToWrapGroup.Children"
-                Title="SQL Query"
+                Title="Nested Groups Sample"
                 ShowTitle="false"
                 AllowDropToGroup="true"
-                ShowNewItem="true"
+                ShowGlobalAddNew="true"
                 SeparatorDisplay="SeparatorDisplay.Between"
                 ChildrenPropertyName="@(nameof(ItemToWrapGroup.Children))"
                 OnStatusUpdated="HandleStatusUpdated"
                 ShowDebugInfo="false"
-                Name="Nested Groups Sample">
+                Name="Top Level Container">
     <ItemTemplate Context="curItem">
       @curItem.ItemContent
     </ItemTemplate>
