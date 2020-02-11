@@ -1,0 +1,38 @@
+﻿@inherits DragAndDropElementBase
+@using System.Globalization
+
+<div draggable="@(model is null ? "false" : model.DragEnabled.ToString().ToLower(CultureInfo.CurrentCulture))">
+  @if (model is null) {
+    <p>Model is null</p>
+  } else {
+    @if (!string.IsNullOrWhiteSpace(model.Name) && ShowTitle) {
+      <div>@model.Name</div>
+    }
+    <div>
+      @if (ChildContent is null) {
+        <p>No children</p>
+      } else {
+        @ChildContent
+      }
+    </div>
+  }
+</div>
+
+
+@code {
+  DraggableContainerViewModel model;
+
+  [Parameter] public bool ShowTitle { get; set; } = true;
+  [Parameter] public bool DragEnabled { get; set; } = true;
+  [Parameter] public List<string> AllowedTargetNames { get; set; }
+
+  [Parameter] public RenderFragment ChildContent { get; set; }
+
+  protected override void OnInitialized() {
+    model = new DraggableContainerViewModel();
+  }
+
+  protected override void OnParametersSet() {
+    model.Name = Name;
+  }
+}

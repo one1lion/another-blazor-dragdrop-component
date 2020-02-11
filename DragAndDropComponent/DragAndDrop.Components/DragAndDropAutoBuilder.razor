@@ -1,0 +1,80 @@
+﻿@typeparam TItem
+@using System.Reflection;
+
+<div class="draganddrop-container">
+@if (Model is null) {
+  <p>No model specified</p>
+} else {
+  <DraggableContainer Name="@Model.Name" ShowTitle="ShowTitle" DragEnabled="@isDraggable">
+    @if (Model.Children is null || Model.Children.Count() == 0) {
+      <p>No children added</p>
+    } else {
+      foreach (var child in Model.Children) {
+        var childType = child.GetType();
+        var childTypeInfo = child.GetType().GetTypeInfo();
+        switch (childType) {
+          case var ti when childTypeInfo.ImplementedInterfaces.Contains(typeof(IDragAndDropContainer)): {
+              <DragAndDropAutoBuilder Model="(IDragAndDropContainer)child" 
+                                      TItem="TItem" 
+                                      ShowTitle="ShowTitle" 
+                                      DraggableItemTemplate="DraggableItemTemplate" 
+                                      NonDraggableItemTemplate="NonDraggableItemTemplate" 
+                                      DraggableGroupTemplate="DraggableGroupTemplate" 
+                                      NonDraggableGroupTemplate="NonDraggableGroupTemplate" />
+              break;
+            }
+          case var ti when childTypeInfo.ImplementedInterfaces.Contains(typeof(IDraggableElement<TItem>)): {
+              var item = ((IDragAndDropElement<TItem>)child).Item;
+              <DraggableItem Name="@child.Name" 
+                             Item="item" 
+                             DragEnabled="((IDraggableElement)child).DragEnabled" 
+                             ItemTemplate="DraggableItemTemplate" />
+              break;
+            }
+          case var ti when childTypeInfo.ImplementedInterfaces.Contains(typeof(IDragAndDropElement<TItem>)): {
+              var item = ((IDragAndDropElement<TItem>)child).Item;
+              <DragAndDropItem Name="@child.Name" 
+                               Item="item" 
+                               ItemTemplate="NonDraggableItemTemplate" />
+              break;
+            }
+          case var ti when childTypeInfo.ImplementedInterfaces.Contains(typeof(IDraggableElement)): {
+              // TODO: Determine what to do with IDraggableElements that are not of a generic type
+              var item = ((DraggableItemViewModel<TItem>)child).Item;
+              <DraggableItem Name="@child.Name" 
+                             Item="item" 
+                             DragEnabled="((IDraggableElement)child).DragEnabled" 
+                             ItemTemplate="DraggableItemTemplate" />
+              break;
+            }
+          default: {
+              <DragAndDropElement Name="@child.Name">
+                @child
+              </DragAndDropElement>
+            
+              break;
+            }
+        
+        }
+      }
+    }
+  </DraggableContainer>
+}
+</div>
+@code {
+  [Parameter] public IDragAndDropContainer Model { get; set; }
+  [Parameter] public bool ShowTitle { get; set; }
+  [Parameter] public RenderFragment DraggableGroupTemplate { get; set; }
+  [Parameter] public RenderFragment NonDraggableGroupTemplate { get; set; }
+  [Parameter] public RenderFragment<TItem> DraggableItemTemplate { get; set; }
+  [Parameter] public RenderFragment<TItem> NonDraggableItemTemplate { get; set; }
+  bool isDraggable = false;
+
+  protected override void OnParametersSet() {
+    if(Model is null) { return; }
+    var typeInfo = Model.GetType().GetTypeInfo();
+    if (typeInfo.ImplementedInterfaces.Contains(typeof(IDraggableElement))) {
+      isDraggable = ((IDraggableElement)Model).DragEnabled;
+    }
+  }
+}
